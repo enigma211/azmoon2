@@ -1,0 +1,14 @@
+{
+  "name": "آزمون کده",
+  "short_name": "آزمون کده",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "lang": "fa",
+  "dir": "rtl",
+  "icons": [
+    { "src": "/icons/icon.svg", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
