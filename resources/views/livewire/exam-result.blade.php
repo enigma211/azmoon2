@@ -69,7 +69,7 @@
                     if (!$isAnswered) { continue; }
                 ?>
 
-                <div class="rounded-xl shadow p-6 bg-gradient-to-r from-white to-slate-50 {{ $isCorrect ? 'border-2 border-green-200' : 'border-2 border-rose-200' }}">
+                <div class="rounded-xl shadow p-6 bg-gradient-to-r from-white to-slate-50 {{ ($isCorrect ?? false) ? 'border-2 border-green-200' : 'border-2 border-rose-200' }}">
                     <!-- Question Number and Status -->
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-900">سوال {{ $index + 1 }}</h3>
