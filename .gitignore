@@ -26,4 +26,4 @@ Thumbs.db
 !/storage/logs/.gitignore
 /.cache/
 /.turbo
-/database/migrations/**
+

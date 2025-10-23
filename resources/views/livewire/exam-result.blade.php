@@ -49,9 +49,13 @@
         <!-- Questions Review -->
         <div class="space-y-4">
             <h2 class="text-lg font-medium text-gray-900">بررسی سوالات (فقط سوالات پاسخ‌داده‌شده)</h2>
+            @php($userAnswers = $userAnswers ?? [])
             
             <?php foreach($exam->questions as $index => $question): ?>
                 <?php
+                    // Initialize flags defensively to avoid undefined variable in Blade conditions
+                    $isCorrect = false;
+                    $isAnswered = false;
                     $userAnswer = $userAnswers[$question->id] ?? [];
                     $correctChoices = $question->choices->where('is_correct', true);
                     $userSelectedChoices = collect($userAnswer)->filter()->keys();
@@ -74,12 +78,12 @@
                                 @svg('heroicon-o-exclamation-triangle', 'w-4 h-4')
                                 حذف شده
                             </span>
-                        @elseif($isCorrect)
+                        @elseif(isset($isCorrect) && $isCorrect)
                             <span class="inline-flex items-center gap-1 rounded-full bg-green-100 text-green-800 text-sm font-semibold px-3 py-1">
                                 @svg('heroicon-o-check', 'w-4 h-4')
                                 صحیح
                             </span>
-                        @elseif($isAnswered)
+                        @elseif(isset($isAnswered) && $isAnswered)
                             <span class="inline-flex items-center gap-1 rounded-full bg-red-100 text-red-800 text-sm font-semibold px-3 py-1">
                                 @svg('heroicon-o-x-mark', 'w-4 h-4')
                                 غلط
