@@ -27,13 +27,53 @@
 
     @if($q)
         <div wire:key="question-{{ $q->id }}">
-        <article class="prose prose-sm max-w-none">
-            {!! $q->text !!}
-        </article>
+        <div x-data="{ hasWide:false }" x-init="
+            $nextTick(() => {
+                const el = $refs.article;
+                if (!el) return;
+                const imgs = el.querySelectorAll('img');
+                imgs.forEach(img => {
+                    const mark = () => {
+                        const r = (img.naturalWidth||1) / (img.naturalHeight||1);
+                        if (r > 1.4) { hasWide = true; img.classList.add('max-w-none','h-auto','cursor-zoom-in'); }
+                        else { img.classList.add('max-w-full','h-auto'); }
+                    };
+                    if (img.complete) mark(); else img.addEventListener('load', mark, { once: true });
+                });
+            });
+        ">
+            <template x-if="hasWide">
+                <div class="mb-2 rounded border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+                    برای مشاهده بهتر، گوشی را به حالت افقی بچرخانید یا روی تصویر ضربه بزنید برای بزرگ‌نمایی.
+                </div>
+            </template>
+            <article x-ref="article" class="prose prose-sm max-w-none" :class="hasWide ? 'overflow-x-auto -mx-4 px-4 touch-pan-x' : ''">
+                {!! $q->text !!}
+            </article>
+        </div>
 
         @if(!empty($q->image_path))
-            <div class="mt-3">
-                <img src="{{ Storage::url($q->image_path) }}" alt="image" class="w-full rounded" />
+            @php $qImg = Storage::url($q->image_path); @endphp
+            <div x-data="{ wide:false, show:false }" class="mt-3">
+                <template x-if="wide">
+                    <div class="mb-2 rounded border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+                        برای مشاهده بهتر، گوشی را به حالت افقی بچرخانید یا برای بزرگ‌نمایی روی تصویر ضربه بزنید.
+                    </div>
+                </template>
+                <div class="overflow-x-auto -mx-4 px-4 touch-pan-x">
+                    <img src="{{ $qImg }}" alt="image" 
+                         @load="wide = ($event.target.naturalWidth||1)/($event.target.naturalHeight||1) > 1.4"
+                         @click="show = true"
+                         class="max-w-none h-auto rounded cursor-zoom-in select-none" />
+                </div>
+
+                <!-- Zoom Modal -->
+                <div x-show="show" x-cloak class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center" @keydown.escape.window="show=false" @click.self="show=false">
+                    <button @click="show=false" class="absolute top-4 left-4 rounded bg-white/90 px-3 py-1 text-sm text-gray-800 shadow">بستن</button>
+                    <div class="max-w-full max-h-[90vh] overflow-auto p-4">
+                        <img src="{{ $qImg }}" alt="image" class="max-w-none h-auto select-none" />
+                    </div>
+                </div>
             </div>
         @endif
 
