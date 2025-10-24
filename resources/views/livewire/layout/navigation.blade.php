@@ -16,7 +16,7 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white/95 dark:bg-white/95 border-b border-gray-200 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm">
+<nav x-data="{ open: false }" class="bg-white/95 dark:bg-white/95 border-b border-gray-200 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm z-40">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -36,10 +36,8 @@ new class extends Component
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                <div class="hidden sm:-my-px sm:ms-10 sm:flex items-center">
+                    <span class="text-lg font-semibold text-gray-900">آزمون کده</span>
                 </div>
             </div>
 
@@ -94,47 +92,41 @@ new class extends Component
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden fixed inset-x-0 top-16 z-50 bg-white text-gray-800 dark:bg-white dark:text-gray-900 border-t border-gray-200 shadow-md">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
+            <a href="{{ route('home') }}" wire:navigate class="block px-4 py-2 text-base font-medium text-gray-800 hover:bg-gray-50 rounded">
+                خانه
+            </a>
         </div>
 
         <!-- Responsive Settings Options -->
         @auth
-            <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+            <div class="pt-4 pb-1 border-t border-gray-200">
                 <div class="px-4">
-                    <div class="font-medium text-base text-gray-800 dark:text-gray-200" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
-                    <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
+                    <div class="font-medium text-base text-gray-900" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+                    <div class="font-medium text-sm text-gray-600">{{ auth()->user()->email }}</div>
                 </div>
 
                 <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('profile')" wire:navigate>
-                        {{ __('Profile') }}
-                    </x-responsive-nav-link>
+                    <a href="{{ route('profile') }}" wire:navigate class="block px-4 py-2 text-base font-medium text-gray-800 hover:bg-gray-50 rounded">
+                        پروفایل
+                    </a>
 
                     <!-- Authentication -->
-                    <button wire:click="logout" class="w-full text-start">
-                        <x-responsive-nav-link>
-                            {{ __('Log Out') }}
-                        </x-responsive-nav-link>
+                    <button wire:click="logout" class="w-full text-start block px-4 py-2 text-base font-medium text-gray-800 hover:bg-gray-50 rounded">
+                        خروج
                     </button>
                 </div>
             </div>
         @else
             <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                 <div class="px-4">
-                    <div class="font-medium text-base text-gray-800 dark:text-gray-200">مهمان</div>
-                    <div class="font-medium text-sm text-gray-500">برای دسترسی بیشتر وارد شوید</div>
+                    <div class="font-medium text-base text-gray-900">مهمان</div>
+                    <div class="font-medium text-sm text-gray-600">برای دسترسی بیشتر وارد شوید</div>
                 </div>
                 <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('login')" wire:navigate>
-                        ورود
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('register')" wire:navigate>
-                        ثبت‌نام
-                    </x-responsive-nav-link>
+                    <a href="{{ route('login') }}" wire:navigate class="block px-4 py-2 text-base font-medium text-gray-800 hover:bg-gray-50 rounded">ورود</a>
+                    <a href="{{ route('register') }}" wire:navigate class="block px-4 py-2 text-base font-medium text-gray-800 hover:bg-gray-50 rounded">ثبت‌نام</a>
                 </div>
             </div>
         @endauth
