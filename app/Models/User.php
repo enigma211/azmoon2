@@ -100,17 +100,11 @@ class User extends Authenticatable implements FilamentUser
 
     /**
      * Check if user can access a specific question number in an exam
-     * Free users: limited to first 4 questions
-     * Paid subscribers: unlimited access
+     * All users now have unlimited access to all questions
      */
     public function canAccessQuestion(int $questionNumber): bool
     {
-        // Paid subscribers have unlimited access
-        if ($this->hasPaidSubscription()) {
-            return true;
-        }
-
-        // Free users can only access first 4 questions (index 0-3)
-        return $questionNumber < 4;
+        // All users (free, guest, paid) can access all questions
+        return true;
     }
 }

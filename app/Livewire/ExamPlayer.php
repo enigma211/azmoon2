@@ -73,13 +73,6 @@ class ExamPlayer extends Component
     public function next(): void
     {
         $newIndex = $this->index + 1;
-        
-        // Check subscription access before allowing navigation
-        if (Auth::check() && !Auth::user()->canAccessQuestion($newIndex)) {
-            $this->dispatch('show-upgrade-modal');
-            return;
-        }
-        
         $this->index = min($newIndex, $this->questionsCount() - 1);
     }
 
@@ -117,12 +110,6 @@ class ExamPlayer extends Component
 
     public function goTo(int $to): void
     {
-        // Check subscription access before allowing navigation
-        if (Auth::check() && !Auth::user()->canAccessQuestion($to)) {
-            $this->dispatch('show-upgrade-modal');
-            return;
-        }
-        
         $total = $this->questionsCount();
         if ($to >= 0 && $to < $total) {
             $this->index = $to;
