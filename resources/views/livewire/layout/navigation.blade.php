@@ -16,10 +16,10 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white/95 dark:bg-white/95 border-b border-gray-200 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm z-40">
+<nav x-data="{ open: false }" class="bg-gray-50/95 dark:bg-gray-100/95 border-b border-gray-200 backdrop-blur supports-[backdrop-filter]:bg-gray-50/60 shadow-sm z-40">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="flex justify-between h-12">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
@@ -28,9 +28,9 @@ new class extends Component
                             $logo = \App\Helpers\BrandingHelper::getLogo();
                         @endphp
                         @if($logo)
-                            <img src="{{ $logo }}" alt="{{ config('app.name') }}" class="h-10 w-auto">
+                            <img src="{{ $logo }}" alt="{{ config('app.name') }}" class="h-8 w-auto">
                         @else
-                            <span class="text-xl font-bold text-indigo-600 dark:text-indigo-400">{{ config('app.name', 'آزمون کده') }}</span>
+                            <span class="text-lg font-bold text-indigo-600 dark:text-indigo-400">{{ config('app.name', 'آزمون کده') }}</span>
                         @endif
                     </a>
                 </div>
