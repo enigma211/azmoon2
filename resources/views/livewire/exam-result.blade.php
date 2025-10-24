@@ -51,7 +51,7 @@
             <h2 class="text-lg font-medium text-gray-900">بررسی سوالات (فقط سوالات پاسخ‌داده‌شده)</h2>
             @php($userAnswers = $userAnswers ?? [])
             
-            @foreach($exam->questions as $index => $question)
+            @foreach($exam->questions as $question)
                 @php
                     // Initialize flags defensively to avoid undefined variable in Blade conditions
                     $isCorrect = false;
@@ -65,14 +65,13 @@
                                  $userSelectedChoices->diff($correctChoiceIds)->isEmpty() &&
                                  $correctChoiceIds->diff($userSelectedChoices)->isEmpty();
                     $isAnswered = $userSelectedChoices->count() > 0;
-                    // فقط سوالات پاسخ‌داده‌شده نمایش داده شود
-                    if (!$isAnswered) { continue; }
                 @endphp
+                @continue(!$isAnswered)
 
                 <div class="rounded-xl shadow p-6 bg-gradient-to-r from-white to-slate-50 {{ ($isCorrect ?? false) ? 'border-2 border-green-200' : 'border-2 border-rose-200' }}">
                     <!-- Question Number and Status -->
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-gray-900">سوال {{ $index + 1 }}</h3>
+                        <h3 class="text-lg font-bold text-gray-900">سوال {{ $loop->iteration }}</h3>
                         @if($question->is_deleted)
                             <span class="inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-sm font-semibold px-3 py-1">
                                 @svg('heroicon-o-exclamation-triangle', 'w-4 h-4')
@@ -105,7 +104,7 @@
                     @endif
 
                     <!-- Show user's choice first (with option number), then the correct choice (with number) -->
-                    <?php 
+                    @php 
                         $correctChoice = $correctChoices->first();
                         $userPickedId = $userSelectedChoices->first();
                         // Map choice id -> index (0-based) to derive human-friendly option numbers
@@ -113,7 +112,7 @@
                         $userNo = $orderMap->has($userPickedId) ? ($orderMap->get($userPickedId) + 1) : null;
                         $correctNo = ($correctChoice && $orderMap->has($correctChoice->id)) ? ($orderMap->get($correctChoice->id) + 1) : null;
                         $userChoiceModel = $userPickedId ? $question->choices->firstWhere('id', $userPickedId) : null;
-                    ?>
+                    @endphp
 
                     @if($userChoiceModel)
                         <div class="rounded-lg border p-4 bg-gradient-to-r from-sky-50 to-blue-50 border-sky-200 mb-2">
