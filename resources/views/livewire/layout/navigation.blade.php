@@ -16,7 +16,7 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white/95 dark:bg-white/90 md:bg-white md:dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 backdrop-blur supports-[backdrop-filter]:bg-white/60 md:backdrop-blur-none shadow-sm">
+<nav x-data="{ open: false }" class="bg-white/95 dark:bg-white/95 border-b border-gray-200 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
