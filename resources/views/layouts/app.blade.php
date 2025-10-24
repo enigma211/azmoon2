@@ -31,6 +31,12 @@
         @livewireStyles
         <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="theme-color" content="#4f46e5" />
+        @php
+            $favicon = \App\Helpers\BrandingHelper::getFavicon();
+        @endphp
+        @if($favicon)
+            <link rel="icon" type="image/png" href="{{ $favicon }}">
+        @endif
     </head>
     <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased selection:bg-indigo-200 selection:text-indigo-900" style="font-family: Vazirmatn, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
         <div id="app" class="min-h-dvh flex flex-col">

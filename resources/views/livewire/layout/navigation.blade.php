@@ -23,8 +23,15 @@ new class extends Component
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('home') }}" wire:navigate>
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                    <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2">
+                        @php
+                            $logo = \App\Helpers\BrandingHelper::getLogo();
+                        @endphp
+                        @if($logo)
+                            <img src="{{ $logo }}" alt="{{ config('app.name') }}" class="h-10 w-auto">
+                        @else
+                            <span class="text-xl font-bold text-indigo-600 dark:text-indigo-400">{{ config('app.name', 'آزمون کده') }}</span>
+                        @endif
                     </a>
                 </div>
 

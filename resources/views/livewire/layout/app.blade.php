@@ -16,6 +16,12 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $title ?? config('app.name', 'آزمون کده') }}">
     <meta name="twitter:description" content="آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.">
+    @php
+        $favicon = \App\Helpers\BrandingHelper::getFavicon();
+    @endphp
+    @if($favicon)
+        <link rel="icon" type="image/png" href="{{ $favicon }}">
+    @endif
     @vite(['resources/css/app.css','resources/js/app.js'])
     @livewireStyles
     <style>
