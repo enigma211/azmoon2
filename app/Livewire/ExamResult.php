@@ -21,6 +21,7 @@ class ExamResult extends Component
 
     public array $stats = [];
     public array $userAnswers = [];
+    public array $review = [];
 
     protected ?ExamAttempt $attemptModel = null;
 
@@ -95,6 +96,50 @@ class ExamResult extends Component
         // Final coercion to ensure view never gets non-arrays
         $this->stats = is_array($this->stats) ? $this->stats : [];
         $this->userAnswers = is_array($this->userAnswers) ? $this->userAnswers : [];
+
+        // Build lightweight review for Blade to avoid inline PHP parsing issues
+        $this->buildReview();
+    }
+
+    protected function buildReview(): void
+    {
+        $this->review = [];
+        if (!$this->exam || !$this->exam->questions) {
+            return;
+        }
+
+        foreach ($this->exam->questions as $q) {
+            $ans = $this->userAnswers[$q->id] ?? [];
+            $userSelected = collect($ans)->filter()->keys()->map(fn($v) => (int)$v);
+            $isAnswered = $userSelected->count() > 0;
+            if (!$isAnswered) {
+                continue; // show only answered ones
+            }
+
+            $correctChoices = $q->choices->where('is_correct', true);
+            $correctIds = $correctChoices->pluck('id')->map(fn($v) => (int)$v);
+
+            $isCorrect = $userSelected->count() > 0
+                && $userSelected->diff($correctIds)->isEmpty()
+                && $correctIds->diff($userSelected)->isEmpty();
+
+            $userPickedId = $userSelected->first();
+            $orderMap = $q->choices->values()->pluck('id')->flip();
+            $userNo = $orderMap->has($userPickedId) ? ((int)$orderMap->get($userPickedId) + 1) : null;
+            $correctChoice = $correctChoices->first();
+            $correctNo = ($correctChoice && $orderMap->has($correctChoice->id)) ? ((int)$orderMap->get($correctChoice->id) + 1) : null;
+            $userChoiceModel = $userPickedId ? $q->choices->firstWhere('id', $userPickedId) : null;
+
+            $this->review[] = [
+                'is_deleted' => (bool)$q->is_deleted,
+                'text_html' => (string)$q->text,
+                'is_correct' => (bool)$isCorrect,
+                'user_no' => $userNo,
+                'user_choice_text' => $userChoiceModel?->text,
+                'correct_no' => $correctNo,
+                'correct_choice_text' => $correctChoice?->text,
+            ];
+        }
     }
 
     public function render()
@@ -102,6 +147,7 @@ class ExamResult extends Component
         return view('livewire.exam-result', [
             'stats' => $this->stats,
             'userAnswers' => $this->userAnswers,
+            'review' => $this->review,
         ])->layout('layouts.app');
     }
 }

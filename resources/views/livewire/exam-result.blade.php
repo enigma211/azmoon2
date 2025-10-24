@@ -1,7 +1,9 @@
 <div class="mx-auto max-w-4xl p-6 space-y-6">
     <h1 class="text-xl font-medium text-gray-900">نتیجه آزمون: {{ $exam->title }}</h1>
 
-    @php($ok = $stats && is_array($stats))
+    @php
+        $ok = $stats && is_array($stats);
+    @endphp
     
     {{-- Debug: Show if stats exist --}}
     @if(config('app.debug') && !$ok)
@@ -12,7 +14,9 @@
     @endif
 
     @if($ok)
-        @php($passed = (bool)($stats['passed'] ?? false))
+        @php
+            $passed = (bool)($stats['passed'] ?? false);
+        @endphp
         <div class="rounded-xl shadow-lg p-6 bg-gradient-to-r from-indigo-50 via-sky-50 to-purple-50 border border-indigo-100">
             <div class="flex items-center gap-3">
                 @if($passed)
@@ -49,40 +53,22 @@
         <!-- Questions Review -->
         <div class="space-y-4">
             <h2 class="text-lg font-medium text-gray-900">بررسی سوالات (فقط سوالات پاسخ‌داده‌شده)</h2>
-            @php($userAnswers = $userAnswers ?? [])
-            
-            @foreach($exam->questions as $question)
-                @php
-                    // Initialize flags defensively to avoid undefined variable in Blade conditions
-                    $isCorrect = false;
-                    $isAnswered = false;
-                    $userAnswer = $userAnswers[$question->id] ?? [];
-                    $correctChoices = $question->choices->where('is_correct', true);
-                    $userSelectedChoices = collect($userAnswer)->filter()->keys();
-                    $correctChoiceIds = $correctChoices->pluck('id');
-                    // Check if answer is correct
-                    $isCorrect = $userSelectedChoices->count() > 0 &&
-                                 $userSelectedChoices->diff($correctChoiceIds)->isEmpty() &&
-                                 $correctChoiceIds->diff($userSelectedChoices)->isEmpty();
-                    $isAnswered = $userSelectedChoices->count() > 0;
-                @endphp
-                @continue(!$isAnswered)
-
-                <div class="rounded-xl shadow p-6 bg-gradient-to-r from-white to-slate-50 {{ ($isCorrect ?? false) ? 'border-2 border-green-200' : 'border-2 border-rose-200' }}">
+            @foreach($review as $item)
+                <div class="rounded-xl shadow p-6 bg-gradient-to-r from-white to-slate-50 {{ !empty($item['is_correct']) ? 'border-2 border-green-200' : 'border-2 border-rose-200' }}">
                     <!-- Question Number and Status -->
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-900">سوال {{ $loop->iteration }}</h3>
-                        @if($question->is_deleted)
+                        @if(!empty($item['is_deleted']))
                             <span class="inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-sm font-semibold px-3 py-1">
                                 @svg('heroicon-o-exclamation-triangle', 'w-4 h-4')
                                 حذف شده
                             </span>
-                        @elseif(isset($isCorrect) && $isCorrect)
+                        @elseif(!empty($item['is_correct']))
                             <span class="inline-flex items-center gap-1 rounded-full bg-green-100 text-green-800 text-sm font-semibold px-3 py-1">
                                 @svg('heroicon-o-check', 'w-4 h-4')
                                 صحیح
                             </span>
-                        @elseif(isset($isAnswered) && $isAnswered)
+                        @else
                             <span class="inline-flex items-center gap-1 rounded-full bg-red-100 text-red-800 text-sm font-semibold px-3 py-1">
                                 @svg('heroicon-o-x-mark', 'w-4 h-4')
                                 غلط
@@ -92,10 +78,10 @@
 
                     <!-- Question Text -->
                     <div class="prose prose-sm max-w-none mb-4">
-                        {!! $question->text !!}
+                        {!! $item['text_html'] ?? '' !!}
                     </div>
 
-                    @if($question->is_deleted)
+                    @if(!empty($item['is_deleted']))
                         <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 mb-4">
                             <p class="text-sm text-amber-700">
                                 <strong>توجه:</strong> این سوال بطور رسمی حذف شده و در محاسبه نمره نهایی شما لحاظ نشده است.
@@ -104,37 +90,27 @@
                     @endif
 
                     <!-- Show user's choice first (with option number), then the correct choice (with number) -->
-                    @php 
-                        $correctChoice = $correctChoices->first();
-                        $userPickedId = $userSelectedChoices->first();
-                        // Map choice id -> index (0-based) to derive human-friendly option numbers
-                        $orderMap = $question->choices->values()->pluck('id')->flip();
-                        $userNo = $orderMap->has($userPickedId) ? ($orderMap->get($userPickedId) + 1) : null;
-                        $correctNo = ($correctChoice && $orderMap->has($correctChoice->id)) ? ($orderMap->get($correctChoice->id) + 1) : null;
-                        $userChoiceModel = $userPickedId ? $question->choices->firstWhere('id', $userPickedId) : null;
-                    @endphp
-
-                    @if($userChoiceModel)
+                    @if(!empty($item['user_choice_text']))
                         <div class="rounded-lg border p-4 bg-gradient-to-r from-sky-50 to-blue-50 border-sky-200 mb-2">
                             <div class="flex items-start gap-3">
-                                @if($correctChoice && $userPickedId == $correctChoice->id)
+                                @if(!empty($item['is_correct']))
                                     @svg('heroicon-o-check-circle', 'w-6 h-6 text-green-600 flex-shrink-0')
                                 @else
                                     @svg('heroicon-o-x-circle', 'w-6 h-6 text-rose-600 flex-shrink-0')
                                 @endif
                                 <div class="flex-1">
-                                    <p class="text-gray-900">انتخاب شما: گزینه {{ $userNo }} — {{ $userChoiceModel->text }}</p>
+                                    <p class="text-gray-900">انتخاب شما: گزینه {{ $item['user_no'] }} — {{ $item['user_choice_text'] }}</p>
                                 </div>
                             </div>
                         </div>
                     @endif
 
-                    @if($correctChoice)
+                    @if(!empty($item['correct_choice_text']))
                         <div class="rounded-lg border-2 p-4 bg-green-50 border-green-200">
                             <div class="flex items-start gap-3">
                                 @svg('heroicon-o-check-circle', 'w-6 h-6 text-green-600 flex-shrink-0')
                                 <div class="flex-1">
-                                    <p class="text-gray-900">گزینه صحیح: گزینه {{ $correctNo }} — {{ $correctChoice->text }}</p>
+                                    <p class="text-gray-900">گزینه صحیح: گزینه {{ $item['correct_no'] }} — {{ $item['correct_choice_text'] }}</p>
                                 </div>
                             </div>
                         </div>
