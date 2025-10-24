@@ -51,8 +51,8 @@
             <h2 class="text-lg font-medium text-gray-900">بررسی سوالات (فقط سوالات پاسخ‌داده‌شده)</h2>
             @php($userAnswers = $userAnswers ?? [])
             
-            <?php foreach($exam->questions as $index => $question): ?>
-                <?php
+            @foreach($exam->questions as $index => $question)
+                @php
                     // Initialize flags defensively to avoid undefined variable in Blade conditions
                     $isCorrect = false;
                     $isAnswered = false;
@@ -67,7 +67,7 @@
                     $isAnswered = $userSelectedChoices->count() > 0;
                     // فقط سوالات پاسخ‌داده‌شده نمایش داده شود
                     if (!$isAnswered) { continue; }
-                ?>
+                @endphp
 
                 <div class="rounded-xl shadow p-6 bg-gradient-to-r from-white to-slate-50 {{ ($isCorrect ?? false) ? 'border-2 border-green-200' : 'border-2 border-rose-200' }}">
                     <!-- Question Number and Status -->
@@ -141,7 +141,7 @@
                         </div>
                     @endif
                 </div>
-            <?php endforeach; ?>
+            @endforeach
         </div>
     @else
         <div class="rounded border p-4 text-sm text-gray-600">نتیجه‌ای برای نمایش یافت نشد.</div>
