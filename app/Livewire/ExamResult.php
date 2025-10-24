@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use App\Support\ActivityLogger;
+use Illuminate\Support\Facades\Session as SessionFacade;
 
 class ExamResult extends Component
 {
@@ -35,6 +36,14 @@ class ExamResult extends Component
                 $query->where('user_id', Auth::id());
             }
             $attempt = $query->first();
+            // If attempt id is provided but not found or not owned, show friendly message
+            if (!$attempt) {
+                SessionFacade::flash('error', 'نتیجه‌ای برای این شناسه تلاش یافت نشد یا به شما تعلق ندارد.');
+                $this->stats = [];
+                $this->userAnswers = [];
+                $this->attemptModel = null;
+                return;
+            }
         } elseif (Auth::check()) {
             $attempt = ExamAttempt::where('exam_id', $this->exam->id)
                 ->where('user_id', Auth::id())
@@ -52,10 +61,10 @@ class ExamResult extends Component
             foreach ($rows as $row) {
                 $answers[$row->question_id][$row->choice_id] = (bool) $row->selected;
             }
-            $this->userAnswers = $answers;
+            $this->userAnswers = is_array($answers) ? $answers : [];
 
             // Compute stats using ScoringService
-            $scores = app(ScoringService::class)->compute($this->exam, $answers);
+            $scores = app(ScoringService::class)->compute($this->exam, $this->userAnswers);
             $percentage = (float)($scores['percentage'] ?? 0.0);
             $this->stats = [
                 'percentage' => $percentage,
@@ -73,8 +82,8 @@ class ExamResult extends Component
             ], $this->exam->id, $attempt->id);
         } else {
             // Fallback to session when no attempt is available (e.g., guest)
-            $this->stats = session('exam_result_stats', []);
-            $this->userAnswers = session('exam_user_answers', []);
+            $this->stats = (array) (session('exam_result_stats', []) ?? []);
+            $this->userAnswers = (array) (session('exam_user_answers', []) ?? []);
 
             if (!empty($this->stats)) {
                 ActivityLogger::log('result_viewed_session', [
@@ -82,6 +91,10 @@ class ExamResult extends Component
                 ], $this->exam->id, null);
             }
         }
+
+        // Final coercion to ensure view never gets non-arrays
+        $this->stats = is_array($this->stats) ? $this->stats : [];
+        $this->userAnswers = is_array($this->userAnswers) ? $this->userAnswers : [];
     }
 
     public function render()
