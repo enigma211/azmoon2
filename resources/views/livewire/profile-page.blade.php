@@ -1,8 +1,8 @@
 <div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <header class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">پروفایل کاربری</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">مدیریت حساب و اشتراک</p>
+            <h1 class="text-3xl font-bold text-gray-900">پروفایل کاربری</h1>
+            <p class="text-sm text-gray-600 mt-2">مدیریت حساب و اشتراک</p>
             <div class="mt-4">
                 <a href="{{ route('attempts') }}" wire:navigate class="inline-flex items-center rounded-lg bg-indigo-600 px-5 py-2.5 text-white text-sm font-medium hover:bg-indigo-700 transition shadow-md hover:shadow-lg">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,37 +84,6 @@
             @endif
         </div>
 
-        <!-- Upgrade Suggestion for Free Users -->
-        @if($subscription && $subscription->subscriptionPlan->price_toman == 0 && $availablePlans->count() > 0)
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg shadow-lg p-6">
-                <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
-                    🎯 ارتقا به اشتراک ویژه
-                </h2>
-                <p class="text-gray-700 dark:text-gray-300 mb-6">
-                    با خرید اشتراک ویژه، از تمام امکانات سیستم به صورت نامحدود استفاده کنید!
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    @foreach($availablePlans as $plan)
-                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border-2 border-indigo-200 dark:border-indigo-700 hover:border-indigo-400 transition">
-                            <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">{{ $plan->title }}</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">{{ $plan->description }}</p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-2xl font-bold text-indigo-600">
-                                    {{ number_format($plan->price_toman) }} تومان
-                                </span>
-                                <span class="text-sm text-gray-500">
-                                    {{ $plan->duration_days }} روز
-                                </span>
-                            </div>
-                            <a href="{{ route('checkout.show', $plan->id) }}" 
-                               class="mt-4 block w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition">
-                                خرید اشتراک
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        @endif
+        
     </div>
 </div>

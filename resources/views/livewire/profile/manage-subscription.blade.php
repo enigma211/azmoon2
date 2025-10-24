@@ -1,9 +1,9 @@
 <section>
     <header>
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+        <h2 class="text-2xl font-bold text-gray-900">
             مدیریت اشتراک
         </h2>
-        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p class="mt-2 text-sm text-gray-600">
             وضعیت اشتراک فعلی خود را مشاهده کنید
         </p>
     </header>
@@ -115,14 +115,6 @@
         <!-- Available Plans for Free Users Only -->
         @if($availablePlans->count() > 0)
             <div class="mt-10">
-                <div class="text-center mb-8">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">
-                        ارتقا به اشتراک ویژه
-                    </h3>
-                    <p class="text-gray-600">
-                        با خرید اشتراک، به تمام سوالات و امکانات دسترسی کامل داشته باشید
-                    </p>
-                </div>
                 
                 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     @foreach($availablePlans as $plan)
