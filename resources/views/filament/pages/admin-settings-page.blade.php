@@ -55,6 +55,23 @@
                             <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">نام کاربری ملی‌پیامک (Username)</label>
+                        <input type="text" name="sms_username" class="fi-input w-full" value="{{ old('sms_username', $this->settings->sms_username ?? '') }}" placeholder="نام کاربری پنل ملی‌پیامک">
+                        <p class="text-xs text-gray-500 mt-1">برای Melipayamak از Username/Password استفاده کنید.</p>
+                        @error('sms_username')
+                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">رمز عبور ملی‌پیامک (Password)</label>
+                        <input type="password" name="sms_password" class="fi-input w-full" value="{{ old('sms_password', $this->settings->sms_password ?? '') }}" placeholder="رمز عبور پنل ملی‌پیامک">
+                        @error('sms_password')
+                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
                 <div class="px-6 py-4 border-t flex justify-end">
                     <button type="submit" class="fi-btn fi-color-primary">ذخیره تنظیمات</button>

@@ -20,6 +20,8 @@ class AdminSettingsController extends Controller
             'sms_provider' => 'required|in:dummy,kavenegar,ghasedak,melipayamak',
             'sms_api_key' => 'nullable|string',
             'sms_from' => 'nullable|string',
+            'sms_username' => 'nullable|string',
+            'sms_password' => 'nullable|string',
         ]);
 
         $settings = SystemSetting::first();
@@ -34,6 +36,8 @@ class AdminSettingsController extends Controller
         $settings->sms_provider = $validated['sms_provider'];
         $settings->sms_api_key = $validated['sms_api_key'] ?? null;
         $settings->sms_from = $validated['sms_from'] ?? null;
+        $settings->sms_username = $validated['sms_username'] ?? null;
+        $settings->sms_password = $validated['sms_password'] ?? null;
         $settings->save();
 
         return back()->with('success', 'Settings updated successfully.');
