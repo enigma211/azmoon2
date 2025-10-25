@@ -33,8 +33,6 @@ class SmsService
         $provider = strtolower($this->getSetting('sms_provider', 'dummy'));
         $apiKey = $this->getSetting('sms_api_key');
         $from = $this->getSetting('sms_from');
-        $username = $this->getSetting('sms_username');
-        $password = $this->getSetting('sms_password');
 
         switch ($provider) {
             case 'kavenegar':
@@ -43,12 +41,7 @@ class SmsService
             case 'ghasedak':
             case 'melipayamak':
                 // TODO: Implement real providers; for now behave like Kavenegar stub
-                // Use real Melipayamak provider if credentials provided, fallback to dummy-like log otherwise
-                if ($username && $password) {
-                    $smsProvider = new \App\Services\Providers\MelipayamakSmsProvider($username, $password, $from);
-                } else {
-                    $smsProvider = new KavenegarSmsProvider($apiKey, $from);
-                }
+                $smsProvider = new KavenegarSmsProvider($apiKey, $from);
                 break;
             case 'dummy':
             default:

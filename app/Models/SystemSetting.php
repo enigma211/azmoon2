@@ -13,8 +13,6 @@ class SystemSetting extends Model
         'sms_provider',
         'sms_api_key',
         'sms_from',
-        'sms_username',
-        'sms_password',
     ];
 
     protected $casts = [
@@ -23,7 +21,5 @@ class SystemSetting extends Model
         'sms_provider' => 'string',
         'sms_api_key' => 'string',
         'sms_from' => 'string',
-        'sms_username' => 'string',
-        'sms_password' => 'string',
     ];
 }
