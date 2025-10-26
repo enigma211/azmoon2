@@ -2,52 +2,44 @@
 
 namespace App\Services;
 
-use App\Models\SystemSetting;
-use App\Services\Providers\DummySmsProvider;
-use App\Services\Providers\KavenegarSmsProvider;
+use Melipayamak\Laravel\Facade as Melipayamak;
 
 class SmsService
 {
-    protected function getSetting(string $key, ?string $default = null): ?string
-    {
-        $row = SystemSetting::where('key', $key)->first();
-        if ($row && $row->value !== null) {
-            return (string) $row->value;
-        }
-        // Fallback to column-style storage if present
-        $first = SystemSetting::first();
-        if ($first && isset($first->{$key}) && $first->{$key} !== null) {
-            return (string) $first->{$key};
-        }
-        return $default;
-    }
-
     public function isOtpEnabled(): bool
     {
-        $val = $this->getSetting('otp_enabled', 'false');
+        $val = config('melipayamak.otp_enabled', env('OTP_ENABLED', true));
+        if (is_bool($val)) return $val;
         return in_array(strtolower((string) $val), ['1', 'true', 'yes'], true);
     }
 
     public function sendOtp(string $mobile, string $otp): bool
     {
-        $provider = strtolower($this->getSetting('sms_provider', 'dummy'));
-        $apiKey = $this->getSetting('sms_api_key');
-        $from = $this->getSetting('sms_from');
+        $from = config('melipayamak.from', env('MELIPAYAMAK_FROM'));
+        $template = config('melipayamak.otp_template', 'کد ورود شما: {code}');
+        $text = str_replace('{code}', $otp, $template);
 
-        switch ($provider) {
-            case 'kavenegar':
-                $smsProvider = new KavenegarSmsProvider($apiKey, $from);
-                break;
-            case 'ghasedak':
-            case 'melipayamak':
-                // TODO: Implement real providers; for now behave like Kavenegar stub
-                $smsProvider = new KavenegarSmsProvider($apiKey, $from);
-                break;
-            case 'dummy':
-            default:
-                $smsProvider = new DummySmsProvider();
+        try {
+            $sms = Melipayamak::sms();
+            $response = $sms->send($mobile, (string) $from, (string) $text);
+            // Optionally, parse and check Value or Status from response if needed.
+            return true;
+        } catch (\Throwable $e) {
+            report($e);
+            return false;
         }
+    }
 
-        return $smsProvider->sendOtp($mobile, $otp);
+    public function sendText(string $mobile, string $text): bool
+    {
+        $from = config('melipayamak.from', env('MELIPAYAMAK_FROM'));
+        try {
+            $sms = Melipayamak::sms();
+            $sms->send($mobile, (string) $from, (string) $text);
+            return true;
+        } catch (\Throwable $e) {
+            report($e);
+            return false;
+        }
     }
 }

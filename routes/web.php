@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Livewire\HomePage;
 use App\Livewire\DomainsPage;
 use App\Livewire\ResourcesPage;
@@ -13,7 +14,6 @@ use App\Livewire\ExamResult;
 use App\Livewire\ResourceDetail;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AdminSettingsController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PaymentController;
 use App\Livewire\AttemptsPage;
@@ -52,11 +52,17 @@ Route::post('/login-otp', [AuthController::class, 'login'])->name('loginOtp.post
 Route::get('/verify-otp', [AuthController::class, 'verifyOtpForm'])->name('verifyOtp');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verifyOtp.post');
 
-// Admin Settings (OTP & SMS) - protect with auth
+// Admin Logs and SMS test
 Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/settings', [AdminSettingsController::class, 'index'])->name('admin.settings');
-    Route::post('/admin/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
     Route::get('/admin/logs', AdminLogsPage::class)->name('admin.logs');
+    Route::post('/admin/sms-test', function (Request $request, \App\Services\SmsService $sms) {
+        $data = $request->validate([
+            'mobile' => ['required','regex:/^09\\d{9}$/'],
+            'text'   => ['required','string','max:500'],
+        ]);
+        $ok = $sms->sendText($data['mobile'], $data['text']);
+        return back()->with($ok ? 'success' : 'error', $ok ? 'پیامک با موفقیت ارسال شد.' : 'ارسال پیامک ناموفق بود.');
+    })->name('admin.sms.test');
 });
 
 // Pricing (public) and Checkout (requires auth)
