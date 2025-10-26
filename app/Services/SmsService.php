@@ -33,11 +33,27 @@ class SmsService
     public function sendText(string $mobile, string $text): bool
     {
         $from = config('melipayamak.from', env('MELIPAYAMAK_FROM'));
+        
+        \Log::info('SMS Test: Attempting to send', [
+            'mobile' => $mobile,
+            'from' => $from,
+            'text_length' => strlen($text),
+        ]);
+        
         try {
             $sms = Melipayamak::sms();
-            $sms->send($mobile, (string) $from, (string) $text);
+            $response = $sms->send($mobile, (string) $from, (string) $text);
+            
+            \Log::info('SMS Test: Response received', [
+                'response' => $response,
+            ]);
+            
             return true;
         } catch (\Throwable $e) {
+            \Log::error('SMS Test: Failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             report($e);
             return false;
         }

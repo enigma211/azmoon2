@@ -13,7 +13,8 @@ class AdminSettingsPage extends Page
     protected static ?string $title = 'تنظیمات پیامک';
     protected static ?string $navigationGroup = 'سیستم';
     protected static ?int $navigationSort = 99;
-    protected static bool $shouldRegisterNavigation = false;
+    // Re-enable navigation
+    // protected static bool $shouldRegisterNavigation = false;
 
     public static function getSlug(): string
     {

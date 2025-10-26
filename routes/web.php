@@ -63,6 +63,11 @@ Route::middleware(['auth'])->group(function () {
         $ok = $sms->sendText($data['mobile'], $data['text']);
         return back()->with($ok ? 'success' : 'error', $ok ? 'پیامک با موفقیت ارسال شد.' : 'ارسال پیامک ناموفق بود.');
     })->name('admin.sms.test');
+    
+    // SMS Debug page
+    Route::get('/admin/sms-debug', function () {
+        return view('admin-sms-debug');
+    })->name('admin.sms.debug');
 });
 
 // Pricing (public) and Checkout (requires auth)
