@@ -136,20 +136,19 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('شناسه')
+                    ->sortable(),
+                    
                 Tables\Columns\TextColumn::make('username')
                     ->label('نام کاربری')
                     ->searchable()
                     ->sortable(),
+                    
                 Tables\Columns\TextColumn::make('name')
                     ->label('نام')
                     ->searchable()
                     ->sortable(),
-
-                Tables\Columns\TextColumn::make('email')
-                    ->label('ایمیل')
-                    ->searchable()
-                    ->copyable()
-                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('mobile')
                     ->label('موبایل')
@@ -166,107 +165,10 @@ class UserResource extends Resource
                     ->badge()
                     ->color(fn ($state) => $state === 'admin' ? 'danger' : 'success'),
 
-                Tables\Columns\TextColumn::make('subscription_plan')
-                    ->label('نوع اشتراک')
-                    ->getStateUsing(function ($record) {
-                        try {
-                            $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
-                                ->where('status', 'active')
-                                ->latest('starts_at')
-                                ->first();
-                            
-                            if (!$subscription) return 'بدون اشتراک';
-                            
-                            $plan = \App\Models\SubscriptionPlan::find($subscription->subscription_plan_id);
-                            return $plan?->title ?? 'بدون اشتراک';
-                        } catch (\Throwable $e) {
-                            return 'بدون اشتراک';
-                        }
-                    })
-                    ->badge()
-                    ->color(fn ($state) => $state === 'بدون اشتراک' ? 'gray' : 'success'),
-
-                Tables\Columns\TextColumn::make('subscription_start')
-                    ->label('تاریخ خرید')
-                    ->getStateUsing(function ($record) {
-                        try {
-                            $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
-                                ->where('status', 'active')
-                                ->latest('starts_at')
-                                ->first();
-                            
-                            return $subscription?->starts_at;
-                        } catch (\Throwable $e) {
-                            return null;
-                        }
-                    })
-                    ->jalaliDate()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('subscription_end')
-                    ->label('تاریخ پایان')
-                    ->getStateUsing(function ($record) {
-                        try {
-                            $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
-                                ->where('status', 'active')
-                                ->latest('starts_at')
-                                ->first();
-                            
-                            return $subscription?->ends_at;
-                        } catch (\Throwable $e) {
-                            return null;
-                        }
-                    })
-                    ->jalaliDate()
-                    ->default('نامحدود')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('subscription_days_remaining')
-                    ->label('روزهای باقیمانده')
-                    ->getStateUsing(function ($record) {
-                        try {
-                            $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
-                                ->where('status', 'active')
-                                ->latest('starts_at')
-                                ->first();
-                            
-                            if (!$subscription) return '-';
-                            if (!$subscription->ends_at) return 'نامحدود';
-                            
-                            $endDate = \Carbon\Carbon::parse($subscription->ends_at)->startOfDay();
-                            $today = \Carbon\Carbon::now()->startOfDay();
-                            $remaining = (int) $today->diffInDays($endDate, false);
-                            return $remaining > 0 ? $remaining . ' روز' : 'منقضی شده';
-                        } catch (\Throwable $e) {
-                            return '-';
-                        }
-                    })
-                    ->badge()
-                    ->color(function ($record) {
-                        try {
-                            $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
-                                ->where('status', 'active')
-                                ->latest('starts_at')
-                                ->first();
-                            
-                            if (!$subscription || !$subscription->ends_at) return 'success';
-                            
-                            $endDate = \Carbon\Carbon::parse($subscription->ends_at)->startOfDay();
-                            $today = \Carbon\Carbon::now()->startOfDay();
-                            $remaining = (int) $today->diffInDays($endDate, false);
-                            if ($remaining <= 0) return 'danger';
-                            if ($remaining <= 7) return 'warning';
-                            return 'success';
-                        } catch (\Throwable $e) {
-                            return 'gray';
-                        }
-                    }),
-
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('تاریخ ثبت‌نام')
                     ->jalaliDateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('role')
