@@ -113,36 +113,19 @@ class UserResource extends Resource
 
                 Forms\Components\Section::make('اشتراک فعال')
                     ->schema([
-                        Forms\Components\Group::make()
-                            ->relationship('activeSubscription')
-                            ->schema([
-                                Forms\Components\Select::make('subscription_plan_id')
-                                    ->label('طرح اشتراک')
-                                    ->relationship('subscriptionPlan', 'title')
-                                    ->searchable()
-                                    ->preload(),
-                                Forms\Components\DatePicker::make('starts_at')
-                                    ->label('تاریخ خرید')
-                                    ->jalali()
-                                    ->displayFormat('Y/m/d')
-                                    ->format('Y-m-d'),
-                                Forms\Components\DatePicker::make('ends_at')
-                                    ->label('تاریخ پایان')
-                                    ->jalali()
-                                    ->displayFormat('Y/m/d')
-                                    ->format('Y-m-d')
-                                    ->helperText('خالی = نامحدود')
-                                    ->nullable(),
-                                Forms\Components\Select::make('status')
-                                    ->label('وضعیت')
-                                    ->options([
-                                        'active' => 'فعال',
-                                        'expired' => 'منقضی',
-                                        'cancelled' => 'لغو شده',
-                                    ])
-                                    ->default('active'),
-                            ])
-                            ->columns(4),
+                        Forms\Components\Placeholder::make('subscription_info')
+                            ->label('')
+                            ->content(function ($record) {
+                                if (!$record || !$record->activeSubscription) {
+                                    return 'این کاربر هنوز اشتراکی ندارد. برای افزودن اشتراک، از بخش "اشتراک‌های کاربران" استفاده کنید.';
+                                }
+                                $sub = $record->activeSubscription;
+                                $plan = $sub->subscriptionPlan?->title ?? 'نامشخص';
+                                $starts = $sub->starts_at ? jdate($sub->starts_at)->format('Y/m/d') : '-';
+                                $ends = $sub->ends_at ? jdate($sub->ends_at)->format('Y/m/d') : 'نامحدود';
+                                return "طرح: {$plan} | شروع: {$starts} | پایان: {$ends} | وضعیت: {$sub->status}";
+                            })
+                            ->visible(fn ($record) => $record !== null),
                     ])
                     ->collapsed()
                     ->columns(1),
@@ -152,6 +135,7 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['activeSubscription.subscriptionPlan']))
             ->columns([
                 Tables\Columns\TextColumn::make('username')
                     ->label('نام کاربری')
@@ -187,18 +171,39 @@ class UserResource extends Resource
                     ->label('نوع اشتراک')
                     ->default('بدون اشتراک')
                     ->badge()
-                    ->color(fn ($state) => $state === 'بدون اشتراک' ? 'gray' : 'success'),
+                    ->color(fn ($state) => $state === 'بدون اشتراک' ? 'gray' : 'success')
+                    ->getStateUsing(function ($record) {
+                        try {
+                            return $record->activeSubscription?->subscriptionPlan?->title ?? 'بدون اشتراک';
+                        } catch (\Throwable $e) {
+                            return 'بدون اشتراک';
+                        }
+                    }),
 
                 Tables\Columns\TextColumn::make('activeSubscription.starts_at')
                     ->label('تاریخ خرید')
                     ->jalaliDate()
-                    ->sortable(),
+                    ->sortable()
+                    ->getStateUsing(function ($record) {
+                        try {
+                            return $record->activeSubscription?->starts_at;
+                        } catch (\Throwable $e) {
+                            return null;
+                        }
+                    }),
 
                 Tables\Columns\TextColumn::make('activeSubscription.ends_at')
                     ->label('تاریخ پایان')
                     ->jalaliDate()
                     ->default('نامحدود')
-                    ->sortable(),
+                    ->sortable()
+                    ->getStateUsing(function ($record) {
+                        try {
+                            return $record->activeSubscription?->ends_at;
+                        } catch (\Throwable $e) {
+                            return null;
+                        }
+                    }),
 
                 Tables\Columns\TextColumn::make('subscription_days_remaining')
                     ->label('روزهای باقیمانده')
