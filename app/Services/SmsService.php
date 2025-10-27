@@ -19,12 +19,9 @@ class SmsService
         $template = config('melipayamak.otp_template', 'کد ورود شما: {code}');
         $text = str_replace('{code}', $otp, $template);
 
-        // Normalize mobile: remove leading zero for Melipayamak API
-        $normalizedMobile = ltrim($mobile, '0');
-
         try {
             $sms = Melipayamak::sms();
-            $response = $sms->send($normalizedMobile, (string) $from, (string) $text);
+            $response = $sms->send($mobile, (string) $from, (string) $text);
             
             // Parse response to check if successful
             $result = json_decode($response, true);
@@ -48,20 +45,15 @@ class SmsService
     {
         $from = config('melipayamak.from', env('MELIPAYAMAK_FROM'));
         
-        // Normalize mobile: remove leading zero for Melipayamak API
-        // 09xxxxxxxxx -> 9xxxxxxxxx
-        $normalizedMobile = ltrim($mobile, '0');
-        
         \Log::info('SMS Test: Attempting to send', [
-            'mobile_original' => $mobile,
-            'mobile_normalized' => $normalizedMobile,
+            'mobile' => $mobile,
             'from' => $from,
             'text_length' => strlen($text),
         ]);
         
         try {
             $sms = Melipayamak::sms();
-            $response = $sms->send($normalizedMobile, (string) $from, (string) $text);
+            $response = $sms->send($mobile, (string) $from, (string) $text);
             
             \Log::info('SMS Test: Response received', [
                 'response' => $response,
