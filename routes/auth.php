@@ -5,11 +5,14 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 Route::middleware('guest')->group(function () {
-    Volt::route('register', 'pages.auth.register')
-        ->name('register');
+    // Redirect login and register to profile page (OTP login)
+    Route::get('register', function () {
+        return redirect()->route('profile');
+    })->name('register');
 
-    Volt::route('login', 'pages.auth.login')
-        ->name('login');
+    Route::get('login', function () {
+        return redirect()->route('profile');
+    })->name('login');
 
     Volt::route('forgot-password', 'pages.auth.forgot-password')
         ->name('password.request');

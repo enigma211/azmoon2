@@ -23,7 +23,7 @@ use App\Livewire\Admin\LogsPage as AdminLogsPage;
 Route::get('/', HomePage::class)->name('home');
 Route::get('/domains', DomainsPage::class)->name('domains');
 Route::get('/resources', ResourcesPage::class)->name('resources');
-Route::get('/profile', ProfilePage::class)->middleware(['auth'])->name('profile');
+Route::get('/profile', ProfilePage::class)->name('profile');
 Route::get('/attempts', AttemptsPage::class)->middleware(['auth'])->name('attempts');
 
 // Domain -> Batches -> Exams flow
