@@ -30,6 +30,7 @@ class AuthController extends Controller
             $user = User::create([
                 'name' => 'User '.$mobile,
                 'email' => $mobile.'@example.local',
+                'username' => $mobile, // Use mobile as username
                 'password' => bcrypt(str()->random(16)),
                 'mobile' => $mobile,
                 'role' => 'student',

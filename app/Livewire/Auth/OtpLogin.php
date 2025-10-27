@@ -126,42 +126,49 @@ class OtpLogin extends Component
             return;
         }
 
-        // Create new user
-        $user = User::create([
-            'name' => trim($this->firstName . ' ' . $this->lastName),
-            'email' => $sessionMobile . '@example.local',
-            'password' => bcrypt(str()->random(16)),
-            'mobile' => $sessionMobile,
-            'role' => 'student',
-        ]);
-
-        // Assign free plan to new user
-        $freePlan = SubscriptionPlan::where('price_toman', 0)
-            ->where('is_active', true)
-            ->first();
-
-        if ($freePlan) {
-            $endsAt = $freePlan->duration_days == 0 
-                ? null  // Unlimited
-                : now()->addDays($freePlan->duration_days);
-
-            UserSubscription::create([
-                'user_id' => $user->id,
-                'subscription_plan_id' => $freePlan->id,
-                'starts_at' => now(),
-                'ends_at' => $endsAt,
-                'status' => 'active',
+        try {
+            // Create new user
+            $user = User::create([
+                'name' => trim($this->firstName . ' ' . $this->lastName),
+                'email' => $sessionMobile . '@example.local',
+                'username' => $sessionMobile, // Use mobile as username
+                'password' => bcrypt(str()->random(16)),
+                'mobile' => $sessionMobile,
+                'role' => 'student',
             ]);
+
+            // Assign free plan to new user
+            $freePlan = SubscriptionPlan::where('price_toman', 0)
+                ->where('is_active', true)
+                ->first();
+
+            if ($freePlan) {
+                $endsAt = $freePlan->duration_days == 0 
+                    ? null  // Unlimited
+                    : now()->addDays($freePlan->duration_days);
+
+                UserSubscription::create([
+                    'user_id' => $user->id,
+                    'subscription_plan_id' => $freePlan->id,
+                    'starts_at' => now(),
+                    'ends_at' => $endsAt,
+                    'status' => 'active',
+                ]);
+            }
+
+            // Login the new user
+            Auth::login($user);
+
+            session()->forget(['otp', 'mobile', 'otp_expires_at', 'user_exists']);
+
+            session()->flash('success', 'ثبت‌نام با موفقیت انجام شد. خوش آمدید!');
+
+            return redirect()->route('profile');
+        } catch (\Exception $e) {
+            \Log::error('Registration failed: ' . $e->getMessage());
+            $this->addError('firstName', 'خطا در ثبت‌نام: ' . $e->getMessage());
+            return;
         }
-
-        // Login the new user
-        Auth::login($user);
-
-        session()->forget(['otp', 'mobile', 'otp_expires_at', 'user_exists']);
-
-        session()->flash('success', 'ثبت‌نام با موفقیت انجام شد. خوش آمدید!');
-
-        return redirect()->route('profile');
     }
 
     public function resetForm()
