@@ -135,7 +135,6 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => $query->with(['activeSubscription.subscriptionPlan']))
             ->columns([
                 Tables\Columns\TextColumn::make('username')
                     ->label('نام کاربری')
@@ -167,51 +166,73 @@ class UserResource extends Resource
                     ->badge()
                     ->color(fn ($state) => $state === 'admin' ? 'danger' : 'success'),
 
-                Tables\Columns\TextColumn::make('activeSubscription.subscriptionPlan.title')
+                Tables\Columns\TextColumn::make('subscription_plan')
                     ->label('نوع اشتراک')
-                    ->default('بدون اشتراک')
-                    ->badge()
-                    ->color(fn ($state) => $state === 'بدون اشتراک' ? 'gray' : 'success')
                     ->getStateUsing(function ($record) {
                         try {
-                            return $record->activeSubscription?->subscriptionPlan?->title ?? 'بدون اشتراک';
+                            $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
+                                ->where('status', 'active')
+                                ->latest('starts_at')
+                                ->first();
+                            
+                            if (!$subscription) return 'بدون اشتراک';
+                            
+                            $plan = \App\Models\SubscriptionPlan::find($subscription->subscription_plan_id);
+                            return $plan?->title ?? 'بدون اشتراک';
                         } catch (\Throwable $e) {
                             return 'بدون اشتراک';
                         }
-                    }),
+                    })
+                    ->badge()
+                    ->color(fn ($state) => $state === 'بدون اشتراک' ? 'gray' : 'success'),
 
-                Tables\Columns\TextColumn::make('activeSubscription.starts_at')
+                Tables\Columns\TextColumn::make('subscription_start')
                     ->label('تاریخ خرید')
-                    ->jalaliDate()
-                    ->sortable()
                     ->getStateUsing(function ($record) {
                         try {
-                            return $record->activeSubscription?->starts_at;
+                            $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
+                                ->where('status', 'active')
+                                ->latest('starts_at')
+                                ->first();
+                            
+                            return $subscription?->starts_at;
                         } catch (\Throwable $e) {
                             return null;
                         }
-                    }),
+                    })
+                    ->jalaliDate()
+                    ->sortable(),
 
-                Tables\Columns\TextColumn::make('activeSubscription.ends_at')
+                Tables\Columns\TextColumn::make('subscription_end')
                     ->label('تاریخ پایان')
+                    ->getStateUsing(function ($record) {
+                        try {
+                            $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
+                                ->where('status', 'active')
+                                ->latest('starts_at')
+                                ->first();
+                            
+                            return $subscription?->ends_at;
+                        } catch (\Throwable $e) {
+                            return null;
+                        }
+                    })
                     ->jalaliDate()
                     ->default('نامحدود')
-                    ->sortable()
-                    ->getStateUsing(function ($record) {
-                        try {
-                            return $record->activeSubscription?->ends_at;
-                        } catch (\Throwable $e) {
-                            return null;
-                        }
-                    }),
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('subscription_days_remaining')
                     ->label('روزهای باقیمانده')
                     ->getStateUsing(function ($record) {
-                        $subscription = $record->activeSubscription;
-                        if (!$subscription) return '-';
-                        if (!$subscription->ends_at) return 'نامحدود';
                         try {
+                            $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
+                                ->where('status', 'active')
+                                ->latest('starts_at')
+                                ->first();
+                            
+                            if (!$subscription) return '-';
+                            if (!$subscription->ends_at) return 'نامحدود';
+                            
                             $endDate = \Carbon\Carbon::parse($subscription->ends_at)->startOfDay();
                             $today = \Carbon\Carbon::now()->startOfDay();
                             $remaining = (int) $today->diffInDays($endDate, false);
@@ -222,9 +243,14 @@ class UserResource extends Resource
                     })
                     ->badge()
                     ->color(function ($record) {
-                        $subscription = $record->activeSubscription;
-                        if (!$subscription || !$subscription->ends_at) return 'success';
                         try {
+                            $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
+                                ->where('status', 'active')
+                                ->latest('starts_at')
+                                ->first();
+                            
+                            if (!$subscription || !$subscription->ends_at) return 'success';
+                            
                             $endDate = \Carbon\Carbon::parse($subscription->ends_at)->startOfDay();
                             $today = \Carbon\Carbon::now()->startOfDay();
                             $remaining = (int) $today->diffInDays($endDate, false);
