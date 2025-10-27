@@ -12,9 +12,16 @@ class ProfilePage extends Component
     public $availablePlans;
     public $daysRemaining = null;
     public $isExpired = false;
+    public $isGuest = false;
 
     public function mount()
     {
+        // Check if user is logged in
+        if (!Auth::check()) {
+            $this->isGuest = true;
+            return;
+        }
+
         $user = Auth::user();
         $this->subscription = $user->activeSubscription;
 
@@ -28,6 +35,15 @@ class ProfilePage extends Component
         $this->availablePlans = SubscriptionPlan::where('price_toman', '>', 0)
             ->where('is_active', true)
             ->get();
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+        
+        return redirect()->route('home');
     }
 
     public function render()

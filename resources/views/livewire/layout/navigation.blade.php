@@ -74,8 +74,7 @@ new class extends Component
             @else
                 <!-- Guest: Login / Register -->
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
-                    <a href="{{ route('login') }}" wire:navigate class="px-3 py-2 text-sm rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white">ورود</a>
-                    <a href="{{ route('register') }}" wire:navigate class="ms-3 px-3 py-2 text-sm rounded-md bg-gray-900 text-white hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600">ثبت‌نام</a>
+                    <a href="{{ route('profile') }}" wire:navigate class="px-4 py-2 text-sm rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition-colors font-medium">ورود / ثبت‌نام</a>
                 </div>
             @endauth
 

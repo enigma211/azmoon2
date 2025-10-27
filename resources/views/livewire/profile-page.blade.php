@@ -1,26 +1,51 @@
 <div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <header class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">پروفایل کاربری</h1>
-            <p class="text-sm text-gray-600 mt-2">مدیریت حساب و اشتراک</p>
-            <div class="mt-4">
-                <a href="{{ route('attempts') }}" wire:navigate class="inline-flex items-center rounded-lg bg-indigo-600 px-5 py-2.5 text-white text-sm font-medium hover:bg-indigo-700 transition shadow-md hover:shadow-lg">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    تاریخچه آزمون‌ها و نمرات
-                </a>
-            </div>
-        </header>
+        @if ($isGuest)
+            {{-- Guest User: Show Login Form --}}
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">پروفایل کاربری</h1>
+                <p class="text-sm text-gray-600 mt-2">برای دسترسی به پروفایل خود، لطفا وارد شوید</p>
+            </header>
 
-        <!-- Subscription Management Component -->
-        <livewire:profile.manage-subscription />
+            <livewire:auth.otp-login />
+        @else
+            {{-- Logged In User: Show Profile --}}
+            <header class="mb-8">
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h1 class="text-3xl font-bold mb-2">
+                                خوش آمدید، {{ auth()->user()->name }}! 👋
+                            </h1>
+                            <p class="text-indigo-100">به پروفایل کاربری خود خوش آمدید</p>
+                        </div>
+                        <button 
+                            wire:click="logout"
+                            class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white text-sm font-medium transition-colors backdrop-blur"
+                        >
+                            خروج
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-4 flex gap-3">
+                    <a href="{{ route('attempts') }}" wire:navigate class="inline-flex items-center rounded-lg bg-indigo-600 px-5 py-2.5 text-white text-sm font-medium hover:bg-indigo-700 transition shadow-md hover:shadow-lg">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        تاریخچه آزمون‌ها و نمرات
+                    </a>
+                </div>
+            </header>
 
-        <!-- Spacer -->
-        <div class="h-8"></div>
+            <!-- Subscription Management Component -->
+            <livewire:profile.manage-subscription />
 
-        <!-- Old Subscription Card (Hidden, keeping for reference) -->
-        <div class="hidden bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <!-- Spacer -->
+            <div class="h-8"></div>
+
+            <!-- Old Subscription Card (Hidden, keeping for reference) -->
+            <div class="hidden bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
             <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">وضعیت اشتراک (قدیمی)</h2>
             
             @if($subscription)
@@ -82,7 +107,8 @@
             @else
                 <p class="text-gray-600 dark:text-gray-400">اطلاعات اشتراک یافت نشد.</p>
             @endif
-        </div>
+            </div>
+        @endif
 
         
     </div>
