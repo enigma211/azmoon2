@@ -21,8 +21,8 @@ class EditUser extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        // Set username to display (readonly)
-        $data['username'] = $this->record->username ?? $this->record->mobile;
+        // Set username to display (readonly) - handle null mobile
+        $data['username'] = $this->record->username ?? $this->record->mobile ?? 'نامشخص';
         
         return $data;
     }
@@ -66,11 +66,16 @@ class EditUser extends EditRecord
                 ->update(['status' => 'expired']);
 
             // Create new subscription
+            // If subscription_days is very large (e.g., 36500 = 100 years), treat as unlimited
+            $endsAt = $subscriptionDays >= 36500 
+                ? now()->addYears(100)
+                : now()->addDays($subscriptionDays);
+
             UserSubscription::create([
                 'user_id' => $this->record->id,
                 'subscription_plan_id' => $premiumPlan->id,
                 'starts_at' => now(),
-                'ends_at' => now()->addDays($subscriptionDays),
+                'ends_at' => $endsAt,
                 'status' => 'active',
             ]);
 

@@ -155,8 +155,9 @@ class OtpLogin extends Component
                 ->first();
 
             if ($freePlan) {
-                $endsAt = $freePlan->duration_days == 0 
-                    ? null  // Unlimited
+                // Calculate end date - if duration is 0 or null, set to 100 years (unlimited)
+                $endsAt = ($freePlan->duration_days == 0 || $freePlan->duration_days === null)
+                    ? now()->addYears(100)  // Unlimited = 100 years
                     : now()->addDays($freePlan->duration_days);
 
                 UserSubscription::create([
