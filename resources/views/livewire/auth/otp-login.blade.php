@@ -21,7 +21,7 @@
                             type="text" 
                             id="mobile"
                             wire:model.defer="mobile"
-                            placeholder="09361694020"
+                            placeholder=""
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('mobile') border-red-500 @enderror"
                             maxlength="11"
                             dir="ltr"
@@ -60,7 +60,7 @@
                             type="text" 
                             id="otp"
                             wire:model.defer="otp"
-                            placeholder="123456"
+                            placeholder=""
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-center text-2xl tracking-widest @error('otp') border-red-500 @enderror"
                             maxlength="6"
                             dir="ltr"
@@ -112,7 +112,7 @@
                             type="text" 
                             id="firstName"
                             wire:model.defer="firstName"
-                            placeholder="رضا"
+                            placeholder=""
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('firstName') border-red-500 @enderror"
                             autofocus
                         >
@@ -129,7 +129,7 @@
                             type="text" 
                             id="lastName"
                             wire:model.defer="lastName"
-                            placeholder="عطریانفر"
+                            placeholder=""
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('lastName') border-red-500 @enderror"
                         >
                         @error('lastName')
@@ -145,7 +145,7 @@
                             type="email" 
                             id="email"
                             wire:model.defer="email"
-                            placeholder="example@email.com"
+                            placeholder=""
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('email') border-red-500 @enderror"
                             dir="ltr"
                         >
