@@ -45,22 +45,31 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\Section::make('اطلاعات کاربر')
                     ->schema([
-                        Forms\Components\TextInput::make('username')
-                            ->label('نام کاربری (انگلیسی)')
+                        Forms\Components\TextInput::make('mobile')
+                            ->label('موبایل')
+                            ->tel()
                             ->required()
-                            ->rule('regex:/^[A-Za-z0-9]+$/')
-                            ->unique(ignoreRecord: true)
-                            ->helperText('فقط حروف انگلیسی و اعداد')
-                            ->maxLength(50),
+                            ->maxLength(11)
+                            ->placeholder('09123456789')
+                            ->helperText('نام کاربری به صورت خودکار همان شماره موبایل است'),
+
+                        Forms\Components\TextInput::make('username')
+                            ->label('نام کاربری (خودکار)')
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->helperText('نام کاربری از شماره موبایل گرفته می‌شود'),
+
                         // Virtual first/last name that hydrate/dehydrate to single name field
                         Forms\Components\TextInput::make('first_name')
                             ->label('نام')
                             ->required()
                             ->afterStateHydrated(function ($set, $record) {
-                                $full = (string)($record->name ?? '');
-                                $parts = preg_split('/\s+/', trim($full), 2);
-                                $set('first_name', $parts[0] ?? '');
-                                $set('last_name', $parts[1] ?? '');
+                                if ($record) {
+                                    $full = (string)($record->name ?? '');
+                                    $parts = preg_split('/\s+/', trim($full), 2);
+                                    $set('first_name', $parts[0] ?? '');
+                                    $set('last_name', $parts[1] ?? '');
+                                }
                             })
                             ->dehydrated(false)
                             ->maxLength(255),
@@ -84,13 +93,8 @@ class UserResource extends Resource
                             ->label('ایمیل')
                             ->email()
                             ->required()
+                            ->unique(ignoreRecord: true)
                             ->maxLength(255),
-
-                        Forms\Components\TextInput::make('mobile')
-                            ->label('موبایل')
-                            ->tel()
-                            ->maxLength(11)
-                            ->placeholder('09123456789'),
 
                         Forms\Components\Select::make('role')
                             ->label('نقش')
@@ -111,24 +115,47 @@ class UserResource extends Resource
                     ])
                     ->columns(2),
 
-                Forms\Components\Section::make('اشتراک فعال')
+                Forms\Components\Section::make('مدیریت اشتراک ویژه')
                     ->schema([
-                        Forms\Components\Placeholder::make('subscription_info')
-                            ->label('')
+                        Forms\Components\Toggle::make('grant_subscription')
+                            ->label('اعطای اشتراک ویژه')
+                            ->helperText('با فعال کردن این گزینه، می‌توانید به کاربر اشتراک ویژه بدهید')
+                            ->live()
+                            ->dehydrated(false),
+
+                        Forms\Components\TextInput::make('subscription_days')
+                            ->label('تعداد روز اشتراک')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(3650)
+                            ->default(90)
+                            ->suffix('روز')
+                            ->helperText('پیش‌فرض: 90 روز (3 ماه)')
+                            ->visible(fn (callable $get) => $get('grant_subscription'))
+                            ->dehydrated(false),
+
+                        Forms\Components\Placeholder::make('current_subscription')
+                            ->label('اشتراک فعلی')
                             ->content(function ($record) {
-                                if (!$record || !$record->activeSubscription) {
-                                    return 'این کاربر هنوز اشتراکی ندارد. برای افزودن اشتراک، از بخش "اشتراک‌های کاربران" استفاده کنید.';
-                                }
-                                $sub = $record->activeSubscription;
-                                $plan = $sub->subscriptionPlan?->title ?? 'نامشخص';
-                                $starts = $sub->starts_at ? jdate($sub->starts_at)->format('Y/m/d') : '-';
-                                $ends = $sub->ends_at ? jdate($sub->ends_at)->format('Y/m/d') : 'نامحدود';
-                                return "طرح: {$plan} | شروع: {$starts} | پایان: {$ends} | وضعیت: {$sub->status}";
-                            })
-                            ->visible(fn ($record) => $record !== null),
+                                if (!$record) return 'کاربر جدید - اشتراکی ندارد';
+                                
+                                $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
+                                    ->where('status', 'active')
+                                    ->latest('starts_at')
+                                    ->first();
+                                
+                                if (!$subscription) return 'بدون اشتراک فعال';
+                                
+                                $plan = \App\Models\SubscriptionPlan::find($subscription->subscription_plan_id);
+                                $planTitle = $plan?->title ?? 'نامشخص';
+                                $starts = $subscription->starts_at ? jdate($subscription->starts_at)->format('Y/m/d') : '-';
+                                $ends = $subscription->ends_at ? jdate($subscription->ends_at)->format('Y/m/d') : 'نامحدود';
+                                
+                                return "📦 {$planTitle} | 📅 از {$starts} تا {$ends}";
+                            }),
                     ])
-                    ->collapsed()
-                    ->columns(1),
+                    ->columns(1)
+                    ->visible(fn (string $operation) => $operation === 'edit'),
             ]);
     }
 
