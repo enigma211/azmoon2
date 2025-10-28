@@ -140,20 +140,23 @@ class UserResource extends Resource
                     ->label('شناسه')
                     ->sortable(),
                     
-                Tables\Columns\TextColumn::make('username')
-                    ->label('نام کاربری')
+                Tables\Columns\TextColumn::make('mobile')
+                    ->label('نام کاربری (موبایل)')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->copyable()
+                    ->description(fn ($record) => $record->username),
                     
                 Tables\Columns\TextColumn::make('name')
                     ->label('نام')
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('mobile')
-                    ->label('موبایل')
+                Tables\Columns\TextColumn::make('email')
+                    ->label('ایمیل')
                     ->searchable()
-                    ->copyable(),
+                    ->copyable()
+                    ->icon('heroicon-m-envelope'),
 
                 Tables\Columns\TextColumn::make('role')
                     ->label('نقش')

@@ -101,7 +101,7 @@
         @if ($step === 'register')
             <div>
                 <h2 class="text-2xl font-bold text-gray-900 mb-2">تکمیل ثبت‌نام</h2>
-                <p class="text-sm text-gray-600 mb-6">لطفا نام و نام خانوادگی خود را وارد کنید</p>
+                <p class="text-sm text-gray-600 mb-6">لطفا اطلاعات خود را وارد کنید</p>
 
                 <form wire:submit.prevent="completeRegistration">
                     <div class="mb-4">
@@ -133,6 +133,23 @@
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('lastName') border-red-500 @enderror"
                         >
                         @error('lastName')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            ایمیل
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email"
+                            wire:model.defer="email"
+                            placeholder="example@email.com"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('email') border-red-500 @enderror"
+                            dir="ltr"
+                        >
+                        @error('email')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

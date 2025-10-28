@@ -16,6 +16,7 @@ class OtpLogin extends Component
     public $otp = '';
     public $firstName = '';
     public $lastName = '';
+    public $email = '';
     public $otpSent = false;
     public $userExists = false;
     public $countdown = 0;
@@ -25,6 +26,7 @@ class OtpLogin extends Component
         'otp' => 'required|digits:6',
         'firstName' => 'required|string|min:2|max:50',
         'lastName' => 'required|string|min:2|max:50',
+        'email' => 'required|email|max:255',
     ];
 
     protected $messages = [
@@ -36,6 +38,8 @@ class OtpLogin extends Component
         'firstName.min' => 'نام باید حداقل 2 کاراکتر باشد',
         'lastName.required' => 'نام خانوادگی الزامی است',
         'lastName.min' => 'نام خانوادگی باید حداقل 2 کاراکتر باشد',
+        'email.required' => 'ایمیل الزامی است',
+        'email.email' => 'فرمت ایمیل صحیح نیست',
     ];
 
     public function sendOtp(SmsService $smsService)
@@ -117,6 +121,7 @@ class OtpLogin extends Component
         $this->validate([
             'firstName' => $this->rules['firstName'],
             'lastName' => $this->rules['lastName'],
+            'email' => $this->rules['email'],
         ], $this->messages);
 
         $sessionMobile = session('mobile');
@@ -127,10 +132,17 @@ class OtpLogin extends Component
         }
 
         try {
+            // Check if email already exists
+            $existingEmail = User::where('email', $this->email)->first();
+            if ($existingEmail) {
+                $this->addError('email', 'این ایمیل قبلاً ثبت شده است.');
+                return;
+            }
+
             // Create new user
             $user = User::create([
                 'name' => trim($this->firstName . ' ' . $this->lastName),
-                'email' => $sessionMobile . '@example.local',
+                'email' => $this->email,
                 'username' => $sessionMobile, // Use mobile as username
                 'password' => bcrypt(str()->random(16)),
                 'mobile' => $sessionMobile,
@@ -173,7 +185,7 @@ class OtpLogin extends Component
 
     public function resetForm()
     {
-        $this->reset(['step', 'mobile', 'otp', 'firstName', 'lastName', 'otpSent', 'userExists', 'countdown']);
+        $this->reset(['step', 'mobile', 'otp', 'firstName', 'lastName', 'email', 'otpSent', 'userExists', 'countdown']);
         session()->forget(['otp', 'mobile', 'otp_expires_at', 'user_exists']);
     }
 
