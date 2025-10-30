@@ -3,6 +3,11 @@
     $q = $question ?? null;
 @endphp
 <div class="mx-auto max-w-2xl p-4 space-y-4">
+    <!-- Exam Title -->
+    <div class="text-center mb-2">
+        <h1 class="text-xl font-bold text-gray-800">{{ $this->exam->title }}</h1>
+    </div>
+    
     <!-- Progress bar -->
     <div>
         @php $pct = ($total ?? 0) > 0 ? intval((($index ?? 0)+1) / ($total ?? 1) * 100) : 0; @endphp
@@ -87,23 +92,111 @@
                         @csrf
                         <input type="hidden" name="answers" value="{{ json_encode($this->answers) }}">
                         <button type="submit"
-                                class="rounded-lg px-10 py-3 text-white font-bold text-lg {{ ($this->requireAllAnswered && $this->unansweredCount() > 0) ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 shadow-lg hover:shadow-xl' }} transition-all"
+                                class="rounded-lg px-6 py-2 text-white font-medium text-sm {{ ($this->requireAllAnswered && $this->unansweredCount() > 0) ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 shadow hover:shadow-lg' }} transition-all"
                                 @disabled($this->requireAllAnswered && $this->unansweredCount() > 0)>
                             پایان آزمون و مشاهده کارنامه
                         </button>
                     </form>
                 @else
                     <button wire:click="submit"
-                            class="rounded-lg px-10 py-3 text-white font-bold text-lg {{ ($this->requireAllAnswered && $this->unansweredCount() > 0) ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 shadow-lg hover:shadow-xl' }} transition-all"
+                            class="rounded-lg px-6 py-2 text-white font-medium text-sm {{ ($this->requireAllAnswered && $this->unansweredCount() > 0) ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 shadow hover:shadow-lg' }} transition-all"
                             @disabled($this->requireAllAnswered && $this->unansweredCount() > 0)>
                         پایان آزمون و مشاهده کارنامه
                     </button>
                 @endauth
+            </div>
+            
+            <!-- Report Issue Button -->
+            <div class="flex justify-center pt-2">
+                <button wire:click="$set('showReportModal', true)" 
+                        class="text-sm text-gray-600 hover:text-red-600 underline transition">
+                    گزارش ایراد سوال
+                </button>
+            </div>
     </div>
     @else
         <div class="rounded border p-4 text-sm text-gray-600">سوالی برای نمایش وجود ندارد.</div>
     @endif
 </div>
+
+<!-- Report Issue Modal -->
+@if($showReportModal)
+<div class="fixed inset-0 z-50 overflow-y-auto" x-data="{ show: @entangle('showReportModal') }" x-show="show" x-cloak>
+    <div class="flex min-h-screen items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div x-show="show" 
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @click="$wire.set('showReportModal', false)"
+             class="fixed inset-0 bg-black bg-opacity-50"></div>
+        
+        <!-- Modal Content -->
+        <div x-show="show"
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-gray-900">گزارش ایراد سوال</h3>
+                <button @click="$wire.set('showReportModal', false)" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Flash Messages -->
+            @if(session('success'))
+                <div class="mb-4 p-3 bg-green-100 border border-green-300 text-green-800 rounded-lg text-sm">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="mb-4 p-3 bg-red-100 border border-red-300 text-red-800 rounded-lg text-sm">
+                    {{ session('error') }}
+                </div>
+            @endif
+            
+            <!-- Form -->
+            <form wire:submit.prevent="submitReport">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">توضیحات ایراد:</label>
+                    <textarea wire:model="reportText" 
+                              rows="4" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                              placeholder="لطفاً ایراد سوال را به طور دقیق توضیح دهید..."></textarea>
+                    @error('reportText')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex gap-3">
+                    <button type="submit" 
+                            class="flex-1 rounded-lg bg-red-600 px-4 py-2 text-white font-medium hover:bg-red-700 transition">
+                        ارسال گزارش
+                    </button>
+                    <button type="button" 
+                            @click="$wire.set('showReportModal', false)"
+                            class="flex-1 rounded-lg bg-gray-200 px-4 py-2 text-gray-700 font-medium hover:bg-gray-300 transition">
+                        انصراف
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
 <!-- Periodic autosave flush (debounced) -->
 <div wire:poll.2s="flushDirty" class="hidden" aria-hidden="true"></div>
 

@@ -30,6 +30,9 @@ class ExamPlayer extends Component
     protected array $dirtyQueue = [];
 
     public bool $requireAllAnswered = false;
+    
+    public string $reportText = '';
+    public bool $showReportModal = false;
 
     public function mount(Exam $exam): void
     {
@@ -300,6 +303,37 @@ class ExamPlayer extends Component
             $params['attempt'] = $this->attempt->id;
         }
         return redirect()->route('exam.result', $params);
+    }
+
+    public function submitReport(): void
+    {
+        $this->validate([
+            'reportText' => 'required|string|min:10|max:1000',
+        ], [
+            'reportText.required' => 'لطفاً متن گزارش را وارد کنید.',
+            'reportText.min' => 'گزارش باید حداقل 10 کاراکتر باشد.',
+            'reportText.max' => 'گزارش نباید بیشتر از 1000 کاراکتر باشد.',
+        ]);
+
+        $questions = $this->exam->questions->where('is_deleted', false)->values();
+        $currentQuestion = $questions[$this->index] ?? null;
+
+        if (!$currentQuestion) {
+            session()->flash('error', 'سوال یافت نشد.');
+            return;
+        }
+
+        \App\Models\QuestionReport::create([
+            'user_id' => auth()->id(),
+            'question_id' => $currentQuestion->id,
+            'exam_id' => $this->exam->id,
+            'report' => $this->reportText,
+            'status' => 'pending',
+        ]);
+
+        $this->reportText = '';
+        $this->showReportModal = false;
+        session()->flash('success', 'گزارش شما با موفقیت ثبت شد.');
     }
 
     public function render()
