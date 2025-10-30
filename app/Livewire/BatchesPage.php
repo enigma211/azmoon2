@@ -18,7 +18,7 @@ class BatchesPage extends Component
     public function render()
     {
         return view('livewire.batches-page', [
-            'batches' => $this->domain->batches()->latest()->get(),
+            'batches' => $this->domain->batches()->orderBy('sort_order', 'asc')->orderBy('created_at', 'desc')->get(),
         ])->layout('layouts.app');
     }
 }

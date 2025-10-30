@@ -72,6 +72,13 @@ class ExamBatchResource extends Resource
                         Toggle::make('is_active')
                             ->label('فعال')
                             ->default(true),
+                        
+                        TextInput::make('sort_order')
+                            ->label('ترتیب نمایش')
+                            ->numeric()
+                            ->default(0)
+                            ->helperText('عدد کوچکتر = نمایش زودتر. برای مثال: 1، 2، 3، ...')
+                            ->required(),
                     ])->columns(2),
             ]);
     }
@@ -80,6 +87,10 @@ class ExamBatchResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('sort_order')
+                    ->label('ترتیب')
+                    ->sortable()
+                    ->alignCenter(),
                 TextColumn::make('title')->label('عنوان')->sortable()->searchable(),
                 TextColumn::make('domain.title')->label('دامنه')->sortable()->searchable(),
                 TextColumn::make('updated_at')->formatStateUsing(fn ($state) => jdate_time($state))->label('ویرایش')->sortable(),
@@ -94,7 +105,9 @@ class ExamBatchResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->reorderable('sort_order')
+            ->defaultSort('sort_order', 'asc');
     }
 
     public static function getRelations(): array

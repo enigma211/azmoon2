@@ -14,6 +14,7 @@ class ExamBatch extends Model
         'title',
         'slug',
         'is_active',
+        'sort_order',
     ];
 
     protected $casts = [
