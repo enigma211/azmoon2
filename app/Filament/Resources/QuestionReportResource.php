@@ -43,6 +43,15 @@ class QuestionReportResource extends Resource
                     ->relationship('question', 'id')
                     ->required()
                     ->disabled(),
+                Forms\Components\Placeholder::make('question_preview')
+                    ->label('پیش‌نمایش سوال')
+                    ->content(function ($record) {
+                        if (!$record || !$record->question) {
+                            return 'سوال یافت نشد';
+                        }
+                        $text = strip_tags($record->question->text);
+                        return strlen($text) > 200 ? substr($text, 0, 200) . '...' : $text;
+                    }),
                 Forms\Components\Select::make('exam_id')
                     ->label('آزمون')
                     ->relationship('exam', 'title')
@@ -86,7 +95,12 @@ class QuestionReportResource extends Resource
                     ->limit(30),
                 Tables\Columns\TextColumn::make('question_id')
                     ->label('شماره سوال')
-                    ->sortable(),
+                    ->sortable()
+                    ->url(fn ($record) => $record->question_id 
+                        ? route('filament.admin.resources.questions.edit', ['record' => $record->question_id])
+                        : null)
+                    ->color('primary')
+                    ->icon('heroicon-o-pencil-square'),
                 Tables\Columns\TextColumn::make('report')
                     ->label('گزارش')
                     ->limit(50)
@@ -119,6 +133,14 @@ class QuestionReportResource extends Resource
                     ]),
             ])
             ->actions([
+                Tables\Actions\Action::make('edit_question')
+                    ->label('ویرایش سوال')
+                    ->icon('heroicon-o-pencil-square')
+                    ->color('warning')
+                    ->url(fn ($record) => $record->question_id 
+                        ? route('filament.admin.resources.questions.edit', ['record' => $record->question_id])
+                        : null)
+                    ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
