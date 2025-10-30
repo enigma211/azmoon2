@@ -25,20 +25,6 @@
         </div>
     </div>
 
-    <!-- Navigation buttons (moved to top) -->
-    <div class="flex items-center justify-center gap-6">
-        <button wire:click="prev" 
-                class="rounded bg-gray-100 px-8 py-2 text-gray-700 disabled:opacity-50 hover:bg-gray-200 transition font-medium" 
-                @disabled(($index ?? 0) === 0)>
-            قبلی
-        </button>
-        <button wire:click="next" 
-                class="rounded bg-indigo-600 px-8 py-2 text-white hover:bg-indigo-700 transition font-medium" 
-                @disabled((($index ?? 0) + 1) >= ($total ?? 0))>
-            بعدی
-        </button>
-    </div>
-
     @if($q)
         <div wire:key="question-{{ $q->id }}">
         <article class="prose prose-sm max-w-none">
@@ -79,8 +65,22 @@
             </div>
         @endif
 
-        <!-- Submit button (kept at bottom) -->
         <div class="mt-8 space-y-4">
+            <!-- Navigation buttons -->
+            <div class="flex items-center justify-center gap-6">
+                <button wire:click="prev" 
+                        class="rounded bg-gray-100 px-8 py-2 text-gray-700 disabled:opacity-50 hover:bg-gray-200 transition font-medium" 
+                        @disabled(($index ?? 0) === 0)>
+                    قبلی
+                </button>
+                <button wire:click="next" 
+                        class="rounded bg-indigo-600 px-8 py-2 text-white hover:bg-indigo-700 transition font-medium" 
+                        @disabled((($index ?? 0) + 1) >= ($total ?? 0))>
+                    بعدی
+                </button>
+            </div>
+            
+            <!-- Submit button -->
             <div class="flex justify-center pt-4 border-t border-gray-200">
                 @auth
                     <form method="POST" action="{{ route('exam.finish', ['exam' => $this->exam->id]) }}" id="finishForm-{{ $this->exam->id }}" class="inline" data-loading-delay="4000">
