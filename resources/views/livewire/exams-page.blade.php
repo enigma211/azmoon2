@@ -17,17 +17,41 @@
                 
                 <!-- Content -->
                 <div class="relative">
-                    <!-- Icon -->
-                    <div class="mb-3 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-indigo-100 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                    </div>
-                    
                     <!-- Title -->
-                    <h3 class="font-semibold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                    <h3 class="font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">
                         {{ $exam->title }}
                     </h3>
+                    
+                    <!-- Meta Info -->
+                    <div class="flex items-center gap-4 mb-3 text-sm text-gray-600">
+                        @php
+                            $questionCount = $exam->questions()->where('is_deleted', false)->count();
+                        @endphp
+                        @if($questionCount > 0)
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>{{ $questionCount }} سوال</span>
+                            </div>
+                        @endif
+                        
+                        @if($exam->duration_minutes)
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>{{ $exam->duration_minutes }} دقیقه</span>
+                            </div>
+                        @else
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>بدون محدودیت زمان</span>
+                            </div>
+                        @endif
+                    </div>
                     
                     <!-- Description -->
                     @if($exam->description)
