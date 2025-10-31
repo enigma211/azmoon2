@@ -11,17 +11,39 @@
         @else
             {{-- Logged In User: Show Profile --}}
             <header class="mb-8">
-                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg p-4 text-white">
                     <div class="flex items-start justify-between">
-                        <div>
-                            <h1 class="text-3xl font-bold mb-2">
+                        <div class="flex-1">
+                            <h1 class="text-xl font-bold mb-1">
                                 خوش آمدید، {{ auth()->user()->name }}! 👋
                             </h1>
-                            <p class="text-indigo-100">به پروفایل کاربری خود خوش آمدید</p>
+                            @php
+                                $user = auth()->user();
+                                $hasPaid = $user->hasPaidSubscription();
+                                $subscription = $user->activeSubscription()->with('subscriptionPlan')->first();
+                                $daysRemaining = null;
+                                if ($subscription && $subscription->ends_at) {
+                                    $daysRemaining = now()->diffInDays($subscription->ends_at, false);
+                                    $daysRemaining = $daysRemaining > 0 ? ceil($daysRemaining) : 0;
+                                }
+                            @endphp
+                            <p class="text-indigo-100 text-sm">
+                                پلن شما: 
+                                @if($hasPaid && $subscription)
+                                    <span class="font-semibold">{{ $subscription->subscriptionPlan->title }}</span>
+                                    @if($daysRemaining !== null)
+                                        <span class="text-xs">- {{ $daysRemaining }} روز باقیمانده</span>
+                                    @else
+                                        <span class="text-xs">- نامحدود</span>
+                                    @endif
+                                @else
+                                    <span class="font-semibold">رایگان</span>
+                                @endif
+                            </p>
                         </div>
                         <button 
                             wire:click="logout"
-                            class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white text-sm font-medium transition-colors backdrop-blur"
+                            class="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-white text-xs font-medium transition-colors backdrop-blur"
                         >
                             خروج
                         </button>
