@@ -3,8 +3,7 @@
         <!-- Header -->
         <header class="mb-8">
             <div class="text-center">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">منابع آموزشی</h1>
-                <p class="text-gray-600">راهنماها، فایل‌های PDF و ویدیوهای آموزشی</p>
+                <h1 class="text-3xl font-bold text-gray-900">منابع آموزشی</h1>
             </div>
         </header>
 
@@ -15,37 +14,9 @@
                        wire:navigate
                        class="group relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-gray-200">
                         
-                        <!-- Icon Header -->
-                        <div class="relative h-20 bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center">
-                            @switch($item->type)
-                                @case('pdf')
-                                    <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center shadow-lg">
-                                        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
-                                        </svg>
-                                    </div>
-                                    @break
-                                
-                                @case('video')
-                                    <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center shadow-lg">
-                                        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
-                                        </svg>
-                                    </div>
-                                    @break
-                                
-                                @default
-                                    <div class="w-12 h-12 bg-gray-500 rounded-lg flex items-center justify-center shadow-lg">
-                                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                        </svg>
-                                    </div>
-                                    @break
-                            @endswitch
-                        </div>
                         
                         <!-- Content -->
-                        <div class="p-5">
+                        <div class="p-6">
                             <h3 class="font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-indigo-600 transition-colors">
                                 {{ $item->title }}
                             </h3>
