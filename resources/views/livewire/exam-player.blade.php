@@ -2,7 +2,12 @@
     // Defensive checks to avoid errors before data is fully wired
     $q = $question ?? null;
 @endphp
-<div class="mx-auto max-w-2xl p-4 space-y-4">
+<div class="mx-auto max-w-2xl p-4 space-y-4" 
+     oncontextmenu="return false;" 
+     onselectstart="return false;" 
+     oncopy="return false;"
+     oncut="return false;"
+     style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
     <!-- Exam Title -->
     <div class="text-center mb-2">
         <h1 class="text-xl font-bold text-gray-800">{{ $this->exam->title }}</h1>
@@ -262,3 +267,68 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Prevent keyboard shortcuts for copy, cut, and developer tools
+    document.addEventListener('keydown', function(e) {
+        // Prevent Ctrl+C (Copy)
+        if (e.ctrlKey && e.key === 'c') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Prevent Ctrl+X (Cut)
+        if (e.ctrlKey && e.key === 'x') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Prevent Ctrl+A (Select All)
+        if (e.ctrlKey && e.key === 'a') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Prevent Ctrl+U (View Source)
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Prevent Ctrl+S (Save)
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Prevent F12 (Developer Tools)
+        if (e.key === 'F12') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Prevent Ctrl+Shift+I (Developer Tools)
+        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Prevent Ctrl+Shift+J (Console)
+        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Prevent Ctrl+Shift+C (Inspect Element)
+        if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+            e.preventDefault();
+            return false;
+        }
+    });
+    
+    // Additional protection: disable drag and drop
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+</script>
