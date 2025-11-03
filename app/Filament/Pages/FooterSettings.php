@@ -23,8 +23,6 @@ class FooterSettings extends Page implements HasForms
 
     protected static ?int $navigationSort = 12;
 
-    public ?array $data = [];
-
     public static function getNavigationLabel(): string
     {
         return 'تنظیمات فوتر';
@@ -87,8 +85,7 @@ class FooterSettings extends Page implements HasForms
 </div>'),
                     ])
                     ->columns(1),
-            ])
-            ->statePath('data');
+            ]);
     }
 
     protected function getFormActions(): array
