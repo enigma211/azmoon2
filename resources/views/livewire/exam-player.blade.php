@@ -347,11 +347,27 @@
     });
 </script>
 
+<!-- MathJax for LaTeX rendering -->
+<script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        options: {
+            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        }
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+
 <!-- Assumptions Modal -->
 @if($this->exam->assumptions_text || $this->exam->assumptions_image)
     <div 
         x-data="{ show: false }"
-        @open-modal.window="if ($event.detail === 'assumptions-modal') show = true"
+        @open-modal.window="if ($event.detail === 'assumptions-modal') { show = true; setTimeout(() => { if (window.MathJax) MathJax.typesetPromise(); }, 100); }"
         @close-modal.window="show = false"
         @keydown.escape.window="show = false"
         x-show="show"
@@ -398,8 +414,8 @@
                 <!-- Body -->
                 <div class="p-6 space-y-4">
                     @if($this->exam->assumptions_text)
-                        <div class="prose prose-sm max-w-none bg-amber-50 rounded-lg p-4 border border-amber-200">
-                            {!! $this->exam->assumptions_text !!}
+                        <div class="prose prose-sm max-w-none bg-amber-50 rounded-lg p-4 border border-amber-200 assumptions-content" style="white-space: pre-wrap;">
+                            {!! nl2br(e($this->exam->assumptions_text)) !!}
                         </div>
                     @endif
                     
