@@ -32,15 +32,15 @@
       .touchable { touch-action: manipulation; }
     </style>
 </head>
-<body class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-16 flex flex-col">
+<body class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <div id="lw-overlay" class="loading-overlay"><div class="loading-spinner"></div></div>
 
-    <main class="max-w-screen-md mx-auto flex-1">
+    <main class="max-w-screen-md mx-auto">
         {{ $slot }}
+        
+        <!-- Footer -->
+        <x-footer />
     </main>
-
-    <!-- Footer -->
-    <x-footer />
 
     <nav class="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 border-t-2 border-gray-200 dark:border-gray-700">
         <div class="max-w-screen-md mx-auto grid grid-cols-4 text-center text-sm">

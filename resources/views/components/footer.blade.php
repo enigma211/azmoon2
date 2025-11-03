@@ -1,5 +1,5 @@
-<footer class="bg-gray-900 text-gray-300 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<footer class="bg-gray-900 text-gray-300 mt-8 mb-20">
+    <div class="max-w-screen-md mx-auto px-4 py-8">
         <div class="flex flex-col items-center justify-center space-y-4">
             <!-- لوگوی اینماد -->
             <div class="enamad-logo">
