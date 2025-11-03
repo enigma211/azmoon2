@@ -43,7 +43,7 @@
 
         @if(!empty($q->image_path))
             <div class="mt-3">
-                <img src="{{ Storage::url($q->image_path) }}" alt="image" class="w-full rounded" />
+                <img src="{{ Storage::url($q->image_path) }}" alt="image" class="max-w-full h-auto rounded" style="width: auto;" />
             </div>
         @endif
 
