@@ -131,16 +131,17 @@ class ExamResource extends Resource
 
                 Forms\Components\Section::make('مفروضات آزمون')
                     ->schema([
-                        Forms\Components\Textarea::make('assumptions_text')
-                            ->label('متن مفروضات (پشتیبانی از LaTeX)')
-                            ->helperText('می‌توانید از LaTeX استفاده کنید. مثال: $$ E = mc^2 $$ یا $ \\frac{a}{b} $')
-                            ->rows(8)
+                        Forms\Components\RichEditor::make('assumptions_text')
+                            ->label('متن مفروضات')
+                            ->helperText('مفروضاتی که در تمام سوالات این آزمون باید در نظر گرفته شود (مثل: g=10 m/s², وزن=2kg)')
                             ->columnSpanFull()
-                            ->placeholder('مثال:
-در تمام سوالات این آزمون:
-• شتاب گرانش: $$ g = 10 \\, m/s^2 $$
-• جرم: $$ m = 2 \\, kg $$
-• فرمول انرژی: $$ E = \\frac{1}{2}mv^2 $$'),
+                            ->toolbarButtons([
+                                'bold',
+                                'italic',
+                                'underline',
+                                'bulletList',
+                                'orderedList',
+                            ]),
 
                         Forms\Components\FileUpload::make('assumptions_image')
                             ->label('تصویر مفروضات')
@@ -149,7 +150,6 @@ class ExamResource extends Resource
                             ->helperText('تصویر مربوط به مفروضات (مثل: جدول مقادیر، نمودار)')
                             ->columnSpanFull(),
                     ])
-                    ->description('مفروضاتی که در تمام سوالات این آزمون باید در نظر گرفته شود. می‌توانید از LaTeX برای فرمول‌های ریاضی استفاده کنید.')
                     ->collapsible()
                     ->collapsed(false),
             ]);
