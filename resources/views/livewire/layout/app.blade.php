@@ -30,6 +30,18 @@
       .loading-spinner { width: 48px; height: 48px; border: 4px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
       @keyframes spin { to { transform: rotate(360deg); } }
       .touchable { touch-action: manipulation; }
+      .enamad-logo img {
+        max-width: 100px;
+        height: auto;
+        display: block;
+      }
+      .enamad-logo a {
+        display: inline-block;
+        transition: opacity 0.2s;
+      }
+      .enamad-logo a:hover {
+        opacity: 0.8;
+      }
     </style>
 </head>
 <body class="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -39,7 +51,23 @@
         {{ $slot }}
         
         <!-- Footer -->
-        <x-footer />
+        <footer class="bg-gray-900 text-gray-300 mt-8 mb-20">
+            <div class="max-w-screen-md mx-auto px-4 py-8">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <!-- لوگوی اینماد -->
+                    <div class="enamad-logo">
+                        <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=668272&Code=OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse'>
+                            <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=668272&Code=OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse' alt='اینماد' style='cursor:pointer' code='OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse'>
+                        </a>
+                    </div>
+                    
+                    <!-- Copyright -->
+                    <div class="text-center text-sm text-gray-400">
+                        <p>© {{ date('Y') }} {{ config('app.name', 'آزمون کده') }} - تمامی حقوق محفوظ است.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </main>
 
     <nav class="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 border-t-2 border-gray-200 dark:border-gray-700">
