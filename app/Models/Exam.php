@@ -19,6 +19,8 @@ class Exam extends Model
         'is_published',
         'total_score',
         'negative_score_ratio',
+        'assumptions_text',
+        'assumptions_image',
     ];
 
     protected $casts = [

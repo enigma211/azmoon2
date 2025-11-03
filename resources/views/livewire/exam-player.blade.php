@@ -13,6 +13,20 @@
         <h1 class="text-xl font-bold text-gray-800">{{ $this->exam->title }}</h1>
     </div>
     
+    <!-- Assumptions Button -->
+    @if($this->exam->assumptions_text || $this->exam->assumptions_image)
+        <div class="flex justify-center mb-3">
+            <button 
+                @click="$dispatch('open-modal', 'assumptions-modal')"
+                class="inline-flex items-center gap-2 rounded-lg bg-amber-100 px-4 py-2 text-amber-800 text-sm font-medium hover:bg-amber-200 transition shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                مشاهده مفروضات آزمون
+            </button>
+        </div>
+    @endif
+    
     <!-- Progress bar -->
     <div>
         @php $pct = ($total ?? 0) > 0 ? intval((($index ?? 0)+1) / ($total ?? 1) * 100) : 0; @endphp
@@ -332,3 +346,82 @@
         return false;
     });
 </script>
+
+<!-- Assumptions Modal -->
+@if($this->exam->assumptions_text || $this->exam->assumptions_image)
+    <div 
+        x-data="{ show: false }"
+        @open-modal.window="if ($event.detail === 'assumptions-modal') show = true"
+        @close-modal.window="show = false"
+        @keydown.escape.window="show = false"
+        x-show="show"
+        x-cloak
+        class="fixed inset-0 z-50 overflow-y-auto"
+        style="display: none;">
+        
+        <!-- Backdrop -->
+        <div 
+            class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            @click="show = false">
+        </div>
+        
+        <!-- Modal Content -->
+        <div class="flex min-h-screen items-center justify-center p-4">
+            <div 
+                @click.stop
+                x-show="show"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform scale-90"
+                x-transition:enter-end="opacity-100 transform scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 transform scale-100"
+                x-transition:leave-end="opacity-0 transform scale-90"
+                class="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+                
+                <!-- Header -->
+                <div class="sticky top-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-4 rounded-t-2xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold">مفروضات این آزمون</h3>
+                    </div>
+                    <button 
+                        @click="show = false"
+                        class="text-white hover:bg-white/20 rounded-lg p-2 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Body -->
+                <div class="p-6 space-y-4">
+                    @if($this->exam->assumptions_text)
+                        <div class="prose prose-sm max-w-none bg-amber-50 rounded-lg p-4 border border-amber-200">
+                            {!! $this->exam->assumptions_text !!}
+                        </div>
+                    @endif
+                    
+                    @if($this->exam->assumptions_image)
+                        <div class="flex justify-center bg-gray-50 rounded-lg p-4">
+                            <img 
+                                src="{{ Storage::url($this->exam->assumptions_image) }}" 
+                                alt="تصویر مفروضات" 
+                                class="max-w-full h-auto rounded shadow-lg">
+                        </div>
+                    @endif
+                </div>
+                
+                <!-- Footer -->
+                <div class="sticky bottom-0 bg-gray-50 px-6 py-4 rounded-b-2xl flex justify-end">
+                    <button 
+                        @click="show = false"
+                        class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg transition">
+                        بستن
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif

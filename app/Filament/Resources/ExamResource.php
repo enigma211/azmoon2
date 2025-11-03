@@ -128,6 +128,30 @@ class ExamResource extends Resource
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
+
+                Forms\Components\Fieldset::make('مفروضات آزمون')
+                    ->schema([
+                        Forms\Components\RichEditor::make('assumptions_text')
+                            ->label('متن مفروضات')
+                            ->helperText('مفروضاتی که در تمام سوالات این آزمون باید در نظر گرفته شود (مثل: g=10 m/s², وزن=2kg)')
+                            ->columnSpanFull()
+                            ->toolbarButtons([
+                                'bold',
+                                'italic',
+                                'underline',
+                                'bulletList',
+                                'orderedList',
+                            ]),
+
+                        Forms\Components\FileUpload::make('assumptions_image')
+                            ->label('تصویر مفروضات')
+                            ->image()
+                            ->directory('assumptions')
+                            ->helperText('تصویر مربوط به مفروضات (مثل: جدول مقادیر، نمودار)')
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible()
+                    ->collapsed(false),
             ]);
     }
 
