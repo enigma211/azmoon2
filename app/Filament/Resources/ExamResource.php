@@ -129,7 +129,7 @@ class ExamResource extends Resource
                     ])
                     ->columns(2),
 
-                Forms\Components\Fieldset::make('مفروضات آزمون')
+                Forms\Components\Section::make('مفروضات آزمون')
                     ->schema([
                         Forms\Components\RichEditor::make('assumptions_text')
                             ->label('متن مفروضات')
