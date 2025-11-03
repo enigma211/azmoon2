@@ -39,9 +39,9 @@ class FooterSettings extends Page implements HasForms
     {
         $settings = SiteSetting::first();
         $this->form->fill([
-            'footer_column_1' => $settings?->footer_column_1 ?? '',
-            'footer_column_2' => $settings?->footer_column_2 ?? '',
-            'footer_column_3' => $settings?->footer_column_3 ?? '',
+            'footer_column_1' => $settings?->footer_column_1,
+            'footer_column_2' => $settings?->footer_column_2,
+            'footer_column_3' => $settings?->footer_column_3,
         ]);
     }
 
