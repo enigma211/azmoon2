@@ -115,8 +115,8 @@
             @endif
         </section>
 
-        <!-- Footer با لوگوی اینماد -->
-        <footer class="py-8 mt-12 mb-20">
+        <!-- Footer با لوگوی اینماد - فقط دسکتاپ -->
+        <footer class="hidden lg:block mt-20 pt-10 pb-8 bg-gray-100 border-t-2 border-gray-300 rounded-t-lg shadow-inner">
             <div class="flex flex-col items-center justify-center space-y-4">
                 <!-- لوگوی اینماد -->
                 <div>
