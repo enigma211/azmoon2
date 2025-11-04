@@ -117,7 +117,7 @@
     </div>
 
     <!-- Footer با لوگوی اینماد - فقط دسکتاپ -->
-    <footer class="hidden lg:block mt-20 pt-10 pb-8 bg-gray-100 border-t-2 border-gray-300 shadow-inner">
+    <footer class="site-footer" style="margin-top: 5rem; padding: 2.5rem 0 2rem; background-color: #f3f4f6; border-top: 2px solid #d1d5db;">
         <div class="flex flex-col items-center justify-center space-y-4">
             <!-- لوگوی اینماد -->
             <div>
@@ -132,5 +132,13 @@
             </div>
         </div>
     </footer>
+    <!-- Spacer to avoid overlap with fixed bottom nav on desktop -->
+    <div class="desktop-footer-spacer" style="height: 96px;"></div>
+    <style>
+        /* نمایش فقط روی دسکتاپ بدون Tailwind */
+        @media (max-width: 1023.98px) { .site-footer { display: none; } }
+        @media (min-width: 1024px) { .site-footer { display: block; } }
+        /* Spacer only relevant on desktop */
+        @media (max-width: 1023.98px) { .desktop-footer-spacer { display: none; } }
+    </style>
 </div>
-
