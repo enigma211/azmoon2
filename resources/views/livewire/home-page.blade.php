@@ -117,7 +117,7 @@
     </div>
 
     <!-- Footer با لوگوی اینماد - فقط دسکتاپ -->
-    <footer class="site-footer" style="margin-top: 5rem; padding: 2.5rem 0 6rem; background-color: #f3f4f6; border-top: 2px solid #d1d5db;">
+    <footer class="site-footer" style="margin-top: 5rem; padding: 2.5rem 0 2rem; background-color: #f3f4f6; border-top: 2px solid #d1d5db;">
         <div class="flex flex-col items-center justify-center space-y-4">
             <!-- لوگوی اینماد -->
             <div>
