@@ -42,6 +42,10 @@
       .enamad-logo a:hover {
         opacity: 0.8;
       }
+      /* Hide mobile bottom nav on desktop to avoid extra strip after page content */
+      @media (min-width: 1024px) {
+        nav.mobile-bottom-nav { display: none !important; }
+      }
     </style>
 </head>
 <body class="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -49,28 +53,9 @@
 
     <main class="max-w-screen-md mx-auto">
         {{ $slot }}
-        
-        <!-- Footer -->
-        <footer class="bg-gray-900 text-gray-300 mt-8 mb-20">
-            <div class="max-w-screen-md mx-auto px-4 py-8">
-                <div class="flex flex-col items-center justify-center space-y-4">
-                    <!-- لوگوی اینماد -->
-                    <div class="enamad-logo">
-                        <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=668272&Code=OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse'>
-                            <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=668272&Code=OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse' alt='اینماد' style='cursor:pointer' code='OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse'>
-                        </a>
-                    </div>
-                    
-                    <!-- Copyright -->
-                    <div class="text-center text-sm text-gray-400">
-                        <p>© {{ date('Y') }} {{ config('app.name', 'آزمون کده') }} - تمامی حقوق محفوظ است.</p>
-                    </div>
-                </div>
-            </div>
-        </footer>
     </main>
 
-    <nav class="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 border-t-2 border-gray-200 dark:border-gray-700">
+    <nav class="mobile-bottom-nav fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 border-t-2 border-gray-200 dark:border-gray-700">
         <div class="max-w-screen-md mx-auto grid grid-cols-4 text-center text-sm">
             <a href="{{ route('home') }}" wire:navigate class="py-2 flex flex-col items-center gap-1 touchable">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75V21a.75.75 0 00.75.75h4.5a.75.75 0 00.75-.75v-3.75a.75.75 0 01.75-.75h2.25a.75.75 0 01.75.75V21a.75.75 0 00.75.75h4.5A.75.75 0 0021 21V9.75" /></svg>
