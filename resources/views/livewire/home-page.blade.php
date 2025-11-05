@@ -130,6 +130,13 @@
             <div class="text-center text-sm text-gray-600">
                 <p>© {{ date('Y') }} {{ config('app.name', 'آزمون کده') }} - تمامی حقوق محفوظ است.</p>
             </div>
+            
+            <!-- اطلاعات موقت برای راستی‌آزمایی زرین‌پال -->
+            <div class="text-center text-xs text-gray-500 mt-2 space-y-1">
+                <p>محسن صادقی نژاد</p>
+                <p>0082305110</p>
+                <p>برای راستی آزمایی سایت زرین پال می‌باشد.</p>
+            </div>
         </div>
     </footer>
     <style>
