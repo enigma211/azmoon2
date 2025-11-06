@@ -12,14 +12,14 @@
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             @php
                 $gradients = [
-                    'bg-gradient-to-br from-pink-400 via-rose-400 to-red-400 hover:from-pink-500 hover:via-rose-500 hover:to-red-500',
-                    'bg-gradient-to-br from-purple-400 via-violet-400 to-indigo-400 hover:from-purple-500 hover:via-violet-500 hover:to-indigo-500',
-                    'bg-gradient-to-br from-blue-400 via-cyan-400 to-teal-400 hover:from-blue-500 hover:via-cyan-500 hover:to-teal-500',
-                    'bg-gradient-to-br from-green-400 via-emerald-400 to-teal-400 hover:from-green-500 hover:via-emerald-500 hover:to-teal-500',
-                    'bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 hover:from-yellow-500 hover:via-amber-500 hover:to-orange-500',
-                    'bg-gradient-to-br from-orange-400 via-red-400 to-pink-400 hover:from-orange-500 hover:via-red-500 hover:to-pink-500',
-                    'bg-gradient-to-br from-fuchsia-400 via-purple-400 to-pink-400 hover:from-fuchsia-500 hover:via-purple-500 hover:to-pink-500',
-                    'bg-gradient-to-br from-sky-400 via-blue-400 to-indigo-400 hover:from-sky-500 hover:via-blue-500 hover:to-indigo-500',
+                    'bg-gradient-to-br from-pink-100 via-rose-100 to-red-100 hover:from-pink-200 hover:via-rose-200 hover:to-red-200',
+                    'bg-gradient-to-br from-purple-100 via-violet-100 to-indigo-100 hover:from-purple-200 hover:via-violet-200 hover:to-indigo-200',
+                    'bg-gradient-to-br from-blue-100 via-cyan-100 to-teal-100 hover:from-blue-200 hover:via-cyan-200 hover:to-teal-200',
+                    'bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 hover:from-green-200 hover:via-emerald-200 hover:to-teal-200',
+                    'bg-gradient-to-br from-yellow-100 via-amber-100 to-orange-100 hover:from-yellow-200 hover:via-amber-200 hover:to-orange-200',
+                    'bg-gradient-to-br from-orange-100 via-red-100 to-pink-100 hover:from-orange-200 hover:via-red-200 hover:to-pink-200',
+                    'bg-gradient-to-br from-fuchsia-100 via-purple-100 to-pink-100 hover:from-fuchsia-200 hover:via-purple-200 hover:to-pink-200',
+                    'bg-gradient-to-br from-sky-100 via-blue-100 to-indigo-100 hover:from-sky-200 hover:via-blue-200 hover:to-indigo-200',
                 ];
             @endphp
             @foreach($batches as $index => $batch)
