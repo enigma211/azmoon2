@@ -17,24 +17,12 @@
                             <h1 class="text-xl font-bold mb-1">
                                 خوش آمدید، {{ auth()->user()->name }}! 👋
                             </h1>
-                            @php
-                                $user = auth()->user();
-                                $hasPaid = $user->hasPaidSubscription();
-                                $subscription = $user->activeSubscription()->with('subscriptionPlan')->first();
-                                $daysRemaining = null;
-                                if ($subscription && $subscription->ends_at) {
-                                    $daysRemaining = now()->diffInDays($subscription->ends_at, false);
-                                    $daysRemaining = $daysRemaining > 0 ? ceil($daysRemaining) : 0;
-                                }
-                            @endphp
                             <p class="text-indigo-100 text-sm">
                                 پلن شما: 
-                                @if($hasPaid && $subscription)
-                                    <span class="font-semibold">{{ $subscription->subscriptionPlan->title }}</span>
+                                @if($subscription)
+                                    <span class="font-semibold">{{ $subscription->title }}</span>
                                     @if($daysRemaining !== null)
-                                        <span class="text-xs">- {{ $daysRemaining }} روز باقیمانده</span>
-                                    @else
-                                        <span class="text-xs">- نامحدود</span>
+                                        <span class="text-xs">- {{ ceil($daysRemaining) }} روز باقیمانده</span>
                                     @endif
                                 @else
                                     <span class="font-semibold">رایگان</span>

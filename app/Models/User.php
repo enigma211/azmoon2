@@ -82,6 +82,14 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
+     * Get user's subscription plan
+     */
+    public function subscriptionPlan()
+    {
+        return $this->belongsTo(SubscriptionPlan::class);
+    }
+
+    /**
      * Check if user has an active paid subscription
      */
     public function hasPaidSubscription(): bool

@@ -23,11 +23,11 @@ class ProfilePage extends Component
         }
 
         $user = Auth::user();
-        $this->subscription = $user->activeSubscription;
-
-        // Calculate days remaining
-        if ($this->subscription && $this->subscription->ends_at) {
-            $this->daysRemaining = now()->diffInDays($this->subscription->ends_at, false);
+        
+        // Check if user has active subscription
+        if ($user->subscription_plan_id && $user->subscription_end) {
+            $this->subscription = $user->subscriptionPlan;
+            $this->daysRemaining = now()->diffInDays($user->subscription_end, false);
             $this->isExpired = $this->daysRemaining <= 0;
         }
 
