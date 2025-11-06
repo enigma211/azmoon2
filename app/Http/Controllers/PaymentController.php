@@ -30,10 +30,13 @@ class PaymentController extends Controller
     {
         $user = Auth::user();
         
-        // ایجاد صورتحساب
-        $invoice = (new Invoice)->amount($plan->price_toman);
+        // تبدیل تومان به ریال (ضرب در 10)
+        $amountInRials = $plan->price_toman * 10;
         
-        // ذخیره اطلاعات پرداخت در دیتابیس
+        // ایجاد صورتحساب
+        $invoice = (new Invoice)->amount($amountInRials);
+        
+        // ذخیره اطلاعات پرداخت در دیتابیس (به تومان)
         $payment = Payment::create([
             'user_id' => $user->id,
             'subscription_plan_id' => $plan->id,
