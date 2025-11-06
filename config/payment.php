@@ -47,6 +47,6 @@ return [
     |
     */
     'map' => [
-        'zibal' => \Shetabit\Multipay\Drivers\Zibal::class,
+        'zibal' => \App\Payment\Drivers\Zibal::class,
     ]
 ];
