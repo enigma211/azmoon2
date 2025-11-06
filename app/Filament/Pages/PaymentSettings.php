@@ -37,14 +37,13 @@ class PaymentSettings extends Page implements HasForms
         return $form
             ->schema([
                 Section::make('تنظیمات درگاه زیبال')
-                    ->description('برای دریافت Merchant ID به پنل زیبال مراجعه کنید: https://zibal.ir')
+                    ->description('برای تغییر Merchant ID، فایل .env را ویرایش کنید. پنل زیبال: https://zibal.ir')
                     ->schema([
                         TextInput::make('merchant_id')
                             ->label('Merchant ID')
-                            ->placeholder('zibal')
-                            ->helperText('برای تست از مقدار "zibal" استفاده کنید')
-                            ->required()
-                            ->maxLength(255),
+                            ->helperText('این مقدار از فایل .env خوانده می‌شود')
+                            ->disabled()
+                            ->dehydrated(false),
                     ])
                     ->columns(1),
 
@@ -54,7 +53,15 @@ class PaymentSettings extends Page implements HasForms
                             ->label('آدرس بازگشت (Callback URL)')
                             ->default(url('/payment/verify'))
                             ->disabled()
+                            ->dehydrated(false)
                             ->helperText('این آدرس به صورت خودکار تنظیم می‌شود'),
+                        
+                        TextInput::make('status')
+                            ->label('وضعیت')
+                            ->default('فعال ✓')
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->helperText('درگاه پرداخت زیبال فعال است'),
                     ])
                     ->columns(1),
             ])
@@ -63,45 +70,6 @@ class PaymentSettings extends Page implements HasForms
 
     protected function getFormActions(): array
     {
-        return [
-            Action::make('save')
-                ->label('ذخیره تنظیمات')
-                ->submit('save'),
-        ];
-    }
-
-    public function save(): void
-    {
-        $data = $this->form->getState();
-
-        // Update .env file
-        $this->updateEnvFile([
-            'ZIBAL_MERCHANT_ID' => $data['merchant_id'],
-        ]);
-
-        Notification::make()
-            ->success()
-            ->title('تنظیمات با موفقیت ذخیره شد')
-            ->body('تنظیمات درگاه پرداخت زیبال بروزرسانی شد.')
-            ->send();
-    }
-
-    protected function updateEnvFile(array $data): void
-    {
-        $envFile = base_path('.env');
-        $envContent = file_get_contents($envFile);
-
-        foreach ($data as $key => $value) {
-            $pattern = "/^{$key}=.*/m";
-            $replacement = "{$key}={$value}";
-
-            if (preg_match($pattern, $envContent)) {
-                $envContent = preg_replace($pattern, $replacement, $envContent);
-            } else {
-                $envContent .= "\n{$replacement}";
-            }
-        }
-
-        file_put_contents($envFile, $envContent);
+        return [];
     }
 }
