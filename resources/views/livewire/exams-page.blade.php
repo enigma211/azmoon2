@@ -8,36 +8,22 @@
     <!-- Exams Grid -->
     <div class="grid gap-4 sm:grid-cols-2">
         @foreach($exams as $exam)
-            @php
-                // Array of beautiful gradients
-                $gradients = [
-                    'from-violet-500 to-purple-600',
-                    'from-blue-500 to-cyan-600',
-                    'from-emerald-500 to-teal-600',
-                    'from-orange-500 to-pink-600',
-                    'from-rose-500 to-red-600',
-                    'from-indigo-500 to-blue-600',
-                    'from-fuchsia-500 to-purple-600',
-                    'from-amber-500 to-orange-600',
-                ];
-                $gradient = $gradients[$loop->index % count($gradients)];
-            @endphp
             <a href="{{ route('exam.play', ['exam' => $exam->id]) }}" 
                wire:navigate 
-               class="group relative bg-gradient-to-br {{ $gradient }} rounded-xl p-5 hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden">
+               class="group relative bg-white rounded-xl border border-gray-200 p-5 hover:border-indigo-300 hover:shadow-lg transition-all duration-300 overflow-hidden">
                 
-                <!-- Overlay for better text readability -->
-                <div class="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-300"></div>
+                <!-- Subtle gradient overlay on hover -->
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/0 to-purple-50/0 group-hover:from-indigo-50/50 group-hover:to-purple-50/30 transition-all duration-300"></div>
                 
                 <!-- Content -->
-                <div class="relative text-white">
+                <div class="relative">
                     <!-- Title -->
-                    <h3 class="font-bold text-white mb-3 text-lg drop-shadow-sm">
+                    <h3 class="font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">
                         {{ $exam->title }}
                     </h3>
                     
                     <!-- Meta Info -->
-                    <div class="flex items-center gap-4 mb-3 text-sm text-white/90">
+                    <div class="flex items-center gap-4 mb-3 text-sm text-gray-600">
                         @php
                             $questionCount = $exam->questions()->where('is_deleted', false)->count();
                         @endphp
@@ -69,13 +55,13 @@
                     
                     <!-- Description -->
                     @if($exam->description)
-                        <p class="text-sm text-white/80 line-clamp-2 leading-relaxed">
+                        <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">
                             {{ \Illuminate\Support\Str::limit($exam->description, 100) }}
                         </p>
                     @endif
                     
                     <!-- Arrow icon -->
-                    <div class="mt-4 flex items-center text-white text-sm font-semibold bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 w-fit group-hover:bg-white/30 transition-all">
+                    <div class="mt-3 flex items-center text-indigo-600 text-sm font-medium">
                         <span class="group-hover:translate-x-1 transition-transform">شروع آزمون</span>
                         <svg class="w-4 h-4 mr-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
