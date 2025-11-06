@@ -8,22 +8,36 @@
     <!-- Exams Grid -->
     <div class="grid gap-4 sm:grid-cols-2">
         @foreach($exams as $exam)
+            @php
+                // Array of beautiful gradients for exams
+                $examGradients = [
+                    'from-indigo-400 via-purple-400 to-pink-400',
+                    'from-cyan-400 via-blue-400 to-indigo-400',
+                    'from-emerald-400 via-teal-400 to-cyan-400',
+                    'from-amber-400 via-orange-400 to-red-400',
+                    'from-pink-400 via-rose-400 to-red-400',
+                    'from-violet-400 via-purple-400 to-fuchsia-400',
+                    'from-lime-400 via-green-400 to-emerald-400',
+                    'from-orange-400 via-amber-400 to-yellow-400',
+                ];
+                $examGradient = $examGradients[$loop->index % count($examGradients)];
+            @endphp
             <a href="{{ route('exam.play', ['exam' => $exam->id]) }}" 
                wire:navigate 
-               class="group relative bg-white rounded-xl border border-gray-200 p-5 hover:border-indigo-300 hover:shadow-lg transition-all duration-300 overflow-hidden">
+               class="group relative bg-gradient-to-br {{ $examGradient }} rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 overflow-hidden">
                 
-                <!-- Subtle gradient overlay on hover -->
-                <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/0 to-purple-50/0 group-hover:from-indigo-50/50 group-hover:to-purple-50/30 transition-all duration-300"></div>
+                <!-- Overlay for better text readability -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                 
                 <!-- Content -->
                 <div class="relative">
                     <!-- Title -->
-                    <h3 class="font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">
+                    <h3 class="font-bold text-white mb-3 text-lg drop-shadow-md">
                         {{ $exam->title }}
                     </h3>
                     
                     <!-- Meta Info -->
-                    <div class="flex items-center gap-4 mb-3 text-sm text-gray-600">
+                    <div class="flex items-center gap-4 mb-3 text-sm text-white drop-shadow">
                         @php
                             $questionCount = $exam->questions()->where('is_deleted', false)->count();
                         @endphp
@@ -55,16 +69,16 @@
                     
                     <!-- Description -->
                     @if($exam->description)
-                        <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">
+                        <p class="text-sm text-white/90 line-clamp-2 leading-relaxed drop-shadow">
                             {{ \Illuminate\Support\Str::limit($exam->description, 100) }}
                         </p>
                     @endif
                     
                     <!-- Arrow icon -->
-                    <div class="mt-3 flex items-center text-indigo-600 text-sm font-medium">
+                    <div class="mt-4 flex items-center text-white text-sm font-bold bg-black/20 backdrop-blur-sm rounded-lg px-4 py-2.5 w-fit group-hover:bg-black/30 transition-all shadow-lg">
                         <span class="group-hover:translate-x-1 transition-transform">شروع آزمون</span>
-                        <svg class="w-4 h-4 mr-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        <svg class="w-4 h-4 mr-1.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
                         </svg>
                     </div>
                 </div>

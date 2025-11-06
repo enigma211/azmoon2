@@ -12,27 +12,27 @@
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             @foreach($batches as $batch)
                 @php
-                    // Array of beautiful gradients
-                    $gradients = [
-                        'from-violet-500 to-purple-600',
-                        'from-blue-500 to-cyan-600',
-                        'from-emerald-500 to-teal-600',
-                        'from-orange-500 to-pink-600',
-                        'from-rose-500 to-red-600',
-                        'from-indigo-500 to-blue-600',
-                        'from-fuchsia-500 to-purple-600',
-                        'from-amber-500 to-orange-600',
-                        'from-sky-500 to-indigo-600',
-                        'from-pink-500 to-rose-600',
+                    // Array of beautiful gradients for batches
+                    $batchGradients = [
+                        'from-purple-400 via-pink-400 to-red-400',
+                        'from-blue-400 via-cyan-400 to-teal-400',
+                        'from-green-400 via-emerald-400 to-teal-400',
+                        'from-orange-400 via-red-400 to-pink-400',
+                        'from-indigo-400 via-blue-400 to-cyan-400',
+                        'from-fuchsia-400 via-purple-400 to-pink-400',
+                        'from-yellow-400 via-orange-400 to-red-400',
+                        'from-rose-400 via-pink-400 to-fuchsia-400',
+                        'from-teal-400 via-cyan-400 to-blue-400',
+                        'from-lime-400 via-green-400 to-emerald-400',
                     ];
-                    $gradient = $gradients[$loop->index % count($gradients)];
+                    $batchGradient = $batchGradients[$loop->index % count($batchGradients)];
                 @endphp
                 <a href="{{ route('exams', ['batch' => $batch->id]) }}" 
                    wire:navigate 
-                   class="group relative bg-gradient-to-br {{ $gradient }} rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden">
+                   class="group relative bg-gradient-to-br {{ $batchGradient }} rounded-2xl shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 overflow-hidden">
                     
                     <!-- Overlay for better text readability -->
-                    <div class="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-300"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                     
                     <!-- Content -->
                     <div class="relative p-6 text-white">
@@ -61,10 +61,10 @@
                         </div>
                         
                         <!-- Arrow -->
-                        <div class="flex items-center text-white text-sm font-semibold bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 w-fit group-hover:bg-white/30 transition-all">
+                        <div class="flex items-center text-white text-sm font-bold bg-black/20 backdrop-blur-sm rounded-lg px-4 py-2.5 w-fit group-hover:bg-black/30 transition-all shadow-lg">
                             <span class="group-hover:translate-x-1 transition-transform">مشاهده آزمون‌ها</span>
-                            <svg class="w-4 h-4 mr-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            <svg class="w-4 h-4 mr-1.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
                             </svg>
                         </div>
                     </div>
