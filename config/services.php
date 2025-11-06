@@ -35,10 +35,4 @@ return [
         ],
     ],
 
-    'zarinpal' => [
-        'merchantID' => env('ZARINPAL_MERCHANT_ID'),
-        'zarinGate' => env('ZARINPAL_ZARINGATE', false),
-        'sandbox' => env('ZARINPAL_SANDBOX', false),
-    ],
-
 ];

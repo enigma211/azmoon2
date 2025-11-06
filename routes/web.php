@@ -85,7 +85,7 @@ Route::get('/checkout/{plan}', [SubscriptionController::class, 'checkoutShow'])
     ->middleware(['auth'])
     ->name('checkout.show');
 
-// Payment Routes (Zarinpal)
+// Payment Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/payment/{plan}', [PaymentController::class, 'show'])->name('payment.show');
     Route::post('/payment/{plan}/request', [PaymentController::class, 'request'])->name('payment.request');
