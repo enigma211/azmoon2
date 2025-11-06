@@ -31,15 +31,15 @@ class PaymentController extends Controller
         $user = Auth::user();
         
         // ایجاد صورتحساب
-        $invoice = (new Invoice)->amount($plan->price);
+        $invoice = (new Invoice)->amount($plan->price_toman);
         
         // ذخیره اطلاعات پرداخت در دیتابیس
         $payment = Payment::create([
             'user_id' => $user->id,
             'subscription_plan_id' => $plan->id,
-            'amount' => $plan->price,
+            'amount' => $plan->price_toman,
             'status' => 'pending',
-            'description' => "خرید اشتراک {$plan->name}",
+            'description' => "خرید اشتراک {$plan->title}",
         ]);
 
         try {

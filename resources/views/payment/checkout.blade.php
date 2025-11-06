@@ -11,7 +11,7 @@
                         <div class="space-y-3">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">نام پلن:</span>
-                                <span class="font-semibold">{{ $plan->name }}</span>
+                                <span class="font-semibold">{{ $plan->title }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">مدت زمان:</span>
@@ -19,7 +19,7 @@
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">مبلغ قابل پرداخت:</span>
-                                <span class="font-bold text-lg text-blue-600">{{ number_format($plan->price) }} تومان</span>
+                                <span class="font-bold text-lg text-blue-600">{{ number_format($plan->price_toman) }} تومان</span>
                             </div>
                         </div>
                     </div>
