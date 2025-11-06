@@ -12,11 +12,6 @@ use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 
 class PaymentController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * نمایش صفحه پرداخت
      */
