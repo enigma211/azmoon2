@@ -13,7 +13,7 @@
             @foreach($batches as $batch)
                 <a href="{{ route('exams', ['batch' => $batch->id]) }}" 
                    wire:navigate 
-                   class="group relative rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 hover:from-blue-100 hover:via-indigo-100 hover:to-purple-100 border-2 border-white/50">
+                   class="group relative rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden bg-gradient-to-br from-blue-300 via-indigo-300 to-purple-300 hover:from-blue-400 hover:via-indigo-400 hover:to-purple-400 border-2 border-white/50">
                     
                     <!-- Content -->
                     <div class="p-6">
@@ -23,7 +23,7 @@
                         
                         <!-- Additional Info -->
                         <div class="flex items-center justify-between text-sm mb-4">
-                            <span class="text-gray-800 font-medium">نوبت آزمون</span>
+                            <span class="text-gray-900 font-medium">نوبت آزمون</span>
                             
                             @if($batch->is_active)
                                 <span class="inline-flex items-center rounded-full bg-green-500 text-white text-xs font-medium px-3 py-1 shadow-sm">
@@ -37,7 +37,7 @@
                         </div>
                         
                         <!-- Arrow -->
-                        <div class="flex items-center text-indigo-700 text-sm font-semibold">
+                        <div class="flex items-center text-gray-900 text-sm font-semibold">
                             <span class="group-hover:translate-x-1 transition-transform">مشاهده آزمون‌ها</span>
                             <svg class="w-4 h-4 mr-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>

@@ -10,7 +10,7 @@
         @foreach($exams as $exam)
             <a href="{{ route('exam.play', ['exam' => $exam->id]) }}" 
                wire:navigate 
-               class="group relative rounded-xl p-6 hover:shadow-2xl transition-all duration-300 overflow-hidden bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 hover:from-teal-100 hover:via-cyan-100 hover:to-blue-100 border-2 border-white/50 shadow-lg">
+               class="group relative rounded-xl p-6 hover:shadow-2xl transition-all duration-300 overflow-hidden bg-gradient-to-br from-teal-300 via-cyan-300 to-blue-300 hover:from-teal-400 hover:via-cyan-400 hover:to-blue-400 border-2 border-white/50 shadow-lg">
                 
                 <!-- Content -->
                 <div class="relative">
@@ -25,25 +25,25 @@
                             $questionCount = $exam->questions()->where('is_deleted', false)->count();
                         @endphp
                         @if($questionCount > 0)
-                            <span class="text-gray-800 font-medium">{{ $questionCount }} سوال</span>
+                            <span class="text-gray-900 font-medium">{{ $questionCount }} سوال</span>
                         @endif
                         
                         @if($exam->duration_minutes)
-                            <span class="text-gray-800 font-medium">{{ $exam->duration_minutes }} دقیقه</span>
+                            <span class="text-gray-900 font-medium">{{ $exam->duration_minutes }} دقیقه</span>
                         @else
-                            <span class="text-gray-800 font-medium">بدون محدودیت زمان</span>
+                            <span class="text-gray-900 font-medium">بدون محدودیت زمان</span>
                         @endif
                     </div>
                     
                     <!-- Description -->
                     @if($exam->description)
-                        <p class="text-sm text-gray-700 line-clamp-2 leading-relaxed mb-3">
+                        <p class="text-sm text-gray-900 line-clamp-2 leading-relaxed mb-3">
                             {{ \Illuminate\Support\Str::limit($exam->description, 100) }}
                         </p>
                     @endif
                     
                     <!-- Arrow icon -->
-                    <div class="flex items-center text-cyan-700 text-sm font-semibold">
+                    <div class="flex items-center text-gray-900 text-sm font-semibold">
                         <span class="group-hover:translate-x-1 transition-transform">شروع آزمون</span>
                         <svg class="w-4 h-4 mr-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
