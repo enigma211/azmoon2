@@ -6,62 +6,44 @@
     </div>
 
     <!-- Exams Grid -->
-    <div class="grid gap-4 sm:grid-cols-2">
+    <div class="grid gap-5 sm:grid-cols-2">
         @foreach($exams as $exam)
             <a href="{{ route('exam.play', ['exam' => $exam->id]) }}" 
                wire:navigate 
-               class="group relative bg-white rounded-xl border border-gray-200 p-5 hover:border-indigo-300 hover:shadow-lg transition-all duration-300 overflow-hidden">
-                
-                <!-- Subtle gradient overlay on hover -->
-                <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/0 to-purple-50/0 group-hover:from-indigo-50/50 group-hover:to-purple-50/30 transition-all duration-300"></div>
+               class="group relative rounded-xl p-6 hover:shadow-2xl transition-all duration-300 overflow-hidden bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 hover:from-teal-100 hover:via-cyan-100 hover:to-blue-100 border-2 border-white/50 shadow-lg">
                 
                 <!-- Content -->
                 <div class="relative">
                     <!-- Title -->
-                    <h3 class="font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">
+                    <h3 class="font-bold text-gray-900 mb-3 text-lg">
                         {{ $exam->title }}
                     </h3>
                     
                     <!-- Meta Info -->
-                    <div class="flex items-center gap-4 mb-3 text-sm text-gray-600">
+                    <div class="flex items-center gap-4 mb-3 text-sm">
                         @php
                             $questionCount = $exam->questions()->where('is_deleted', false)->count();
                         @endphp
                         @if($questionCount > 0)
-                            <div class="flex items-center gap-1.5">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <span>{{ $questionCount }} سوال</span>
-                            </div>
+                            <span class="text-gray-800 font-medium">{{ $questionCount }} سوال</span>
                         @endif
                         
                         @if($exam->duration_minutes)
-                            <div class="flex items-center gap-1.5">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <span>{{ $exam->duration_minutes }} دقیقه</span>
-                            </div>
+                            <span class="text-gray-800 font-medium">{{ $exam->duration_minutes }} دقیقه</span>
                         @else
-                            <div class="flex items-center gap-1.5">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <span>بدون محدودیت زمان</span>
-                            </div>
+                            <span class="text-gray-800 font-medium">بدون محدودیت زمان</span>
                         @endif
                     </div>
                     
                     <!-- Description -->
                     @if($exam->description)
-                        <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">
+                        <p class="text-sm text-gray-700 line-clamp-2 leading-relaxed mb-3">
                             {{ \Illuminate\Support\Str::limit($exam->description, 100) }}
                         </p>
                     @endif
                     
                     <!-- Arrow icon -->
-                    <div class="mt-3 flex items-center text-indigo-600 text-sm font-medium">
+                    <div class="flex items-center text-cyan-700 text-sm font-semibold">
                         <span class="group-hover:translate-x-1 transition-transform">شروع آزمون</span>
                         <svg class="w-4 h-4 mr-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
