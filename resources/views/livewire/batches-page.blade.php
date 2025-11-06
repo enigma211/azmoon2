@@ -3,8 +3,7 @@
         <!-- Header -->
         <header class="mb-8">
             <div class="text-center">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">نوبت‌های آزمون</h1>
-                <p class="text-gray-600">نوبت مورد نظر خود را برای شرکت در آزمون انتخاب کنید</p>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto">تمام آزمون‌هایی که در لیست زیر مشاهده می‌کنید آزمون‌های رسمی می‌باشد که توسط دفتر مقررات ملی ساختمان برگزار گردیده است و تمام سوالات مربوط به دوره‌های گذشته است</p>
             </div>
         </header>
 
