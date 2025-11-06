@@ -7,10 +7,25 @@
 
     <!-- Exams Grid -->
     <div class="grid gap-5 sm:grid-cols-2">
-        @foreach($exams as $exam)
+        @php
+            $examGradients = [
+                'bg-gradient-to-br from-rose-400 via-pink-400 to-fuchsia-400 hover:from-rose-500 hover:via-pink-500 hover:to-fuchsia-500',
+                'bg-gradient-to-br from-violet-400 via-purple-400 to-indigo-400 hover:from-violet-500 hover:via-purple-500 hover:to-indigo-500',
+                'bg-gradient-to-br from-cyan-400 via-sky-400 to-blue-400 hover:from-cyan-500 hover:via-sky-500 hover:to-blue-500',
+                'bg-gradient-to-br from-teal-400 via-emerald-400 to-green-400 hover:from-teal-500 hover:via-emerald-500 hover:to-green-500',
+                'bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 hover:from-amber-500 hover:via-orange-500 hover:to-red-500',
+                'bg-gradient-to-br from-lime-400 via-green-400 to-emerald-400 hover:from-lime-500 hover:via-green-500 hover:to-emerald-500',
+                'bg-gradient-to-br from-indigo-400 via-blue-400 to-cyan-400 hover:from-indigo-500 hover:via-blue-500 hover:to-cyan-500',
+                'bg-gradient-to-br from-pink-400 via-rose-400 to-red-400 hover:from-pink-500 hover:via-rose-500 hover:to-red-500',
+            ];
+        @endphp
+        @foreach($exams as $index => $exam)
+            @php
+                $examGradientClass = $examGradients[$index % count($examGradients)];
+            @endphp
             <a href="{{ route('exam.play', ['exam' => $exam->id]) }}" 
                wire:navigate 
-               class="group relative rounded-xl p-6 hover:shadow-2xl transition-all duration-300 overflow-hidden bg-gradient-to-br from-teal-300 via-cyan-300 to-blue-300 hover:from-teal-400 hover:via-cyan-400 hover:to-blue-400 border-2 border-white/50 shadow-lg">
+               class="group relative rounded-xl p-6 hover:shadow-2xl transition-all duration-300 overflow-hidden {{ $examGradientClass }} border-2 border-white/30 shadow-lg">
                 
                 <!-- Content -->
                 <div class="relative">

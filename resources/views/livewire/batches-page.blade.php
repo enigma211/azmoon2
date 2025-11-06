@@ -10,10 +10,25 @@
 
         <!-- Batches Grid -->
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            @foreach($batches as $batch)
+            @php
+                $gradients = [
+                    'bg-gradient-to-br from-pink-400 via-rose-400 to-red-400 hover:from-pink-500 hover:via-rose-500 hover:to-red-500',
+                    'bg-gradient-to-br from-purple-400 via-violet-400 to-indigo-400 hover:from-purple-500 hover:via-violet-500 hover:to-indigo-500',
+                    'bg-gradient-to-br from-blue-400 via-cyan-400 to-teal-400 hover:from-blue-500 hover:via-cyan-500 hover:to-teal-500',
+                    'bg-gradient-to-br from-green-400 via-emerald-400 to-teal-400 hover:from-green-500 hover:via-emerald-500 hover:to-teal-500',
+                    'bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 hover:from-yellow-500 hover:via-amber-500 hover:to-orange-500',
+                    'bg-gradient-to-br from-orange-400 via-red-400 to-pink-400 hover:from-orange-500 hover:via-red-500 hover:to-pink-500',
+                    'bg-gradient-to-br from-fuchsia-400 via-purple-400 to-pink-400 hover:from-fuchsia-500 hover:via-purple-500 hover:to-pink-500',
+                    'bg-gradient-to-br from-sky-400 via-blue-400 to-indigo-400 hover:from-sky-500 hover:via-blue-500 hover:to-indigo-500',
+                ];
+            @endphp
+            @foreach($batches as $index => $batch)
+                @php
+                    $gradientClass = $gradients[$index % count($gradients)];
+                @endphp
                 <a href="{{ route('exams', ['batch' => $batch->id]) }}" 
                    wire:navigate 
-                   class="group relative rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden bg-gradient-to-br from-blue-300 via-indigo-300 to-purple-300 hover:from-blue-400 hover:via-indigo-400 hover:to-purple-400 border-2 border-white/50">
+                   class="group relative rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden {{ $gradientClass }} border-2 border-white/30">
                     
                     <!-- Content -->
                     <div class="p-6">
