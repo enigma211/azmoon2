@@ -115,6 +115,9 @@ class PaymentController extends Controller
                 'subscription_end' => now()->addDays($plan->duration_days),
             ]);
 
+            // لاگین کردن کاربر
+            Auth::login($user);
+
             return redirect()->route('profile')
                 ->with('subscription_success', "پرداخت با موفقیت انجام شد. کد پیگیری: {$receipt->getReferenceId()}");
 
