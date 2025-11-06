@@ -34,9 +34,9 @@ new class extends Component
                 </a>
             </div>
 
-            <!-- Settings / User menu - Right Side -->
+            <!-- Settings / User menu - Right Side (Hidden on mobile/tablet) -->
             @auth
-                <div class="absolute left-0 flex items-center">
+                <div class="absolute left-0 hidden lg:flex items-center">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
@@ -65,8 +65,8 @@ new class extends Component
                     </x-dropdown>
                 </div>
             @else
-                <!-- Guest: Login / Register - Right Side -->
-                <div class="absolute left-0 flex items-center">
+                <!-- Guest: Login / Register - Right Side (Hidden on mobile/tablet) -->
+                <div class="absolute left-0 hidden lg:flex items-center">
                     <a href="{{ route('profile') }}" wire:navigate class="px-4 py-2 text-sm rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition-colors font-medium">ورود / ثبت‌نام</a>
                 </div>
             @endauth
