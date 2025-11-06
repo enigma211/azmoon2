@@ -118,13 +118,8 @@
         </div>
 
         @livewireScripts
-        <script>
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('/service-worker.js').catch(function(){/* noop */});
-                });
-            }
-        </script>
+        {{-- Service Worker temporarily disabled due to caching issues --}}
+        {{-- Will be re-enabled with proper network-first strategy for PWA --}}
         <script>
             // Show overlay only if navigation is >200ms to prevent flicker
             (function(){
