@@ -24,6 +24,12 @@ class ProfilePage extends Component
 
         $user = Auth::user();
         
+        // Check and reset expired subscription
+        $user->checkAndResetExpiredSubscription();
+        
+        // Refresh user data after potential update
+        $user->refresh();
+        
         // Check if user has active subscription
         if ($user->subscription_plan_id && $user->subscription_end) {
             $this->subscription = $user->subscriptionPlan;

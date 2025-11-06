@@ -90,6 +90,20 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
+     * Check if subscription is expired and reset to free plan
+     */
+    public function checkAndResetExpiredSubscription(): void
+    {
+        if ($this->subscription_end && $this->subscription_end < now()) {
+            $this->update([
+                'subscription_plan_id' => null,
+                'subscription_start' => null,
+                'subscription_end' => null,
+            ]);
+        }
+    }
+
+    /**
      * Check if user has an active paid subscription
      */
     public function hasPaidSubscription(): bool
