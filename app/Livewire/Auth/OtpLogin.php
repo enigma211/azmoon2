@@ -7,6 +7,7 @@ use App\Models\SubscriptionPlan;
 use App\Models\UserSubscription;
 use App\Services\SmsService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class OtpLogin extends Component
@@ -61,12 +62,14 @@ class OtpLogin extends Component
             return;
         }
 
-        // Store OTP in session
-        session([
-            'otp' => $otp,
-            'mobile' => $this->mobile,
-            'otp_expires_at' => now()->addMinutes(5),
+        Cache::put('otp:' . $this->mobile, [
+            'code' => $otp,
+            'expires_at' => now()->addMinutes(5),
             'user_exists' => $this->userExists,
+        ], now()->addMinutes(5));
+
+        session([
+            'mobile' => $this->mobile,
         ]);
 
         $this->otpSent = true;
@@ -80,10 +83,11 @@ class OtpLogin extends Component
     {
         $this->validate(['otp' => $this->rules['otp']], $this->messages);
 
-        $expectedOtp = session('otp');
-        $sessionMobile = session('mobile');
-        $expires = session('otp_expires_at');
-        $userExists = session('user_exists', false);
+        $sessionMobile = session('mobile') ?? $this->mobile;
+        $data = Cache::get('otp:' . $sessionMobile);
+        $expectedOtp = $data['code'] ?? null;
+        $expires = $data['expires_at'] ?? null;
+        $userExists = $data['user_exists'] ?? false;
 
         if (!$expectedOtp || !$sessionMobile) {
             $this->addError('otp', 'جلسه منقضی شده است. لطفا دوباره تلاش کنید.');
@@ -107,6 +111,8 @@ class OtpLogin extends Component
             $user = User::where('mobile', $sessionMobile)->first();
             Auth::login($user);
 
+            session()->regenerate();
+            Cache::forget('otp:' . $sessionMobile);
             session()->forget(['otp', 'mobile', 'otp_expires_at', 'user_exists']);
             
             return redirect()->route('profile');
