@@ -44,6 +44,9 @@ Route::get('/resource/{resource}', ResourceDetail::class)->name('resource.detail
 // Alias for Breeze/legacy links expecting a dashboard route
 Route::get('/dashboard', HomePage::class)->name('dashboard');
 
+// Payment Callback (no auth required for callback) - MUST be before auth.php
+Route::get('/payment/verify', [PaymentController::class, 'verify'])->name('payment.verify');
+
 // Breeze auth routes
 require __DIR__.'/auth.php';
 
@@ -90,6 +93,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payment/{plan}', [PaymentController::class, 'show'])->name('payment.show');
     Route::post('/payment/{plan}/request', [PaymentController::class, 'request'])->name('payment.request');
 });
-
-// Payment Callback (no auth required for callback)
-Route::get('/payment/verify', [PaymentController::class, 'verify'])->name('payment.verify');
