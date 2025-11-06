@@ -52,12 +52,12 @@
                             </div>
                         </div>
 
-                        <div class="flex gap-4">
-                            <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-150">
-                                پرداخت و فعال‌سازی اشتراک
+                        <div class="flex flex-col sm:flex-row gap-4" dir="rtl">
+                            <button type="submit" class="w-full sm:flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition duration-150 shadow-lg">
+                                💳 پرداخت و فعال‌سازی اشتراک
                             </button>
-                            <a href="{{ route('profile') }}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-4 rounded-lg text-center transition duration-150">
-                                انصراف
+                            <a href="{{ route('profile') }}" class="w-full sm:flex-1 bg-gray-400 hover:bg-gray-500 text-white font-bold py-4 px-6 rounded-lg text-center transition duration-150 shadow-lg">
+                                ❌ انصراف
                             </a>
                         </div>
                     </form>
