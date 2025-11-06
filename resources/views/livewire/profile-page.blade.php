@@ -63,23 +63,23 @@
                     <!-- Plan Name -->
                     <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3">
                         <span class="text-gray-600 dark:text-gray-400">نوع اشتراک:</span>
-                        <span class="font-semibold text-lg {{ $subscription->subscriptionPlan->price_toman > 0 ? 'text-green-600' : 'text-gray-600' }}">
-                            {{ $subscription->subscriptionPlan->title }}
+                        <span class="font-semibold text-lg {{ $subscription->price_toman > 0 ? 'text-green-600' : 'text-gray-600' }}">
+                            {{ $subscription->title }}
                         </span>
                     </div>
 
                     <!-- Start Date -->
                     <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3">
                         <span class="text-gray-600 dark:text-gray-400">تاریخ فعال‌سازی:</span>
-                        <span class="font-medium">{{ jdate($subscription->starts_at, 'Y/m/d') }}</span>
+                        <span class="font-medium">{{ jdate(auth()->user()->subscription_start, 'Y/m/d') }}</span>
                     </div>
 
                     <!-- End Date -->
                     <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3">
                         <span class="text-gray-600 dark:text-gray-400">تاریخ پایان:</span>
                         <span class="font-medium">
-                            @if($subscription->ends_at)
-                                {{ jdate($subscription->ends_at, 'Y/m/d') }}
+                            @if(auth()->user()->subscription_end)
+                                {{ jdate(auth()->user()->subscription_end, 'Y/m/d') }}
                             @else
                                 <span class="text-green-600">نامحدود</span>
                             @endif
