@@ -19,17 +19,26 @@ if (!fs.existsSync(iconsDir)) {
     fs.mkdirSync(iconsDir, { recursive: true });
 }
 
-// خواندن SVG
-const svgBuffer = fs.readFileSync(path.join(iconsDir, 'icon.svg'));
+// خواندن لوگوی اصلی
+const logoPath = path.join(iconsDir, 'logo-original.png');
+if (!fs.existsSync(logoPath)) {
+    console.error('❌ فایل logo-original.png یافت نشد!');
+    console.log('لطفاً لوگو را از آدرس زیر دانلود و در public/icons/ قرار دهید:');
+    console.log('https://azmoonkade.com/storage/branding/01K8BVENAG3PBKHM0SDPYDZAHG.png');
+    process.exit(1);
+}
 
 // تولید آیکون‌ها
 async function generateIcons() {
-    console.log('🎨 شروع تولید آیکون‌ها...\n');
+    console.log('🎨 شروع تولید آیکون‌ها از لوگوی اصلی...\n');
 
     for (const size of sizes) {
         try {
-            await sharp(svgBuffer)
-                .resize(size, size)
+            await sharp(logoPath)
+                .resize(size, size, {
+                    fit: 'contain',
+                    background: { r: 255, g: 255, b: 255, alpha: 1 }
+                })
                 .png()
                 .toFile(path.join(iconsDir, `icon-${size}x${size}.png`));
             
@@ -41,14 +50,17 @@ async function generateIcons() {
 
     // ساخت maskable icon با padding
     try {
-        await sharp(svgBuffer)
-            .resize(410, 410)
+        await sharp(logoPath)
+            .resize(410, 410, {
+                fit: 'contain',
+                background: { r: 255, g: 255, b: 255, alpha: 1 }
+            })
             .extend({
                 top: 51,
                 bottom: 51,
                 left: 51,
                 right: 51,
-                background: { r: 79, g: 70, b: 229, alpha: 1 }
+                background: { r: 255, g: 255, b: 255, alpha: 1 }
             })
             .png()
             .toFile(path.join(iconsDir, 'maskable-icon-512x512.png'));
@@ -58,34 +70,43 @@ async function generateIcons() {
         console.error('❌ خطا در ساخت maskable icon:', error.message);
     }
 
-    // ساخت آیکون‌های shortcut
+    // ساخت آیکون‌های shortcut با لوگوی اصلی
     try {
-        // آیکون شروع آزمون (با علامت document)
-        await sharp(Buffer.from(`
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
-                <rect width="96" height="96" fill="#10b981" rx="20"/>
-                <path d="M30 25h26l10 10v31a4 4 0 01-4 4H30a4 4 0 01-4-4V29a4 4 0 014-4z" fill="white"/>
-                <path d="M56 25v10h10z" fill="#d1fae5"/>
-                <line x1="38" y1="45" x2="58" y2="45" stroke="#10b981" stroke-width="2"/>
-                <line x1="38" y1="52" x2="58" y2="52" stroke="#10b981" stroke-width="2"/>
-                <line x1="38" y1="59" x2="50" y2="59" stroke="#10b981" stroke-width="2"/>
-            </svg>
-        `))
-            .resize(96, 96)
+        // آیکون شروع آزمون (لوگو با بک‌گراند سبز)
+        await sharp({
+            create: {
+                width: 96,
+                height: 96,
+                channels: 4,
+                background: { r: 16, g: 185, b: 129, alpha: 1 }
+            }
+        })
+            .composite([{
+                input: await sharp(logoPath)
+                    .resize(70, 70, { fit: 'contain', background: { r: 16, g: 185, b: 129, alpha: 0 } })
+                    .toBuffer(),
+                gravity: 'center'
+            }])
             .png()
             .toFile(path.join(iconsDir, 'shortcut-exam.png'));
         
         console.log('✅ Shortcut icon (آزمون) ساخته شد');
 
-        // آیکون پروفایل (با علامت user)
-        await sharp(Buffer.from(`
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
-                <rect width="96" height="96" fill="#6366f1" rx="20"/>
-                <circle cx="48" cy="35" r="12" fill="white"/>
-                <path d="M28 70c0-11 9-20 20-20s20 9 20 20z" fill="white"/>
-            </svg>
-        `))
-            .resize(96, 96)
+        // آیکون پروفایل (لوگو با بک‌گراند آبی)
+        await sharp({
+            create: {
+                width: 96,
+                height: 96,
+                channels: 4,
+                background: { r: 99, g: 102, b: 241, alpha: 1 }
+            }
+        })
+            .composite([{
+                input: await sharp(logoPath)
+                    .resize(70, 70, { fit: 'contain', background: { r: 99, g: 102, b: 241, alpha: 0 } })
+                    .toBuffer(),
+                gravity: 'center'
+            }])
             .png()
             .toFile(path.join(iconsDir, 'shortcut-profile.png'));
         
