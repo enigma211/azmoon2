@@ -32,8 +32,8 @@ if (!fs.existsSync(logoPath)) {
 async function generateIcons() {
     console.log('🎨 شروع تولید آیکون‌ها از لوگوی اصلی...\n');
 
-    // رنگ بک‌گراند: Indigo-600 (#4f46e5)
-    const bgColor = { r: 79, g: 70, b: 229, alpha: 1 };
+    // رنگ بک‌گراند: سفید کلاسیک (#ffffff)
+    const bgColor = { r: 255, g: 255, b: 255, alpha: 1 };
     
     for (const size of sizes) {
         try {
