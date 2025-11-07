@@ -36,6 +36,11 @@ Route::get('/pwa-test', function () {
     return view('pwa-test');
 })->name('pwa.test');
 
+// PWA Debug page (برای عیب‌یابی موبایل)
+Route::get('/pwa-debug', function () {
+    return view('pwa-debug');
+})->name('pwa.debug');
+
 // Domain -> Batches -> Exams flow
 Route::get('/domains/{domain}/batches', BatchesPage::class)->name('batches');
 Route::get('/batches/{batch}/exams', ExamsPage::class)->name('exams');
