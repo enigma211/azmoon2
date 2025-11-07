@@ -45,6 +45,33 @@
         @endif
     </head>
     <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased selection:bg-indigo-200 selection:text-indigo-900" style="font-family: Vazirmatn, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
+        <!-- PWA Install Banner -->
+        <div id="pwa-install-banner" class="hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 py-3">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3 flex-1">
+                        <svg class="w-8 h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-semibold text-sm">نصب اپلیکیشن آزمون کده</p>
+                            <p class="text-xs opacity-90">دسترسی سریع‌تر و تجربه بهتر</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <button onclick="installPWA()" class="bg-white text-indigo-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-50 transition-colors">
+                            نصب
+                        </button>
+                        <button onclick="dismissInstallBanner()" class="text-white hover:bg-white/20 p-2 rounded-lg transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="app" class="min-h-dvh flex flex-col">
             <!-- Top Navigation (optional) -->
             <livewire:layout.navigation />
@@ -119,8 +146,55 @@
 
         @livewireScripts
         
-        {{-- PWA Service Worker Registration --}}
+        {{-- PWA Service Worker Registration & Install Banner --}}
         <script>
+            let deferredPrompt = null;
+            const installBanner = document.getElementById('pwa-install-banner');
+            
+            // PWA Install Banner Functions
+            window.installPWA = async function() {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`نتیجه نصب: ${outcome}`);
+                    
+                    if (outcome === 'accepted') {
+                        console.log('✅ کاربر اپ را نصب کرد');
+                    }
+                    
+                    deferredPrompt = null;
+                    installBanner?.classList.add('hidden');
+                    localStorage.setItem('pwa-install-dismissed', 'true');
+                }
+            };
+            
+            window.dismissInstallBanner = function() {
+                installBanner?.classList.add('hidden');
+                localStorage.setItem('pwa-install-dismissed', 'true');
+                console.log('Banner نصب بسته شد');
+            };
+            
+            // Listen for install prompt
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // نمایش banner اگر قبلاً بسته نشده
+                const dismissed = localStorage.getItem('pwa-install-dismissed');
+                if (!dismissed && installBanner) {
+                    installBanner.classList.remove('hidden');
+                    console.log('✅ Banner نصب نمایش داده شد');
+                }
+            });
+            
+            // Check if already installed
+            window.addEventListener('appinstalled', () => {
+                console.log('✅ اپلیکیشن نصب شد');
+                installBanner?.classList.add('hidden');
+                localStorage.setItem('pwa-install-dismissed', 'true');
+            });
+            
+            // Service Worker Registration
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('/service-worker.js')
