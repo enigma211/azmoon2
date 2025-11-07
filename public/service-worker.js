@@ -188,6 +188,73 @@ function isStaticAsset(pathname) {
 }
 
 // ========================================
+// Push Notification Handler
+// ========================================
+self.addEventListener('push', (event) => {
+  console.log('[SW] Push notification received');
+  
+  let data = {
+    title: 'آزمون کده',
+    body: 'اعلان جدید',
+    icon: '/icons/icon-192x192.png',
+    badge: '/icons/icon-96x96.png',
+    data: {
+      url: '/'
+    }
+  };
+  
+  if (event.data) {
+    try {
+      data = { ...data, ...event.data.json() };
+    } catch (e) {
+      console.error('[SW] خطا در parse کردن push data:', e);
+    }
+  }
+  
+  const options = {
+    body: data.body,
+    icon: data.icon,
+    badge: data.badge,
+    data: data.data,
+    vibrate: [200, 100, 200],
+    tag: data.tag || 'azmoonkade-notification',
+    requireInteraction: false,
+    actions: data.actions || []
+  };
+  
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+});
+
+// ========================================
+// Notification Click Handler
+// ========================================
+self.addEventListener('notificationclick', (event) => {
+  console.log('[SW] Notification clicked');
+  
+  event.notification.close();
+  
+  const urlToOpen = event.notification.data?.url || '/';
+  
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        // اگر پنجره‌ای باز است، فوکوس کن
+        for (const client of clientList) {
+          if (client.url === urlToOpen && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        // اگر پنجره‌ای باز نیست، پنجره جدید باز کن
+        if (clients.openWindow) {
+          return clients.openWindow(urlToOpen);
+        }
+      })
+  );
+});
+
+// ========================================
 // Message Handler - ارتباط با صفحه
 // ========================================
 self.addEventListener('message', (event) => {

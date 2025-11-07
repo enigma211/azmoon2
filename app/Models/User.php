@@ -82,6 +82,14 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
+     * Get user's push notification subscriptions
+     */
+    public function pushSubscriptions()
+    {
+        return $this->hasMany(PushSubscription::class);
+    }
+
+    /**
      * Get user's subscription plan
      */
     public function subscriptionPlan()

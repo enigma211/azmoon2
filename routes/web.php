@@ -41,6 +41,11 @@ Route::get('/pwa-debug', function () {
     return view('pwa-debug');
 })->name('pwa.debug');
 
+// Push Notifications Test page
+Route::get('/push-test', function () {
+    return view('push-test');
+})->name('push.test');
+
 // Domain -> Batches -> Exams flow
 Route::get('/domains/{domain}/batches', BatchesPage::class)->name('batches');
 Route::get('/batches/{batch}/exams', ExamsPage::class)->name('exams');
@@ -97,6 +102,22 @@ Route::get('/pricing', function () {
 Route::post('/checkout/{plan}', [SubscriptionController::class, 'checkout'])
     ->middleware(['auth'])
     ->name('checkout');
+
+// Push Notifications API
+Route::prefix('push')->name('push.')->group(function () {
+    Route::get('/vapid-public-key', [\App\Http\Controllers\PushNotificationController::class, 'getPublicKey'])
+        ->name('vapid-key');
+    
+    Route::post('/subscribe', [\App\Http\Controllers\PushNotificationController::class, 'subscribe'])
+        ->name('subscribe');
+    
+    Route::post('/unsubscribe', [\App\Http\Controllers\PushNotificationController::class, 'unsubscribe'])
+        ->name('unsubscribe');
+    
+    Route::post('/send-test', [\App\Http\Controllers\PushNotificationController::class, 'sendTest'])
+        ->middleware(['auth'])
+        ->name('send-test');
+});
 
 // Show checkout page
 Route::get('/checkout/{plan}', [SubscriptionController::class, 'checkoutShow'])
