@@ -1,4 +1,5 @@
 {
+  "id": "/",
   "name": "آزمون کده - شبیه ساز آزمون نظام مهندسی",
   "short_name": "آزمون کده",
   "description": "شبیه‌ساز آزمون نظام مهندسی با سوالات واقعی سال‌های گذشته",
@@ -93,20 +94,6 @@
           "type": "image/png"
         }
       ]
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/screenshot-1.png",
-      "sizes": "540x720",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "/screenshots/screenshot-2.png",
-      "sizes": "540x720",
-      "type": "image/png",
-      "form_factor": "narrow"
     }
   ]
 }
