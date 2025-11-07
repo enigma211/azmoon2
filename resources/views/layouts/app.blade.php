@@ -118,8 +118,47 @@
         </div>
 
         @livewireScripts
-        {{-- Service Worker temporarily disabled due to caching issues --}}
-        {{-- Will be re-enabled with proper network-first strategy for PWA --}}
+        
+        {{-- PWA Service Worker Registration --}}
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/service-worker.js')
+                        .then((registration) => {
+                            console.log('✅ Service Worker registered:', registration.scope);
+                            
+                            // بررسی به‌روزرسانی
+                            registration.addEventListener('updatefound', () => {
+                                const newWorker = registration.installing;
+                                console.log('🔄 Service Worker جدید در حال نصب...');
+                                
+                                newWorker.addEventListener('statechange', () => {
+                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                        // نسخه جدید آماده است
+                                        if (confirm('نسخه جدید اپلیکیشن آماده است. می‌خواهید الان به‌روزرسانی کنید؟')) {
+                                            newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                            window.location.reload();
+                                        }
+                                    }
+                                });
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('❌ Service Worker registration failed:', error);
+                        });
+                    
+                    // رفرش خودکار وقتی SW جدید فعال شد
+                    let refreshing = false;
+                    navigator.serviceWorker.addEventListener('controllerchange', () => {
+                        if (!refreshing) {
+                            refreshing = true;
+                            window.location.reload();
+                        }
+                    });
+                });
+            }
+        </script>
+        
         <script>
             // Show overlay only if navigation is >200ms to prevent flicker
             (function(){

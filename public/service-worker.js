@@ -1,63 +1,205 @@
-const CACHE_NAME = 'azmoon-cache-v1';
-const OFFLINE_URL = '/offline.html';
+// آزمون کده - Service Worker PWA
+// نسخه: 2.0.0
+// استراتژی: Network-First برای HTML، Cache-First برای Assets
 
+const CACHE_VERSION = 'v2.0.0';
+const CACHE_NAME = `azmoonkade-${CACHE_VERSION}`;
+const OFFLINE_URL = '/offline';
+
+// فایل‌های ضروری که باید در نصب cache شوند
+const PRECACHE_ASSETS = [
+  '/offline',
+  '/manifest.webmanifest',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
+];
+
+// مدت زمان cache (24 ساعت)
+const CACHE_MAX_AGE = 24 * 60 * 60 * 1000;
+
+// ========================================
+// Install Event - نصب و Pre-cache
+// ========================================
 self.addEventListener('install', (event) => {
+  console.log('[SW] نصب Service Worker نسخه', CACHE_VERSION);
+  
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll([
-        OFFLINE_URL,
-        '/',
-        '/manifest.webmanifest',
-      ]);
-    }).then(() => self.skipWaiting())
-  );
-});
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    (async () => {
-      const keys = await caches.keys();
-      await Promise.all(keys.map((k) => (k === CACHE_NAME ? null : caches.delete(k))));
-      await self.clients.claim();
-    })()
-  );
-});
-
-self.addEventListener('fetch', (event) => {
-  const req = event.request;
-  const url = new URL(req.url);
-
-  // Do not attempt to cache non-GET requests
-  if (req.method !== 'GET') {
-    return; // Let the request pass through
-  }
-
-  // For navigations (HTML), try network first, fallback to offline
-  if (req.mode === 'navigate') {
-    event.respondWith(
-      fetch(req).catch(async () => {
-        const cache = await caches.open(CACHE_NAME);
-        const cached = await cache.match(OFFLINE_URL);
-        return cached || new Response('Offline', { status: 503, statusText: 'Offline' });
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('[SW] Pre-caching assets');
+        return cache.addAll(PRECACHE_ASSETS);
       })
-    );
+      .then(() => {
+        console.log('[SW] نصب با موفقیت انجام شد');
+        return self.skipWaiting();
+      })
+      .catch((error) => {
+        console.error('[SW] خطا در نصب:', error);
+      })
+  );
+});
+
+// ========================================
+// Activate Event - فعال‌سازی و پاک‌سازی
+// ========================================
+self.addEventListener('activate', (event) => {
+  console.log('[SW] فعال‌سازی Service Worker نسخه', CACHE_VERSION);
+  
+  event.waitUntil(
+    caches.keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME) {
+              console.log('[SW] حذف cache قدیمی:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      })
+      .then(() => {
+        console.log('[SW] فعال‌سازی با موفقیت انجام شد');
+        return self.clients.claim();
+      })
+  );
+});
+
+// ========================================
+// Fetch Event - مدیریت درخواست‌ها
+// ========================================
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // فقط درخواست‌های GET
+  if (request.method !== 'GET') {
     return;
   }
 
-  // For static assets, use cache-first
-  if (url.origin === location.origin) {
-    event.respondWith(
-      caches.match(req).then((cached) => {
-        return (
-          cached ||
-          fetch(req).then((res) => {
-            // Cache only successful, basic (same-origin) responses
-            if (res && res.status === 200 && res.type === 'basic') {
-              const resClone = res.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
-            }
-            return res;
-          })
+  // نادیده گرفتن درخواست‌های خارجی (CDN, API خارجی)
+  if (url.origin !== location.origin) {
+    return;
+  }
+
+  // نادیده گرفتن درخواست‌های Livewire
+  if (url.pathname.startsWith('/livewire/')) {
+    return;
+  }
+
+  // استراتژی Network-First برای صفحات HTML
+  if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(networkFirstStrategy(request));
+    return;
+  }
+
+  // استراتژی Cache-First برای Assets استاتیک
+  if (isStaticAsset(url.pathname)) {
+    event.respondWith(cacheFirstStrategy(request));
+    return;
+  }
+
+  // بقیه درخواست‌ها: Network-First
+  event.respondWith(networkFirstStrategy(request));
+});
+
+// ========================================
+// استراتژی Network-First
+// ========================================
+async function networkFirstStrategy(request) {
+  try {
+    const networkResponse = await fetch(request);
+    
+    // Cache کردن پاسخ موفق
+    if (networkResponse && networkResponse.status === 200) {
+      const cache = await caches.open(CACHE_NAME);
+      cache.put(request, networkResponse.clone());
+    }
+    
+    return networkResponse;
+  } catch (error) {
+    console.log('[SW] Network failed, trying cache:', request.url);
+    
+    // بررسی cache
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+    
+    // اگر صفحه HTML بود، نمایش صفحه Offline
+    if (request.mode === 'navigate') {
+      const offlineResponse = await caches.match(OFFLINE_URL);
+      if (offlineResponse) {
+        return offlineResponse;
+      }
+    }
+    
+    // پاسخ خطای ساده
+    return new Response('آفلاین - اتصال اینترنت خود را بررسی کنید', {
+      status: 503,
+      statusText: 'Service Unavailable',
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    });
+  }
+}
+
+// ========================================
+// استراتژی Cache-First
+// ========================================
+async function cacheFirstStrategy(request) {
+  const cachedResponse = await caches.match(request);
+  
+  if (cachedResponse) {
+    // بررسی تاریخ انقضا
+    const cachedDate = new Date(cachedResponse.headers.get('date'));
+    const now = new Date();
+    
+    if (now - cachedDate < CACHE_MAX_AGE) {
+      return cachedResponse;
+    }
+  }
+  
+  try {
+    const networkResponse = await fetch(request);
+    
+    if (networkResponse && networkResponse.status === 200) {
+      const cache = await caches.open(CACHE_NAME);
+      cache.put(request, networkResponse.clone());
+    }
+    
+    return networkResponse;
+  } catch (error) {
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+    throw error;
+  }
+}
+
+// ========================================
+// تشخیص فایل‌های استاتیک
+// ========================================
+function isStaticAsset(pathname) {
+  const staticExtensions = [
+    '.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp',
+    '.woff', '.woff2', '.ttf', '.eot', '.ico', '.json'
+  ];
+  
+  return staticExtensions.some(ext => pathname.endsWith(ext));
+}
+
+// ========================================
+// Message Handler - ارتباط با صفحه
+// ========================================
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  
+  if (event.data && event.data.type === 'CLEAR_CACHE') {
+    event.waitUntil(
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => caches.delete(cacheName))
         );
       })
     );
