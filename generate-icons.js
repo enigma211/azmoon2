@@ -32,12 +32,15 @@ if (!fs.existsSync(logoPath)) {
 async function generateIcons() {
     console.log('🎨 شروع تولید آیکون‌ها از لوگوی اصلی...\n');
 
+    // رنگ بک‌گراند: Indigo-600 (#4f46e5)
+    const bgColor = { r: 79, g: 70, b: 229, alpha: 1 };
+    
     for (const size of sizes) {
         try {
             await sharp(logoPath)
                 .resize(size, size, {
                     fit: 'contain',
-                    background: { r: 255, g: 255, b: 255, alpha: 1 }
+                    background: bgColor
                 })
                 .png()
                 .toFile(path.join(iconsDir, `icon-${size}x${size}.png`));
@@ -48,19 +51,19 @@ async function generateIcons() {
         }
     }
 
-    // ساخت maskable icon با padding
+    // ساخت maskable icon با padding و بک‌گراند برند
     try {
         await sharp(logoPath)
             .resize(410, 410, {
                 fit: 'contain',
-                background: { r: 255, g: 255, b: 255, alpha: 1 }
+                background: bgColor
             })
             .extend({
                 top: 51,
                 bottom: 51,
                 left: 51,
                 right: 51,
-                background: { r: 255, g: 255, b: 255, alpha: 1 }
+                background: bgColor
             })
             .png()
             .toFile(path.join(iconsDir, 'maskable-icon-512x512.png'));
