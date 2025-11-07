@@ -26,6 +26,11 @@ Route::get('/resources', ResourcesPage::class)->name('resources');
 Route::get('/profile', ProfilePage::class)->name('profile');
 Route::get('/attempts', AttemptsPage::class)->middleware(['auth'])->name('attempts');
 
+// PWA Offline page
+Route::get('/offline', function () {
+    return view('offline');
+})->name('offline');
+
 // Domain -> Batches -> Exams flow
 Route::get('/domains/{domain}/batches', BatchesPage::class)->name('batches');
 Route::get('/batches/{batch}/exams', ExamsPage::class)->name('exams');
