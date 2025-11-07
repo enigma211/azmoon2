@@ -31,6 +31,11 @@ Route::get('/offline', function () {
     return view('offline');
 })->name('offline');
 
+// PWA Test page (فقط در محیط development)
+Route::get('/pwa-test', function () {
+    return view('pwa-test');
+})->name('pwa.test');
+
 // Domain -> Batches -> Exams flow
 Route::get('/domains/{domain}/batches', BatchesPage::class)->name('batches');
 Route::get('/batches/{batch}/exams', ExamsPage::class)->name('exams');
