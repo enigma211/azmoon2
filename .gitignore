@@ -27,3 +27,11 @@ Thumbs.db
 /.cache/
 /.turbo
 
+# TWA / Android App
+*.keystore
+*.jks
+*.p12
+twa-manifest.json
+app-release-signed.apk
+app-release-bundle.aab
+/android/
