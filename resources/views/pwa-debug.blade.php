@@ -127,23 +127,6 @@
                     return parseInt(sizes[0]) >= 144;
                 });
                 
-                // بررسی دقیق آیکون‌ها
-                let iconChecks = '';
-                if (manifest.icons) {
-                    manifest.icons.forEach(icon => {
-                        const img = new Image();
-                        img.onload = () => {
-                            iconChecks += `<div class="status success">✅ ${icon.sizes}: بارگذاری شد</div>`;
-                            document.getElementById('icon-checks').innerHTML = iconChecks;
-                        };
-                        img.onerror = () => {
-                            iconChecks += `<div class="status error">❌ ${icon.sizes}: خطا در بارگذاری</div>`;
-                            document.getElementById('icon-checks').innerHTML = iconChecks;
-                        };
-                        img.src = icon.src;
-                    });
-                }
-                
                 document.getElementById('manifest-info').innerHTML = `
                     <div class="status success">✅ Manifest موجود است</div>
                     <div class="status ${hasIcons ? 'success' : 'error'}">
@@ -154,13 +137,6 @@
                     </div>
                     <div class="status info">نام: ${manifest.name}</div>
                     <div class="status info">Display: ${manifest.display}</div>
-                    <div class="status ${manifest.start_url ? 'success' : 'error'}">
-                        Start URL: ${manifest.start_url || 'ناموجود'}
-                    </div>
-                    <div class="status ${manifest.id ? 'success' : 'warning'}">
-                        App ID: ${manifest.id || 'تنظیم نشده'}
-                    </div>
-                    <div id="icon-checks" style="margin-top: 10px;"></div>
                     <pre>${JSON.stringify(manifest, null, 2).substring(0, 500)}...</pre>
                 `;
             })
