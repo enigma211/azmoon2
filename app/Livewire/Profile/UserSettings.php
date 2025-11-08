@@ -27,12 +27,23 @@ class UserSettings extends Component
             Auth::user()->update(['font_size' => $size]);
         }
 
-        // Apply font size immediately using JavaScript
+        // Apply font size immediately using JavaScript with inline styles
+        $fontSizes = [
+            'small' => '14px',
+            'medium' => '16px',
+            'large' => '18px',
+            'xlarge' => '20px'
+        ];
+        
+        $fontSize = $fontSizes[$size] ?? '16px';
+        
         $this->js("
             localStorage.setItem('userFontSize', '{$size}');
-            document.body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
-            document.body.classList.add('font-{$size}');
-            window.showNotification('اندازه فونت با موفقیت تغییر کرد');
+            document.body.style.fontSize = '{$fontSize}';
+            document.body.setAttribute('data-font-size', '{$size}');
+            if (typeof window.showNotification === 'function') {
+                window.showNotification('اندازه فونت با موفقیت تغییر کرد');
+            }
         ");
     }
 
@@ -44,12 +55,42 @@ class UserSettings extends Component
             Auth::user()->update(['theme' => $theme]);
         }
 
-        // Apply theme immediately using JavaScript
+        // Apply theme immediately using JavaScript with inline styles
         $this->js("
             localStorage.setItem('userTheme', '{$theme}');
-            document.body.classList.remove('theme-light', 'theme-dark');
-            document.body.classList.add('theme-{$theme}');
-            window.showNotification('تم با موفقیت تغییر کرد');
+            document.body.setAttribute('data-theme', '{$theme}');
+            
+            if ('{$theme}' === 'dark') {
+                document.body.style.backgroundColor = '#1a202c';
+                document.body.style.color = '#e2e8f0';
+                document.querySelectorAll('.bg-white').forEach(el => {
+                    el.style.backgroundColor = '#2d3748';
+                    el.style.color = '#e2e8f0';
+                });
+                document.querySelectorAll('.text-gray-900, .text-gray-800, .text-gray-700').forEach(el => {
+                    el.style.color = '#e2e8f0';
+                });
+                document.querySelectorAll('.bg-gray-50').forEach(el => {
+                    el.style.backgroundColor = '#2d3748';
+                });
+            } else {
+                document.body.style.backgroundColor = '';
+                document.body.style.color = '';
+                document.querySelectorAll('.bg-white').forEach(el => {
+                    el.style.backgroundColor = '';
+                    el.style.color = '';
+                });
+                document.querySelectorAll('.text-gray-900, .text-gray-800, .text-gray-700').forEach(el => {
+                    el.style.color = '';
+                });
+                document.querySelectorAll('.bg-gray-50').forEach(el => {
+                    el.style.backgroundColor = '';
+                });
+            }
+            
+            if (typeof window.showNotification === 'function') {
+                window.showNotification('تم با موفقیت تغییر کرد');
+            }
         ");
     }
 

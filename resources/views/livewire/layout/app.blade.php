@@ -159,20 +159,60 @@
         Livewire.on('loaded', () => document.getElementById('lw-overlay')?.classList.remove('show'));
       });
 
-      // User Preferences Management
+      // User Preferences Management with inline styles
       function applyUserPreferences() {
         const fontSize = localStorage.getItem('userFontSize') || '{{ auth()->check() ? auth()->user()->font_size ?? "medium" : "medium" }}';
         const theme = localStorage.getItem('userTheme') || '{{ auth()->check() ? auth()->user()->theme ?? "light" : "light" }}';
         
-        // Remove all font size classes
-        document.body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
-        // Add current font size class
-        document.body.classList.add('font-' + fontSize);
+        // Font size mapping
+        const fontSizeMap = {
+          'small': '14px',
+          'medium': '16px',
+          'large': '18px',
+          'xlarge': '20px'
+        };
         
-        // Remove all theme classes
-        document.body.classList.remove('theme-light', 'theme-dark');
-        // Add current theme class
-        document.body.classList.add('theme-' + theme);
+        // Apply font size
+        document.body.style.fontSize = fontSizeMap[fontSize] || '16px';
+        document.body.setAttribute('data-font-size', fontSize);
+        
+        // Apply theme
+        document.body.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+          document.body.style.backgroundColor = '#1a202c';
+          document.body.style.color = '#e2e8f0';
+          
+          // Apply dark theme to elements
+          setTimeout(() => {
+            document.querySelectorAll('.bg-white').forEach(el => {
+              el.style.backgroundColor = '#2d3748';
+              el.style.color = '#e2e8f0';
+            });
+            document.querySelectorAll('.text-gray-900, .text-gray-800, .text-gray-700').forEach(el => {
+              el.style.color = '#e2e8f0';
+            });
+            document.querySelectorAll('.bg-gray-50').forEach(el => {
+              el.style.backgroundColor = '#2d3748';
+            });
+          }, 100);
+        } else {
+          document.body.style.backgroundColor = '';
+          document.body.style.color = '';
+          
+          // Reset to light theme
+          setTimeout(() => {
+            document.querySelectorAll('.bg-white').forEach(el => {
+              el.style.backgroundColor = '';
+              el.style.color = '';
+            });
+            document.querySelectorAll('.text-gray-900, .text-gray-800, .text-gray-700').forEach(el => {
+              el.style.color = '';
+            });
+            document.querySelectorAll('.bg-gray-50').forEach(el => {
+              el.style.backgroundColor = '';
+            });
+          }, 100);
+        }
       }
 
       // Apply preferences on page load

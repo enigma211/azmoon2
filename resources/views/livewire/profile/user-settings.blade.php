@@ -84,4 +84,17 @@
             این یک متن نمونه است که با تنظیمات فعلی شما نمایش داده می‌شود. اندازه فونت و تم رنگی که انتخاب کرده‌اید در تمام صفحات سایت اعمال خواهد شد.
         </p>
     </div>
+
+    <!-- Debug Info -->
+    <div class="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200">
+        <p class="text-xs text-blue-800 font-semibold mb-1">اطلاعات فنی (برای اشکال‌زدایی):</p>
+        <p class="text-xs text-blue-700">فونت فعلی: <span class="font-mono">{{ $fontSize }}</span></p>
+        <p class="text-xs text-blue-700">تم فعلی: <span class="font-mono">{{ $theme }}</span></p>
+        <button 
+            onclick="alert('localStorage fontSize: ' + localStorage.getItem('userFontSize') + '\nlocalStorage theme: ' + localStorage.getItem('userTheme') + '\nBody fontSize: ' + document.body.style.fontSize + '\nBody theme: ' + document.body.getAttribute('data-theme'))"
+            class="mt-2 text-xs px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+            نمایش مقادیر localStorage
+        </button>
+    </div>
 </div>
