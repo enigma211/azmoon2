@@ -130,7 +130,7 @@ class SupportTicketResource extends Resource
                     ->label('کاربر')
                     ->searchable()
                     ->sortable()
-                    ->url(fn ($record) => $record->user ? route('filament.admin.resources.users.edit', ['record' => $record->user_id]) : null)
+                    ->url(fn ($record) => $record->user ? "/admin/users/{$record->user_id}/edit" : null)
                     ->color('primary')
                     ->weight('medium'),
                 
