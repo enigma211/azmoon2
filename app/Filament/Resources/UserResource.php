@@ -156,8 +156,8 @@ class UserResource extends Resource
                                 
                                 $plan = \App\Models\SubscriptionPlan::find($subscription->subscription_plan_id);
                                 $planTitle = $plan?->title ?? 'نامشخص';
-                                $starts = $subscription->starts_at ? jdate($subscription->starts_at)->format('Y/m/d') : '-';
-                                $ends = $subscription->ends_at ? jdate($subscription->ends_at)->format('Y/m/d') : 'نامحدود';
+                                $starts = $subscription->starts_at ? $subscription->starts_at->format('Y/m/d') : '-';
+                                $ends = $subscription->ends_at ? $subscription->ends_at->format('Y/m/d') : 'نامحدود';
                                 
                                 return "📦 {$planTitle} | 📅 از {$starts} تا {$ends}";
                             }),
