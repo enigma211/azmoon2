@@ -43,57 +43,11 @@
         opacity: 0.8;
       }
 
-      /* Font Size Classes */
+      /* Font Size Classes - برای fallback */
       body.font-small { font-size: 14px; }
       body.font-medium { font-size: 16px; }
       body.font-large { font-size: 18px; }
       body.font-xlarge { font-size: 20px; }
-
-      /* Dark Theme */
-      body.theme-dark {
-        background-color: #1a202c !important;
-        color: #e2e8f0 !important;
-      }
-      body.theme-dark .bg-white {
-        background-color: #2d3748 !important;
-        color: #e2e8f0 !important;
-      }
-      body.theme-dark .text-gray-900 {
-        color: #e2e8f0 !important;
-      }
-      body.theme-dark .text-gray-800 {
-        color: #e2e8f0 !important;
-      }
-      body.theme-dark .text-gray-700 {
-        color: #cbd5e0 !important;
-      }
-      body.theme-dark .text-gray-600 {
-        color: #a0aec0 !important;
-      }
-      body.theme-dark .text-gray-500 {
-        color: #a0aec0 !important;
-      }
-      body.theme-dark .bg-gray-50 {
-        background-color: #2d3748 !important;
-      }
-      body.theme-dark .bg-gray-100 {
-        background-color: #374151 !important;
-      }
-      body.theme-dark .border-gray-200 {
-        border-color: #4a5568 !important;
-      }
-      body.theme-dark .border-gray-300 {
-        border-color: #4a5568 !important;
-      }
-      body.theme-dark nav {
-        background-color: #2d3748 !important;
-      }
-      body.theme-dark footer {
-        background-color: #1a202c !important;
-      }
-      body.theme-dark .shadow-lg {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
-      }
     </style>
 </head>
 <body class="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -176,42 +130,15 @@
         document.body.style.fontSize = fontSizeMap[fontSize] || '16px';
         document.body.setAttribute('data-font-size', fontSize);
         
-        // Apply theme
+        // Apply theme - فقط background اصلی
         document.body.setAttribute('data-theme', theme);
         if (theme === 'dark') {
-          document.body.style.backgroundColor = '#1a202c';
-          document.body.style.color = '#e2e8f0';
-          
-          // Apply dark theme to elements
-          setTimeout(() => {
-            document.querySelectorAll('.bg-white').forEach(el => {
-              el.style.backgroundColor = '#2d3748';
-              el.style.color = '#e2e8f0';
-            });
-            document.querySelectorAll('.text-gray-900, .text-gray-800, .text-gray-700').forEach(el => {
-              el.style.color = '#e2e8f0';
-            });
-            document.querySelectorAll('.bg-gray-50').forEach(el => {
-              el.style.backgroundColor = '#2d3748';
-            });
-          }, 100);
+          // فقط background body را تاریک می‌کنیم
+          document.body.style.backgroundColor = '#1f2937';
+          // باکس‌ها سفید می‌مانند
         } else {
+          // حالت روشن
           document.body.style.backgroundColor = '';
-          document.body.style.color = '';
-          
-          // Reset to light theme
-          setTimeout(() => {
-            document.querySelectorAll('.bg-white').forEach(el => {
-              el.style.backgroundColor = '';
-              el.style.color = '';
-            });
-            document.querySelectorAll('.text-gray-900, .text-gray-800, .text-gray-700').forEach(el => {
-              el.style.color = '';
-            });
-            document.querySelectorAll('.bg-gray-50').forEach(el => {
-              el.style.backgroundColor = '';
-            });
-          }, 100);
         }
       }
 
