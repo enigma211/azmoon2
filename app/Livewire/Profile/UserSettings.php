@@ -27,8 +27,13 @@ class UserSettings extends Component
             Auth::user()->update(['font_size' => $size]);
         }
 
-        $this->dispatch('font-size-updated', fontSize: $size);
-        $this->dispatch('show-notification', message: 'اندازه فونت با موفقیت تغییر کرد');
+        // Apply font size immediately using JavaScript
+        $this->js("
+            localStorage.setItem('userFontSize', '{$size}');
+            document.body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
+            document.body.classList.add('font-{$size}');
+            window.showNotification('اندازه فونت با موفقیت تغییر کرد');
+        ");
     }
 
     public function updateTheme($theme)
@@ -39,8 +44,13 @@ class UserSettings extends Component
             Auth::user()->update(['theme' => $theme]);
         }
 
-        $this->dispatch('theme-updated', theme: $theme);
-        $this->dispatch('show-notification', message: 'تم با موفقیت تغییر کرد');
+        // Apply theme immediately using JavaScript
+        $this->js("
+            localStorage.setItem('userTheme', '{$theme}');
+            document.body.classList.remove('theme-light', 'theme-dark');
+            document.body.classList.add('theme-{$theme}');
+            window.showNotification('تم با موفقیت تغییر کرد');
+        ");
     }
 
     public function render()

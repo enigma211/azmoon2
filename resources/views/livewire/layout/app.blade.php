@@ -51,13 +51,17 @@
 
       /* Dark Theme */
       body.theme-dark {
-        background-color: #1a202c;
-        color: #e2e8f0;
+        background-color: #1a202c !important;
+        color: #e2e8f0 !important;
       }
       body.theme-dark .bg-white {
         background-color: #2d3748 !important;
+        color: #e2e8f0 !important;
       }
       body.theme-dark .text-gray-900 {
+        color: #e2e8f0 !important;
+      }
+      body.theme-dark .text-gray-800 {
         color: #e2e8f0 !important;
       }
       body.theme-dark .text-gray-700 {
@@ -66,11 +70,29 @@
       body.theme-dark .text-gray-600 {
         color: #a0aec0 !important;
       }
+      body.theme-dark .text-gray-500 {
+        color: #a0aec0 !important;
+      }
       body.theme-dark .bg-gray-50 {
         background-color: #2d3748 !important;
       }
+      body.theme-dark .bg-gray-100 {
+        background-color: #374151 !important;
+      }
       body.theme-dark .border-gray-200 {
         border-color: #4a5568 !important;
+      }
+      body.theme-dark .border-gray-300 {
+        border-color: #4a5568 !important;
+      }
+      body.theme-dark nav {
+        background-color: #2d3748 !important;
+      }
+      body.theme-dark footer {
+        background-color: #1a202c !important;
+      }
+      body.theme-dark .shadow-lg {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
       }
     </style>
 </head>
@@ -159,36 +181,19 @@
       // Apply preferences after Livewire navigation
       window.addEventListener('livewire:navigated', applyUserPreferences);
 
-      // Listen for font size updates
-      window.addEventListener('font-size-updated', (event) => {
-        const fontSize = event.detail.fontSize;
-        localStorage.setItem('userFontSize', fontSize);
-        document.body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
-        document.body.classList.add('font-' + fontSize);
-      });
-
-      // Listen for theme updates
-      window.addEventListener('theme-updated', (event) => {
-        const theme = event.detail.theme;
-        localStorage.setItem('userTheme', theme);
-        document.body.classList.remove('theme-light', 'theme-dark');
-        document.body.classList.add('theme-' + theme);
-      });
-
-      // Listen for notifications
-      window.addEventListener('show-notification', (event) => {
-        // Simple notification - you can enhance this with a toast library
-        const message = event.detail.message;
+      // Global notification function
+      window.showNotification = function(message) {
         const notification = document.createElement('div');
-        notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-opacity duration-300';
+        notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[9999] transition-opacity duration-300';
         notification.textContent = message;
+        notification.style.opacity = '1';
         document.body.appendChild(notification);
         
         setTimeout(() => {
           notification.style.opacity = '0';
           setTimeout(() => notification.remove(), 300);
         }, 2000);
-      });
+      };
     </script>
 </body>
 </html>
