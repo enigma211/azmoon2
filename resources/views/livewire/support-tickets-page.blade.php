@@ -124,7 +124,7 @@
                             </span>
                         @endif
                         <span class="text-sm text-gray-500 mr-3">
-                            {{ \Morilog\Jalali\Jalalian::fromDateTime($selectedTicket->created_at)->format('Y/m/d H:i') }}
+                            {{ $selectedTicket->created_at->format('Y/m/d H:i') }}
                         </span>
                     </div>
 
@@ -144,7 +144,7 @@
                                 <p class="text-gray-800 whitespace-pre-wrap">{{ $selectedTicket->admin_reply }}</p>
                                 @if($selectedTicket->replied_at)
                                     <p class="text-xs text-gray-500 mt-2">
-                                        {{ \Morilog\Jalali\Jalalian::fromDateTime($selectedTicket->replied_at)->format('Y/m/d H:i') }}
+                                        {{ $selectedTicket->replied_at->format('Y/m/d H:i') }}
                                     </p>
                                 @endif
                             </div>
@@ -201,7 +201,7 @@
                                 </div>
                                 <p class="text-sm text-gray-600 mb-2">شماره تیکت: {{ $ticket->ticket_number }}</p>
                                 <p class="text-xs text-gray-500">
-                                    {{ \Morilog\Jalali\Jalalian::fromDateTime($ticket->created_at)->format('Y/m/d H:i') }}
+                                    {{ $ticket->created_at->format('Y/m/d H:i') }}
                                 </p>
                             </div>
                             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
