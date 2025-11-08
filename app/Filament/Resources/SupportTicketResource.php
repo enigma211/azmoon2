@@ -25,6 +25,16 @@ class SupportTicketResource extends Resource
 
     protected static ?int $navigationSort = 6;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', 'pending')->count() ?: null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -53,13 +63,15 @@ class SupportTicketResource extends Resource
                             ->dehydrated(false)
                             ->rows(5),
                         
-                        Forms\Components\Select::make('status')
-                            ->label('وضعیت')
-                            ->options([
-                                'pending' => 'در انتظار پاسخ',
-                                'answered' => 'پاسخ داده شده',
-                            ])
-                            ->required(),
+                        Forms\Components\Placeholder::make('status_display')
+                            ->label('وضعیت فعلی')
+                            ->content(fn ($record) => $record ? 
+                                ($record->status === 'pending' ? '⏳ در انتظار پاسخ' : '✅ پاسخ داده شده') 
+                                : 'جدید'
+                            ),
+                        
+                        Forms\Components\Hidden::make('status')
+                            ->default('pending'),
                     ])
                     ->columns(1),
                 
@@ -125,8 +137,10 @@ class SupportTicketResource extends Resource
                     ]),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('پاسخ')
+                    ->icon('heroicon-o-chat-bubble-left-right')
+                    ->color('success'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -147,7 +161,6 @@ class SupportTicketResource extends Resource
     {
         return [
             'index' => Pages\ListSupportTickets::route('/'),
-            'view' => Pages\ViewSupportTicket::route('/{record}'),
             'edit' => Pages\EditSupportTicket::route('/{record}/edit'),
         ];
     }

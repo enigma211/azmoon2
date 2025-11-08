@@ -13,15 +13,17 @@ class EditSupportTicket extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
             Actions\DeleteAction::make(),
         ];
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        // اگر پاسخ داده شده و وضعیت answered است، زمان پاسخ را ثبت کن
-        if (!empty($data['admin_reply']) && $data['status'] === 'answered') {
+        // اگر پاسخ داده شده، وضعیت را به answered تغییر بده
+        if (!empty($data['admin_reply'])) {
+            $data['status'] = 'answered';
+            
+            // اگر قبلاً پاسخ داده نشده، زمان پاسخ را ثبت کن
             if (empty($this->record->replied_at)) {
                 $data['replied_at'] = now();
             }
