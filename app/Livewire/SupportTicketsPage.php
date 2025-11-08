@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\SupportTicket;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 
 class SupportTicketsPage extends Component
@@ -37,17 +36,6 @@ class SupportTicketsPage extends Component
 
     public function createTicket()
     {
-        // بررسی محدودیت 15 دقیقه
-        $key = 'create-ticket:' . Auth::id();
-        
-        if (RateLimiter::tooManyAttempts($key, 1)) {
-            $seconds = RateLimiter::availableIn($key);
-            $minutes = ceil($seconds / 60);
-            
-            session()->flash('error', "شما باید {$minutes} دقیقه صبر کنید تا بتوانید تیکت جدید ایجاد کنید.");
-            return;
-        }
-
         $this->validate();
 
         // ایجاد تیکت
@@ -58,9 +46,6 @@ class SupportTicketsPage extends Component
             'message' => $this->message,
             'status' => 'pending',
         ]);
-
-        // اعمال محدودیت 15 دقیقه
-        RateLimiter::hit($key, 900); // 900 ثانیه = 15 دقیقه
 
         session()->flash('success', 'تیکت شما با موفقیت ثبت شد. شماره تیکت: ' . $ticket->ticket_number);
         
