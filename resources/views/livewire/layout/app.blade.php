@@ -130,15 +130,38 @@
         document.body.style.fontSize = fontSizeMap[fontSize] || '16px';
         document.body.setAttribute('data-font-size', fontSize);
         
-        // Apply theme - فقط background اصلی
+        // Apply theme
         document.body.setAttribute('data-theme', theme);
         if (theme === 'dark') {
-          // فقط background body را تاریک می‌کنیم
+          // Background body را تاریک می‌کنیم
           document.body.style.backgroundColor = '#1f2937';
-          // باکس‌ها سفید می‌مانند
+          document.body.style.color = '#f3f4f6';
+          
+          // برای صفحه آزمون: متن سوالات و پاسخ‌ها را سفید می‌کنیم
+          setTimeout(() => {
+            // متن سوالات
+            document.querySelectorAll('.question-text, .choice-text, .exam-question').forEach(el => {
+              el.style.color = '#f3f4f6';
+            });
+            // متن‌های خاکستری را روشن‌تر می‌کنیم
+            document.querySelectorAll('.text-gray-500, .text-gray-600').forEach(el => {
+              el.style.color = '#d1d5db';
+            });
+          }, 100);
         } else {
           // حالت روشن
           document.body.style.backgroundColor = '';
+          document.body.style.color = '';
+          
+          // ریست کردن رنگ‌ها
+          setTimeout(() => {
+            document.querySelectorAll('.question-text, .choice-text, .exam-question').forEach(el => {
+              el.style.color = '';
+            });
+            document.querySelectorAll('.text-gray-500, .text-gray-600').forEach(el => {
+              el.style.color = '';
+            });
+          }, 100);
         }
       }
 
