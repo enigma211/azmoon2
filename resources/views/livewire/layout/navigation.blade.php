@@ -19,7 +19,7 @@ new class extends Component
 <nav x-data="{ open: false }" class="bg-gray-50/95 dark:bg-gray-100/95 border-b border-gray-200 backdrop-blur supports-[backdrop-filter]:bg-gray-50/60 shadow-sm z-40">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-center items-center h-12 relative">
+        <div class="flex justify-center items-center h-16 relative">
             <!-- Logo - Centered -->
             <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center">
                 <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2">

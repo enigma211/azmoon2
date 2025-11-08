@@ -23,13 +23,13 @@
                     @svg('heroicon-o-check-circle', 'w-10 h-10 text-green-600')
                     <div>
                         <div class="text-lg font-semibold text-green-700">قبول</div>
-                        <div class="text-sm text-gray-700">نمره: {{ number_format($stats['percentage'] ?? 0, 1) }}%</div>
+                        <div class="text-sm text-gray-700">نمره: {{ number_format($stats['percentage'] ?? 0, 1) }}% - حد نصاب قبولی در این آزمون {{ number_format($passThreshold ?? 50, 0) }}% بوده است.</div>
                     </div>
                 @else
                     @svg('heroicon-o-x-circle', 'w-10 h-10 text-rose-600')
                     <div>
                         <div class="text-lg font-semibold text-rose-700">رد</div>
-                        <div class="text-sm text-gray-700">نمره: {{ number_format($stats['percentage'] ?? 0, 1) }}%</div>
+                        <div class="text-sm text-gray-700">نمره: {{ number_format($stats['percentage'] ?? 0, 1) }}% - حد نصاب قبولی در این آزمون {{ number_format($passThreshold ?? 50, 0) }}% بوده است.</div>
                     </div>
                 @endif
             </div>

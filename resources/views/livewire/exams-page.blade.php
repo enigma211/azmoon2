@@ -3,6 +3,21 @@
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 mb-1">فهرست آزمون‌ها</h1>
         <p class="text-sm text-gray-500">آزمون مورد نظر خود را انتخاب کنید</p>
+        
+        <!-- توضیحات نمره منفی -->
+        <div class="mt-4 p-4 bg-amber-50 border-r-4 border-amber-400 rounded-lg">
+            <div class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <div>
+                    <p class="text-sm font-semibold text-amber-900 mb-1">توجه مهم:</p>
+                    <p class="text-sm text-amber-800 leading-relaxed">
+                        این آزمون‌ها دارای نمره منفی می‌باشند و هر 3 سوال منفی، 1 سوال مثبت را از بین می‌برد و در نمره نهایی شما تاثیر می‌گذارد.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Exams Grid -->

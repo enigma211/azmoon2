@@ -148,6 +148,7 @@ class ExamResult extends Component
             'stats' => $this->stats,
             'userAnswers' => $this->userAnswers,
             'review' => $this->review,
+            'passThreshold' => (float)($this->exam->pass_threshold ?? 50),
         ])->layout('layouts.app');
     }
 }
