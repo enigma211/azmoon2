@@ -145,27 +145,15 @@
                     document.body.style.backgroundColor = '#1f2937';
                     document.body.style.color = '#f3f4f6';
                     
+                    // برای صفحه آزمون: متن سوالات و پاسخ‌ها را سفید می‌کنیم
                     setTimeout(() => {
-                        // صفحه batches و سایر صفحات با gradient
-                        document.querySelectorAll('.bg-gradient-to-br').forEach(el => {
-                            if (el.classList.contains('from-gray-50')) {
-                                el.style.background = '#1f2937';
-                            }
-                        });
-                        
-                        // متن‌های خاکستری و مشکی را سفید می‌کنیم
-                        document.querySelectorAll('.text-gray-700, .text-gray-900, .text-gray-800').forEach(el => {
-                            el.style.color = '#f3f4f6';
-                        });
-                        
-                        // متن‌های خاکستری روشن را روشن‌تر می‌کنیم
-                        document.querySelectorAll('.text-gray-500, .text-gray-600').forEach(el => {
-                            el.style.color = '#d1d5db';
-                        });
-                        
-                        // متن سوالات و پاسخ‌ها در آزمون
+                        // متن سوالات
                         document.querySelectorAll('.question-text, .choice-text, .exam-question').forEach(el => {
                             el.style.color = '#f3f4f6';
+                        });
+                        // متن‌های خاکستری را روشن‌تر می‌کنیم
+                        document.querySelectorAll('.text-gray-500, .text-gray-600').forEach(el => {
+                            el.style.color = '#d1d5db';
                         });
                     }, 100);
                 } else {
@@ -175,13 +163,10 @@
                     
                     // ریست کردن رنگ‌ها
                     setTimeout(() => {
-                        document.querySelectorAll('.bg-gradient-to-br').forEach(el => {
-                            el.style.background = '';
-                        });
-                        document.querySelectorAll('.text-gray-700, .text-gray-900, .text-gray-800, .text-gray-500, .text-gray-600').forEach(el => {
+                        document.querySelectorAll('.question-text, .choice-text, .exam-question').forEach(el => {
                             el.style.color = '';
                         });
-                        document.querySelectorAll('.question-text, .choice-text, .exam-question').forEach(el => {
+                        document.querySelectorAll('.text-gray-500, .text-gray-600').forEach(el => {
                             el.style.color = '';
                         });
                     }, 100);

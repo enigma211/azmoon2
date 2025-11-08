@@ -64,23 +64,13 @@ class UserSettings extends Component
                 document.body.style.backgroundColor = '#1f2937';
                 document.body.style.color = '#f3f4f6';
                 
+                // برای صفحه آزمون
                 setTimeout(() => {
-                    // صفحه batches
-                    document.querySelectorAll('.bg-gradient-to-br').forEach(el => {
-                        if (el.classList.contains('from-gray-50')) {
-                            el.style.background = '#1f2937';
-                        }
-                    });
-                    
-                    // همه متن‌های خاکستری و مشکی
-                    document.querySelectorAll('.text-gray-700, .text-gray-900, .text-gray-800').forEach(el => {
+                    document.querySelectorAll('.question-text, .choice-text, .exam-question').forEach(el => {
                         el.style.color = '#f3f4f6';
                     });
                     document.querySelectorAll('.text-gray-500, .text-gray-600').forEach(el => {
                         el.style.color = '#d1d5db';
-                    });
-                    document.querySelectorAll('.question-text, .choice-text, .exam-question').forEach(el => {
-                        el.style.color = '#f3f4f6';
                     });
                 }, 100);
             } else {
@@ -88,13 +78,10 @@ class UserSettings extends Component
                 document.body.style.color = '';
                 
                 setTimeout(() => {
-                    document.querySelectorAll('.bg-gradient-to-br').forEach(el => {
-                        el.style.background = '';
-                    });
-                    document.querySelectorAll('.text-gray-700, .text-gray-900, .text-gray-800, .text-gray-500, .text-gray-600').forEach(el => {
+                    document.querySelectorAll('.question-text, .choice-text, .exam-question').forEach(el => {
                         el.style.color = '';
                     });
-                    document.querySelectorAll('.question-text, .choice-text, .exam-question').forEach(el => {
+                    document.querySelectorAll('.text-gray-500, .text-gray-600').forEach(el => {
                         el.style.color = '';
                     });
                 }, 100);
