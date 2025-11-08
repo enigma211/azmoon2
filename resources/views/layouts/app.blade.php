@@ -119,6 +119,85 @@
 
         @livewireScripts
         
+        {{-- User Preferences Script --}}
+        <script>
+            // User Preferences Management with inline styles
+            function applyUserPreferences() {
+                const fontSize = localStorage.getItem('userFontSize') || '{{ auth()->check() ? auth()->user()->font_size ?? "medium" : "medium" }}';
+                const theme = localStorage.getItem('userTheme') || '{{ auth()->check() ? auth()->user()->theme ?? "light" : "light" }}';
+                
+                // Font size mapping
+                const fontSizeMap = {
+                    'small': '14px',
+                    'medium': '16px',
+                    'large': '18px',
+                    'xlarge': '20px'
+                };
+                
+                // Apply font size
+                document.body.style.fontSize = fontSizeMap[fontSize] || '16px';
+                document.body.setAttribute('data-font-size', fontSize);
+                
+                // Apply theme
+                document.body.setAttribute('data-theme', theme);
+                if (theme === 'dark') {
+                    document.body.style.backgroundColor = '#1a202c';
+                    document.body.style.color = '#e2e8f0';
+                    
+                    // Apply dark theme to elements
+                    setTimeout(() => {
+                        document.querySelectorAll('.bg-white').forEach(el => {
+                            el.style.backgroundColor = '#2d3748';
+                            el.style.color = '#e2e8f0';
+                        });
+                        document.querySelectorAll('.text-gray-900, .text-gray-800, .text-gray-700, .text-gray-600').forEach(el => {
+                            el.style.color = '#e2e8f0';
+                        });
+                        document.querySelectorAll('.bg-gray-50').forEach(el => {
+                            el.style.backgroundColor = '#2d3748';
+                        });
+                    }, 100);
+                } else {
+                    document.body.style.backgroundColor = '';
+                    document.body.style.color = '';
+                    
+                    // Reset to light theme
+                    setTimeout(() => {
+                        document.querySelectorAll('.bg-white').forEach(el => {
+                            el.style.backgroundColor = '';
+                            el.style.color = '';
+                        });
+                        document.querySelectorAll('.text-gray-900, .text-gray-800, .text-gray-700, .text-gray-600').forEach(el => {
+                            el.style.color = '';
+                        });
+                        document.querySelectorAll('.bg-gray-50').forEach(el => {
+                            el.style.backgroundColor = '';
+                        });
+                    }, 100);
+                }
+            }
+
+            // Apply preferences on page load
+            document.addEventListener('DOMContentLoaded', applyUserPreferences);
+            
+            // Apply preferences after Livewire navigation
+            window.addEventListener('livewire:navigated', applyUserPreferences);
+
+            // Global notification function
+            window.showNotification = function(message) {
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[9999] transition-opacity duration-300';
+                notification.textContent = message;
+                notification.style.opacity = '1';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => notification.remove(), 300);
+                }, 2000);
+            };
+        </script>
+        
         {{-- PWA Service Worker Registration --}}
         <script>
             if ('serviceWorker' in navigator) {
