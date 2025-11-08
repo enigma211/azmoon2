@@ -17,6 +17,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PaymentController;
 use App\Livewire\AttemptsPage;
+use App\Livewire\SupportTicketsPage;
 use App\Livewire\Admin\LogsPage as AdminLogsPage;
 
 // SPA-style routes powered by Livewire v3 (wire:navigate handled in views)
@@ -25,6 +26,7 @@ Route::get('/domains', DomainsPage::class)->name('domains');
 Route::get('/resources', ResourcesPage::class)->name('resources');
 Route::get('/profile', ProfilePage::class)->name('profile');
 Route::get('/attempts', AttemptsPage::class)->middleware(['auth'])->name('attempts');
+Route::get('/support-tickets', SupportTicketsPage::class)->middleware(['auth'])->name('support-tickets');
 
 // PWA Offline page
 Route::get('/offline', function () {

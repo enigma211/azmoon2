@@ -54,6 +54,33 @@
             <!-- Spacer -->
             <div class="h-8"></div>
 
+            <!-- Support Tickets Link -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="p-3 bg-blue-100 rounded-lg">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">پشتیبانی</h3>
+                            <p class="text-sm text-gray-600">ارسال تیکت و مشاهده تاریخچه تیکت‌های پشتیبانی</p>
+                        </div>
+                    </div>
+                    <a 
+                        href="{{ route('support-tickets') }}" 
+                        wire:navigate
+                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    >
+                        مشاهده تیکت‌ها
+                    </a>
+                </div>
+            </div>
+
+            <!-- Spacer -->
+            <div class="h-8"></div>
+
             <!-- User Settings Component -->
             <livewire:profile.user-settings />
 
