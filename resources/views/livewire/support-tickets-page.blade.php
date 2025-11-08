@@ -128,28 +128,71 @@
                         </span>
                     </div>
 
-                    <!-- User Message -->
-                    <div class="mb-6">
-                        <h3 class="text-sm font-semibold text-gray-700 mb-2">پیام شما:</h3>
-                        <div class="bg-gray-50 rounded-lg p-4">
+                    <!-- Conversation Thread -->
+                    <div class="mb-6 space-y-4 max-h-96 overflow-y-auto">
+                        <!-- Initial Message -->
+                        <div class="bg-blue-50 rounded-lg p-4 border-r-4 border-blue-500">
+                            <div class="flex items-start justify-between mb-2">
+                                <span class="text-xs font-semibold text-blue-800">شما</span>
+                                <span class="text-xs text-gray-500">{{ $selectedTicket->created_at->format('Y/m/d H:i') }}</span>
+                            </div>
                             <p class="text-gray-800 whitespace-pre-wrap">{{ $selectedTicket->message }}</p>
                         </div>
+
+                        <!-- Replies -->
+                        @foreach($selectedTicket->replies as $reply)
+                            @if($reply->is_admin)
+                                <!-- Admin Reply -->
+                                <div class="bg-green-50 rounded-lg p-4 border-r-4 border-green-500">
+                                    <div class="flex items-start justify-between mb-2">
+                                        <span class="text-xs font-semibold text-green-800">پشتیبانی</span>
+                                        <span class="text-xs text-gray-500">{{ $reply->created_at->format('Y/m/d H:i') }}</span>
+                                    </div>
+                                    <p class="text-gray-800 whitespace-pre-wrap">{{ $reply->message }}</p>
+                                </div>
+                            @else
+                                <!-- User Reply -->
+                                <div class="bg-blue-50 rounded-lg p-4 border-r-4 border-blue-500">
+                                    <div class="flex items-start justify-between mb-2">
+                                        <span class="text-xs font-semibold text-blue-800">شما</span>
+                                        <span class="text-xs text-gray-500">{{ $reply->created_at->format('Y/m/d H:i') }}</span>
+                                    </div>
+                                    <p class="text-gray-800 whitespace-pre-wrap">{{ $reply->message }}</p>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
 
-                    <!-- Admin Reply -->
-                    @if($selectedTicket->admin_reply)
-                        <div class="mb-4">
-                            <h3 class="text-sm font-semibold text-gray-700 mb-2">پاسخ پشتیبانی:</h3>
-                            <div class="bg-indigo-50 rounded-lg p-4 border-r-4 border-indigo-500">
-                                <p class="text-gray-800 whitespace-pre-wrap">{{ $selectedTicket->admin_reply }}</p>
-                                @if($selectedTicket->replied_at)
-                                    <p class="text-xs text-gray-500 mt-2">
-                                        {{ $selectedTicket->replied_at->format('Y/m/d H:i') }}
-                                    </p>
-                                @endif
-                            </div>
+                    <!-- Reply Success Message -->
+                    @if (session()->has('reply_success'))
+                        <div class="mb-4 p-3 bg-green-50 border-r-4 border-green-400 rounded-lg">
+                            <p class="text-sm text-green-800">{{ session('reply_success') }}</p>
                         </div>
                     @endif
+
+                    <!-- Reply Form -->
+                    <div class="mb-4 border-t pt-4">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-3">پاسخ شما:</h3>
+                        <form wire:submit.prevent="sendReply">
+                            <textarea 
+                                wire:model="replyMessage"
+                                rows="4"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="پاسخ خود را بنویسید..."
+                            ></textarea>
+                            @error('replyMessage') 
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            <div class="mt-3 flex gap-2">
+                                <button 
+                                    type="submit"
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                                >
+                                    ارسال پاسخ
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
                     <!-- Close Button -->
                     <div class="mt-6">

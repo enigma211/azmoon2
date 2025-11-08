@@ -75,7 +75,38 @@ class SupportTicketResource extends Resource
                     ])
                     ->columns(1),
                 
-                Forms\Components\Section::make('پاسخ ادمین')
+                Forms\Components\Section::make('گفتگو')
+                    ->schema([
+                        Forms\Components\Placeholder::make('conversation')
+                            ->label('')
+                            ->content(function ($record) {
+                                if (!$record || !$record->replies()->exists()) {
+                                    return 'هنوز پاسخی ارسال نشده است.';
+                                }
+                                
+                                $html = '<div class="space-y-3">';
+                                foreach ($record->replies()->orderBy('created_at')->get() as $reply) {
+                                    $color = $reply->is_admin ? 'bg-green-50 border-green-500' : 'bg-blue-50 border-blue-500';
+                                    $sender = $reply->is_admin ? 'پشتیبانی' : ($reply->user->name ?? 'کاربر');
+                                    $time = $reply->created_at->format('Y/m/d H:i');
+                                    
+                                    $html .= "<div class='p-3 rounded border-r-4 {$color}'>";
+                                    $html .= "<div class='flex justify-between mb-2'>";
+                                    $html .= "<strong class='text-sm'>{$sender}</strong>";
+                                    $html .= "<span class='text-xs text-gray-500'>{$time}</span>";
+                                    $html .= "</div>";
+                                    $html .= "<p class='text-sm whitespace-pre-wrap'>" . e($reply->message) . "</p>";
+                                    $html .= "</div>";
+                                }
+                                $html .= '</div>';
+                                
+                                return new \Illuminate\Support\HtmlString($html);
+                            }),
+                    ])
+                    ->columns(1)
+                    ->visible(fn ($record) => $record && $record->replies()->exists()),
+                
+                Forms\Components\Section::make('پاسخ جدید')
                     ->schema([
                         Forms\Components\Textarea::make('admin_reply')
                             ->label('پاسخ')
