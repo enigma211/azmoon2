@@ -129,7 +129,10 @@ class SupportTicketResource extends Resource
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('کاربر')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->url(fn ($record) => $record->user ? route('filament.admin.resources.users.edit', ['record' => $record->user_id]) : null)
+                    ->color('primary')
+                    ->weight('medium'),
                 
                 Tables\Columns\TextColumn::make('subject')
                     ->label('موضوع')
