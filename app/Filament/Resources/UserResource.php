@@ -64,13 +64,17 @@ class UserResource extends Resource
                             ->label('نام')
                             ->required()
                             ->afterStateHydrated(function ($set, $record) {
-                                if ($record && !empty($record->name)) {
-                                    $full = (string)($record->name ?? '');
-                                    $parts = preg_split('/\s+/', trim($full), 2);
-                                    $set('first_name', $parts[0] ?? '');
-                                    $set('last_name', $parts[1] ?? '');
+                                if ($record && $record->name) {
+                                    $full = trim((string)$record->name);
+                                    if (!empty($full)) {
+                                        $parts = preg_split('/\s+/', $full, 2);
+                                        $set('first_name', $parts[0] ?? '');
+                                        $set('last_name', $parts[1] ?? '');
+                                    } else {
+                                        $set('first_name', '');
+                                        $set('last_name', '');
+                                    }
                                 } else {
-                                    // Default values if name is empty
                                     $set('first_name', '');
                                     $set('last_name', '');
                                 }
