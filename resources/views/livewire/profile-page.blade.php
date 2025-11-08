@@ -68,13 +68,12 @@
                             <p class="text-sm text-gray-600">ارسال تیکت و مشاهده تاریخچه تیکت‌های پشتیبانی</p>
                         </div>
                     </div>
-                    <a 
-                        href="{{ route('support-tickets') }}" 
-                        wire:navigate
-                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    <button 
+                        onclick="window.location.href='{{ route('support-tickets') }}'"
+                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium cursor-pointer"
                     >
                         مشاهده تیکت‌ها
-                    </a>
+                    </button>
                 </div>
             </div>
 
