@@ -54,6 +54,12 @@
             <!-- Spacer -->
             <div class="h-8"></div>
 
+            <!-- User Settings Component -->
+            <livewire:profile.user-settings />
+
+            <!-- Spacer -->
+            <div class="h-8"></div>
+
             <!-- Old Subscription Card (Hidden, keeping for reference) -->
             <div class="hidden bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
             <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">وضعیت اشتراک (قدیمی)</h2>

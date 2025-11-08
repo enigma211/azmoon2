@@ -30,6 +30,8 @@ class User extends Authenticatable implements FilamentUser
         'subscription_plan_id',
         'subscription_start',
         'subscription_end',
+        'font_size',
+        'theme',
     ];
 
     /**

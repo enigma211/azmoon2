@@ -42,6 +42,36 @@
       .enamad-logo a:hover {
         opacity: 0.8;
       }
+
+      /* Font Size Classes */
+      body.font-small { font-size: 14px; }
+      body.font-medium { font-size: 16px; }
+      body.font-large { font-size: 18px; }
+      body.font-xlarge { font-size: 20px; }
+
+      /* Dark Theme */
+      body.theme-dark {
+        background-color: #1a202c;
+        color: #e2e8f0;
+      }
+      body.theme-dark .bg-white {
+        background-color: #2d3748 !important;
+      }
+      body.theme-dark .text-gray-900 {
+        color: #e2e8f0 !important;
+      }
+      body.theme-dark .text-gray-700 {
+        color: #cbd5e0 !important;
+      }
+      body.theme-dark .text-gray-600 {
+        color: #a0aec0 !important;
+      }
+      body.theme-dark .bg-gray-50 {
+        background-color: #2d3748 !important;
+      }
+      body.theme-dark .border-gray-200 {
+        border-color: #4a5568 !important;
+      }
     </style>
 </head>
 <body class="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -105,6 +135,59 @@
       document.addEventListener('livewire:load', () => {
         Livewire.on('loading', () => document.getElementById('lw-overlay')?.classList.add('show'));
         Livewire.on('loaded', () => document.getElementById('lw-overlay')?.classList.remove('show'));
+      });
+
+      // User Preferences Management
+      function applyUserPreferences() {
+        const fontSize = localStorage.getItem('userFontSize') || '{{ auth()->check() ? auth()->user()->font_size ?? "medium" : "medium" }}';
+        const theme = localStorage.getItem('userTheme') || '{{ auth()->check() ? auth()->user()->theme ?? "light" : "light" }}';
+        
+        // Remove all font size classes
+        document.body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
+        // Add current font size class
+        document.body.classList.add('font-' + fontSize);
+        
+        // Remove all theme classes
+        document.body.classList.remove('theme-light', 'theme-dark');
+        // Add current theme class
+        document.body.classList.add('theme-' + theme);
+      }
+
+      // Apply preferences on page load
+      document.addEventListener('DOMContentLoaded', applyUserPreferences);
+      
+      // Apply preferences after Livewire navigation
+      window.addEventListener('livewire:navigated', applyUserPreferences);
+
+      // Listen for font size updates
+      window.addEventListener('font-size-updated', (event) => {
+        const fontSize = event.detail.fontSize;
+        localStorage.setItem('userFontSize', fontSize);
+        document.body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
+        document.body.classList.add('font-' + fontSize);
+      });
+
+      // Listen for theme updates
+      window.addEventListener('theme-updated', (event) => {
+        const theme = event.detail.theme;
+        localStorage.setItem('userTheme', theme);
+        document.body.classList.remove('theme-light', 'theme-dark');
+        document.body.classList.add('theme-' + theme);
+      });
+
+      // Listen for notifications
+      window.addEventListener('show-notification', (event) => {
+        // Simple notification - you can enhance this with a toast library
+        const message = event.detail.message;
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-opacity duration-300';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          setTimeout(() => notification.remove(), 300);
+        }, 2000);
       });
     </script>
 </body>
