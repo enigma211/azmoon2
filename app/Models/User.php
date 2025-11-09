@@ -80,6 +80,10 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasOne(UserSubscription::class)
             ->where('status', 'active')
+            ->where(function($query) {
+                $query->whereNull('ends_at')
+                      ->orWhere('ends_at', '>', now());
+            })
             ->latest('starts_at');
     }
 

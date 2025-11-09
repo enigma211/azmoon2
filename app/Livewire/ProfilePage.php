@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\SubscriptionPlan;
+use App\Models\UserSubscription;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -24,17 +25,27 @@ class ProfilePage extends Component
 
         $user = Auth::user();
         
-        // Check and reset expired subscription
-        $user->checkAndResetExpiredSubscription();
+        // Get active subscription from UserSubscription table (new system)
+        $activeSubscription = $user->activeSubscription()->first();
         
-        // Refresh user data after potential update
-        $user->refresh();
-        
-        // Check if user has active subscription
-        if ($user->subscription_plan_id && $user->subscription_end) {
-            $this->subscription = $user->subscriptionPlan;
-            $this->daysRemaining = now()->diffInDays($user->subscription_end, false);
-            $this->isExpired = $this->daysRemaining <= 0;
+        if ($activeSubscription && $activeSubscription->status === 'active') {
+            $this->subscription = $activeSubscription->subscriptionPlan;
+            
+            // Calculate days remaining
+            if ($activeSubscription->ends_at) {
+                $this->daysRemaining = now()->diffInDays($activeSubscription->ends_at, false);
+                $this->isExpired = $this->daysRemaining <= 0;
+            } else {
+                $this->daysRemaining = null; // Unlimited
+                $this->isExpired = false;
+            }
+        } else {
+            // Fallback to old system for backward compatibility
+            if ($user->subscription_plan_id && $user->subscription_end) {
+                $this->subscription = $user->subscriptionPlan;
+                $this->daysRemaining = now()->diffInDays($user->subscription_end, false);
+                $this->isExpired = $this->daysRemaining <= 0;
+            }
         }
 
         // Get available paid plans for upgrade
