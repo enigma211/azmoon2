@@ -104,19 +104,14 @@ class UserResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
 
-                        Forms\Components\Select::make('roles')
+                        Forms\Components\Select::make('role')
                             ->label('نقش')
-                            ->relationship('roles', 'name')
                             ->options([
-                                'رایگان' => 'رایگان',
-                                'اشتراک ویژه' => 'اشتراک ویژه',
+                                'student' => 'دانش‌آموز',
                                 'admin' => 'مدیر',
-                                'editor' => 'ویرایشگر',
                             ])
-                            ->default('رایگان')
-                            ->required()
-                            ->preload()
-                            ->searchable(),
+                            ->default('student')
+                            ->required(),
 
                         Forms\Components\TextInput::make('password')
                             ->label('رمز عبور')
@@ -198,43 +193,15 @@ class UserResource extends Resource
                     ->copyable()
                     ->icon('heroicon-m-envelope'),
 
-                Tables\Columns\TextColumn::make('roles.name')
+                Tables\Columns\TextColumn::make('role')
                     ->label('نقش')
-                    ->badge()
-                    ->color(fn ($state) => match($state) {
-                        'admin' => 'danger',
-                        'اشتراک ویژه' => 'success',
-                        'رایگان' => 'warning',
-                        'editor' => 'info',
-                        default => 'gray',
-                    }),
-
-                Tables\Columns\TextColumn::make('subscription_status')
-                    ->label('وضعیت اشتراک')
-                    ->getStateUsing(function ($record) {
-                        $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
-                            ->where('status', 'active')
-                            ->where(function($q) {
-                                $q->whereNull('ends_at')
-                                  ->orWhere('ends_at', '>', now());
-                            })
-                            ->latest('starts_at')
-                            ->first();
-                        
-                        if (!$subscription) return 'بدون اشتراک';
-                        
-                        $plan = $subscription->subscriptionPlan;
-                        if (!$plan) return 'نامشخص';
-                        
-                        if ($subscription->ends_at) {
-                            $daysLeft = now()->diffInDays($subscription->ends_at, false);
-                            return $plan->title . ' (' . ceil($daysLeft) . ' روز)';
-                        }
-                        
-                        return $plan->title;
+                    ->formatStateUsing(fn ($state) => match($state) {
+                        'admin' => 'مدیر',
+                        'student' => 'دانش‌آموز',
+                        default => $state,
                     })
                     ->badge()
-                    ->color(fn ($state) => str_contains($state, 'بدون') ? 'gray' : 'success'),
+                    ->color(fn ($state) => $state === 'admin' ? 'danger' : 'success'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('تاریخ ثبت‌نام')
@@ -242,16 +209,12 @@ class UserResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('roles')
+                Tables\Filters\SelectFilter::make('role')
                     ->label('نقش')
-                    ->relationship('roles', 'name')
                     ->options([
-                        'رایگان' => 'رایگان',
-                        'اشتراک ویژه' => 'اشتراک ویژه',
                         'admin' => 'مدیر',
-                        'editor' => 'ویرایشگر',
-                    ])
-                    ->preload(),
+                        'student' => 'دانش‌آموز',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

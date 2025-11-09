@@ -79,13 +79,10 @@ class EditUser extends EditRecord
                 'status' => 'active',
             ]);
 
-            // Assign premium role to the user
-            $this->record->syncRoles(['اشتراک ویژه']);
-
             \Filament\Notifications\Notification::make()
                 ->title('اشتراک با موفقیت اعطا شد')
                 ->success()
-                ->body("اشتراک {$subscriptionDays} روزه به کاربر اعطا شد و نقش 'اشتراک ویژه' اختصاص یافت.")
+                ->body("اشتراک {$subscriptionDays} روزه به کاربر اعطا شد.")
                 ->send();
         }
     }
