@@ -16,6 +16,9 @@ class DomainsPage extends Component
 
         return view('livewire.domains-page', [
             'domains' => $domains
-        ])->layout('layouts.app');
+        ])->layout('layouts.app', [
+            'seoTitle' => 'آزمون‌های نظام مهندسی - آزمون کده',
+            'seoDescription' => 'آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.',
+        ]);
     }
 }

@@ -22,6 +22,9 @@ class ExamLanding extends Component
 
     public function render()
     {
-        return view('livewire.exam-landing')->layout('layouts.app');
+        return view('livewire.exam-landing')->layout('layouts.app', [
+            'seoTitle' => $this->exam->seo_title ?: $this->exam->title . ' - آزمون کده',
+            'seoDescription' => $this->exam->seo_description ?: 'آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.',
+        ]);
     }
 }

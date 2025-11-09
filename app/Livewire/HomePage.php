@@ -24,6 +24,9 @@ class HomePage extends Component
                 'sliders' => $sliders,
                 'domains' => $domains,
             ])
-            ->layout('layouts.app');
+            ->layout('layouts.app', [
+                'seoTitle' => 'آزمون کده - بزرگترین شبیه ساز آزمون نظام مهندسی',
+                'seoDescription' => 'آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.',
+            ]);
     }
 }

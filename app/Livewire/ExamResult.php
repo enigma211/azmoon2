@@ -149,6 +149,9 @@ class ExamResult extends Component
             'userAnswers' => $this->userAnswers,
             'review' => $this->review,
             'passThreshold' => (float)($this->exam->pass_threshold ?? 50),
-        ])->layout('layouts.app');
+        ])->layout('layouts.app', [
+            'seoTitle' => $this->exam->seo_title ?: 'نتیجه آزمون ' . $this->exam->title . ' - آزمون کده',
+            'seoDescription' => $this->exam->seo_description ?: 'آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.',
+        ]);
     }
 }

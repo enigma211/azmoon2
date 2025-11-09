@@ -10,22 +10,22 @@
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="Expires" content="0">
         
-        <meta name="description" content="آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.">
+        <meta name="description" content="{{ $seoDescription ?? 'آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.' }}">
         <meta name="robots" content="index, follow">
         <link rel="canonical" href="{{ url()->current() }}">
 
-        <title>{{ config('app.name', 'آزمون کده') }}</title>
+        <title>{{ $seoTitle ?? config('app.name', 'آزمون کده') }}</title>
 
         <meta property="og:locale" content="fa_IR">
         <meta property="og:type" content="website">
-        <meta property="og:title" content="{{ config('app.name', 'آزمون کده') }}">
-        <meta property="og:description" content="آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.">
+        <meta property="og:title" content="{{ $seoTitle ?? config('app.name', 'آزمون کده') }}">
+        <meta property="og:description" content="{{ $seoDescription ?? 'آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.' }}">
         <meta property="og:url" content="{{ url()->current() }}">
         <meta property="og:site_name" content="{{ config('app.name', 'آزمون کده') }}">
 
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="{{ config('app.name', 'آزمون کده') }}">
-        <meta name="twitter:description" content="آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.">
+        <meta name="twitter:title" content="{{ $seoTitle ?? config('app.name', 'آزمون کده') }}">
+        <meta name="twitter:description" content="{{ $seoDescription ?? 'آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.' }}">
 
         <!-- Fonts: Vazirmatn -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
