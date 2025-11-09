@@ -25,17 +25,20 @@ class DatabaseBackup extends Page
     public function getBackups(): array
     {
         $disk = Storage::disk('local');
-        $backupPath = 'backups';
+        // Support both our custom path and Spatie default path
+        $paths = ['backups', 'laravel-backup'];
 
-        if (!$disk->exists($backupPath)) {
-            return [];
-        }
-
-        $files = $disk->files($backupPath);
         $backups = [];
+        foreach ($paths as $backupPath) {
+            if (!$disk->exists($backupPath)) {
+                continue;
+            }
 
-        foreach ($files as $file) {
-            if (str_ends_with($file, '.sql') || str_ends_with($file, '.zip')) {
+            // Recursively scan directories
+            $files = collect($disk->allFiles($backupPath))
+                ->filter(fn ($file) => str_ends_with($file, '.sql') || str_ends_with($file, '.zip'));
+
+            foreach ($files as $file) {
                 $backups[] = [
                     'name' => basename($file),
                     'path' => $file,
@@ -96,36 +99,16 @@ class DatabaseBackup extends Page
 
     protected function createBackup(): void
     {
-        $disk = Storage::disk('local');
-        $backupPath = 'backups';
+        // Prefer Spatie's backup command which handles zipping and cleanup
+        // Will create a zip under storage/app/laravel-backup by default
+        $exitCode = Artisan::call('backup:run', [
+            '--only-db' => true,
+        ]);
 
-        // Create backups directory if it doesn't exist
-        if (!$disk->exists($backupPath)) {
-            $disk->makeDirectory($backupPath);
-        }
-
-        // Get database configuration
-        $database = config('database.default');
-        $dbConfig = config("database.connections.{$database}");
-
-        $filename = 'backup_' . date('Y-m-d_His') . '.sql';
-        $filepath = storage_path("app/{$backupPath}/{$filename}");
-
-        // Create mysqldump command
-        $command = sprintf(
-            'mysqldump --user=%s --password=%s --host=%s %s > %s',
-            escapeshellarg($dbConfig['username']),
-            escapeshellarg($dbConfig['password']),
-            escapeshellarg($dbConfig['host']),
-            escapeshellarg($dbConfig['database']),
-            escapeshellarg($filepath)
-        );
-
-        // Execute the command
-        exec($command, $output, $returnVar);
-
-        if ($returnVar !== 0) {
-            throw new \Exception('خطا در ایجاد بک‌آپ دیتابیس');
+        if ($exitCode !== 0) {
+            // Try to surface the last output for debugging
+            $output = Artisan::output();
+            throw new \Exception('Backup command failed. ' . ($output ?: ''));
         }
     }
 
