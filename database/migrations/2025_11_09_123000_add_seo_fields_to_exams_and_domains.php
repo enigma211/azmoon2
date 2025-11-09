@@ -35,6 +35,18 @@ return new class extends Migration
                 $table->text('seo_description')->nullable();
             });
         }
+
+        if (!Schema::hasColumn('exam_batches', 'seo_title')) {
+            Schema::table('exam_batches', function (Blueprint $table) {
+                $table->string('seo_title')->nullable();
+            });
+        }
+        
+        if (!Schema::hasColumn('exam_batches', 'seo_description')) {
+            Schema::table('exam_batches', function (Blueprint $table) {
+                $table->text('seo_description')->nullable();
+            });
+        }
     }
 
     /**
