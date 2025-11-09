@@ -52,51 +52,53 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">
-                    <div class="mx-auto max-w-7xl py-4 px-4 sm:px-6 lg:px-8">
+                    <div class="mx-auto max-w-4xl py-4 px-4">
                         {{ $header }}
                     </div>
                 </header>
             @endif
 
             <!-- Page Content -->
-            <main class="flex-1 pb-16"> <!-- pb for bottom tab bar space -->
-                {{ $slot }}
+            <main class="flex-1 pb-16 px-4"> <!-- pb for bottom tab bar space -->
+                <div class="mx-auto max-w-4xl">
+                    {{ $slot }}
+                </div>
             </main>
 
-            <!-- Bottom Tab Bar (Mobile) -->
-            <nav class="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 md:hidden">
-                <ul class="mx-auto grid max-w-md grid-cols-4 text-xs">
+            <!-- Bottom Tab Bar (Mobile & Desktop) -->
+            <nav class="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+                <ul class="mx-auto grid max-w-4xl grid-cols-4 text-xs md:text-sm">
                     <li>
-                        <a href="{{ url('/') }}" wire:navigate class="flex flex-col items-center gap-1 py-2 text-gray-600 hover:text-indigo-600">
+                        <a href="{{ url('/') }}" wire:navigate class="flex flex-col items-center gap-1 py-2 md:py-3 text-gray-600 hover:text-indigo-600">
                             <!-- Heroicon: home -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l9-7.5 9 7.5M4.5 10.5V21h15V10.5" />
                             </svg>
                             <span>خانه</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/domains') }}" wire:navigate class="flex flex-col items-center gap-1 py-2 text-gray-600 hover:text-indigo-600">
+                        <a href="{{ url('/domains') }}" wire:navigate class="flex flex-col items-center gap-1 py-2 md:py-3 text-gray-600 hover:text-indigo-600">
                             <!-- Heroicon: clipboard-document-check -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75l1.5 1.5L15 9.75M8.25 6h7.5A2.25 2.25 0 0 1 18 8.25v9A2.25 2.25 0 0 1 15.75 19.5H8.25A2.25 2.25 0 0 1 6 17.25v-9A2.25 2.25 0 0 1 8.25 6z" />
                             </svg>
                             <span>آزمون‌ها</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/resources') }}" wire:navigate class="flex flex-col items-center gap-1 py-2 text-gray-600 hover:text-indigo-600">
+                        <a href="{{ url('/resources') }}" wire:navigate class="flex flex-col items-center gap-1 py-2 md:py-3 text-gray-600 hover:text-indigo-600">
                             <!-- Heroicon: squares-2x2 -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.75H4.5v5.25h5.25V3.75zm9.75 0h-5.25v5.25H19.5V3.75zM9.75 15H4.5v5.25h5.25V15zm9.75 0h-5.25v5.25H19.5V15z" />
                             </svg>
                             <span>منابع</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/profile') }}" wire:navigate class="flex flex-col items-center gap-1 py-2 text-gray-600 hover:text-indigo-600">
+                        <a href="{{ url('/profile') }}" wire:navigate class="flex flex-col items-center gap-1 py-2 md:py-3 text-gray-600 hover:text-indigo-600">
                             <!-- Heroicon: user -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 7.5a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0zM4.5 19.5a7.5 7.5 0 0 1 15 0" />
                             </svg>
                             <span>پروفایل</span>
