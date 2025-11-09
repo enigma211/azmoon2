@@ -19,12 +19,6 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    // Allow all admin users to access this resource
-    public static function canViewAny(): bool
-    {
-        return auth()->check() && auth()->user()->hasRole('admin');
-    }
-
     public static function getNavigationLabel(): string
     {
         return 'کاربران';
@@ -272,8 +266,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\PaymentsRelationManager::class,
-            RelationManagers\SubscriptionsRelationManager::class,
+            //
         ];
     }
 
