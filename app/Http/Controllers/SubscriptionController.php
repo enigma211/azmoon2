@@ -44,15 +44,6 @@ class SubscriptionController extends Controller
             'status' => 'active',
         ]);
 
-        // Assign proper role based on subscription type
-        if ($plan->price_toman > 0) {
-            // Paid subscription - assign premium role
-            $user->syncRoles(['اشتراک ویژه']);
-        } else {
-            // Free subscription - assign free role
-            $user->syncRoles(['رایگان']);
-        }
-
         return redirect()->route('dashboard')->with('status', 'اشتراک شما فعال شد.');
     }
 }
