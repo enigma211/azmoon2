@@ -78,8 +78,8 @@ class ExamDomainResource extends Resource
                         Forms\Components\Textarea::make('seo_description')
                             ->label('توضیحات سئو (Meta Description)')
                             ->rows(3)
-                            ->maxLength(160)
-                            ->helperText('توصیه می‌شود بین 150 تا 160 کاراکتر باشد.'),
+                            ->maxLength(250)
+                            ->helperText('توصیه می‌شود بین 200 تا 250 کاراکتر باشد.'),
                     ])->collapsible(),
             ]);
     }
