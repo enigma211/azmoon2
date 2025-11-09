@@ -1,12 +1,12 @@
 <div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto px-4">
         <!-- Slider Section -->
         <section class="py-6">
             @if(($sliders ?? collect())->isNotEmpty())
                 <!-- Slider Container -->
                 <div class="relative overflow-hidden rounded-xl shadow-lg bg-white" x-data="slider({{ $sliders->count() }})">
                     <!-- Slides -->
-                    <div class="relative h-48 sm:h-56 md:h-80 lg:h-96">
+                    <div class="relative h-48 sm:h-56 md:h-64 lg:h-64">
                         @foreach ($sliders as $index => $slider)
                             <div 
                                 x-show="currentSlide === {{ $index }}"
