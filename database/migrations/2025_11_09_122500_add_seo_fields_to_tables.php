@@ -17,13 +17,13 @@ return new class extends Migration
         });
 
         Schema::table('exam_domains', function (Blueprint $table) {
-            $table->string('seo_title')->nullable()->after('description');
-            $table->text('seo_description')->nullable()->after('seo_title');
+            $table->string('seo_title')->nullable();
+            $table->text('seo_description')->nullable();
         });
 
         Schema::table('exam_times', function (Blueprint $table) {
-            $table->string('seo_title')->nullable()->after('description');
-            $table->text('seo_description')->nullable()->after('seo_title');
+            $table->string('seo_title')->nullable();
+            $table->text('seo_description')->nullable();
         });
     }
 
