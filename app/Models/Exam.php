@@ -21,6 +21,8 @@ class Exam extends Model
         'negative_score_ratio',
         'assumptions_text',
         'assumptions_image',
+        'seo_title',
+        'seo_description',
     ];
 
     protected $casts = [

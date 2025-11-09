@@ -12,7 +12,11 @@ class ExamDomain extends Model
     protected $fillable = [
         'title',
         'slug',
+        'description',
+        'image',
         'is_active',
+        'seo_title',
+        'seo_description',
     ];
 
     public function batches()

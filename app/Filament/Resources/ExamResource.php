@@ -152,6 +152,20 @@ class ExamResource extends Resource
                     ])
                     ->collapsible()
                     ->collapsed(false),
+
+                Forms\Components\Section::make('تنظیمات سئو')
+                    ->description('این اطلاعات برای بهبود رتبه صفحه در موتورهای جستجو استفاده می‌شود.')
+                    ->schema([
+                        Forms\Components\TextInput::make('seo_title')
+                            ->label('عنوان سئو (Meta Title)')
+                            ->maxLength(60)
+                            ->helperText('توصیه می‌شود بین 50 تا 60 کاراکتر باشد.'),
+                        Forms\Components\Textarea::make('seo_description')
+                            ->label('توضیحات سئو (Meta Description)')
+                            ->rows(3)
+                            ->maxLength(160)
+                            ->helperText('توصیه می‌شود بین 150 تا 160 کاراکتر باشد.'),
+                    ])->collapsible(),
             ]);
     }
 
