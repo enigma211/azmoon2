@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\UserSubscription;
 use App\Models\SubscriptionPlan;
+use App\Models\User;
 use Illuminate\Console\Command;
 
 class ExpireSubscriptions extends Command
@@ -62,6 +63,12 @@ class ExpireSubscriptions extends Command
                 'ends_at' => null, // Unlimited
                 'status' => 'active',
             ]);
+
+            // Assign free role to the user
+            $user = User::find($subscription->user_id);
+            if ($user) {
+                $user->syncRoles(['رایگان']);
+            }
 
             $count++;
             $this->info("User {$subscription->user_id}: Subscription expired and moved to free plan.");
