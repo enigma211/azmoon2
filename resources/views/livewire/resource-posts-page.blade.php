@@ -1,23 +1,6 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12">
     <div class="container mx-auto px-4">
-        <!-- Breadcrumb -->
-        <nav class="mb-8">
-            <ol class="flex items-center space-x-2 space-x-reverse text-sm">
-                <li>
-                    <a href="{{ route('educational-resources') }}" wire:navigate class="text-indigo-600 hover:text-indigo-800">
-                        منابع آموزشی
-                    </a>
-                </li>
-                <li class="text-gray-400">/</li>
-                <li>
-                    <a href="{{ route('educational-resources.categories', $examType->slug) }}" wire:navigate class="text-indigo-600 hover:text-indigo-800">
-                        {{ $examType->title }}
-                    </a>
-                </li>
-                <li class="text-gray-400">/</li>
-                <li class="text-gray-600">{{ $category->title }}</li>
-            </ol>
-        </nav>
+        
 
         <!-- Header -->
         <div class="text-center mb-12">
