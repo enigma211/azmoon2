@@ -218,6 +218,7 @@ class UserResource extends Resource
     {
         return [
             RelationManagers\SubscriptionsRelationManager::class,
+            RelationManagers\PaymentsRelationManager::class,
         ];
     }
 
