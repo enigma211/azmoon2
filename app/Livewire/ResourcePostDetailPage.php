@@ -25,7 +25,8 @@ class ResourcePostDetailPage extends Component
             ->where('is_active', true)
             ->firstOrFail();
 
-        $this->post = EducationalPost::where('slug', $postSlug)
+        $this->post = EducationalPost::with('category')
+            ->where('slug', $postSlug)
             ->where('resource_category_id', $this->category->id)
             ->where('is_active', true)
             ->whereNotNull('published_at')

@@ -15,42 +15,42 @@
 
         <!-- Header -->
         <div class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ $examType->title }}</h1>
+            <h1 class="text-2xl font-bold text-gray-900 mb-4">منابع آموزشی آزمون {{ $examType->title }}</h1>
             @if($examType->description)
-                <p class="text-lg text-gray-600">{{ $examType->description }}</p>
+                <p class="text-base text-gray-600">{{ $examType->description }}</p>
             @endif
         </div>
 
         <!-- Categories Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
             @foreach($examType->resourceCategories as $category)
                 <a href="{{ route('educational-resources.posts', [$examType->slug, $category->slug]) }}" 
                    wire:navigate
-                   class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2">
-                    <div class="p-8">
+                   class="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
+                    <div class="p-6">
                         <!-- Icon -->
-                        <div class="w-24 h-24 mx-auto mb-6 {{ $category->type === 'video' ? 'bg-red-500' : 'bg-indigo-600' }} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <div class="w-16 h-16 mx-auto mb-4 {{ $category->type === 'video' ? 'bg-red-500' : 'bg-indigo-600' }} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
                             @if($category->type === 'video')
                                 <!-- آیکون ویدیو -->
-                                <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M8 5v14l11-7z"/>
                                 </svg>
                             @else
                                 <!-- آیکون کتاب -->
-                                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                 </svg>
                             @endif
                         </div>
 
                         <!-- Title -->
-                        <h2 class="text-2xl font-bold text-gray-900 mb-3 text-center group-hover:text-indigo-600 transition-colors">
+                        <h2 class="text-lg font-bold text-gray-900 mb-2 text-center group-hover:text-indigo-600 transition-colors">
                             {{ $category->title }}
                         </h2>
 
                         <!-- Description -->
                         @if($category->description)
-                            <p class="text-gray-600 text-center mb-4">{{ $category->description }}</p>
+                            <p class="text-gray-600 text-sm text-center mb-3">{{ $category->description }}</p>
                         @endif
 
                         <!-- Stats -->

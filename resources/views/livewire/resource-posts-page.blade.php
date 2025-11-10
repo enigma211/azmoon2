@@ -21,14 +21,20 @@
 
         <!-- Header -->
         <div class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ $category->title }}</h1>
+            @if($category->type === 'video')
+                <h1 class="text-2xl font-bold text-gray-900 mb-4">ویدیوهای آموزشی آزمون {{ $examType->title }}</h1>
+            @elseif($category->type === 'document')
+                <h1 class="text-2xl font-bold text-gray-900 mb-4">جزوات آموزشی آزمون {{ $examType->title }}</h1>
+            @else
+                <h1 class="text-2xl font-bold text-gray-900 mb-4">{{ $category->title }}</h1>
+            @endif
             @if($category->description)
-                <p class="text-lg text-gray-600">{{ $category->description }}</p>
+                <p class="text-base text-gray-600">{{ $category->description }}</p>
             @endif
         </div>
 
         <!-- Posts Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             @foreach($posts as $post)
                 <a href="{{ route('educational-resources.post', [$examType->slug, $category->slug, $post->slug]) }}" 
                    wire:navigate
@@ -43,12 +49,12 @@
                     @else
                         <div class="aspect-video bg-gradient-to-br {{ $category->type === 'video' ? 'from-green-400 to-emerald-600' : 'from-blue-400 to-indigo-600' }} flex items-center justify-center">
                             @if($category->type === 'video')
-                                <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-12 h-12 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             @else
-                                <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-12 h-12 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                             @endif
@@ -56,8 +62,8 @@
                     @endif
 
                     <!-- Content -->
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                    <div class="p-4">
+                        <h3 class="text-base font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2">
                             {{ $post->title }}
                         </h3>
 

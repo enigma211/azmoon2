@@ -22,8 +22,8 @@ class ResourceCategoriesPage extends Component
     public function render()
     {
         return view('livewire.resource-categories-page')->layout('layouts.app', [
-            'seoTitle' => 'منابع آموزشی ' . $this->examType->title . ' - آزمون کده',
-            'seoDescription' => $this->examType->description ?: 'دسترسی به ویدیوها و جزوات آموزشی ' . $this->examType->title,
+            'seoTitle' => 'منابع آموزشی آزمون ' . $this->examType->title . ' - ویدیو و جزوات - آزمون کده',
+            'seoDescription' => $this->examType->description ?: 'دسترسی به ویدیوهای آموزشی و جزوات کامل آزمون ' . $this->examType->title . ' - منابع جامع و تخصصی برای موفقیت در آزمون',
         ]);
     }
 }

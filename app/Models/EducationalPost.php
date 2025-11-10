@@ -73,12 +73,12 @@ class EducationalPost extends Model
 
     public function isVideo(): bool
     {
-        return $this->category->type === 'video';
+        return $this->category?->type === 'video';
     }
 
     public function isDocument(): bool
     {
-        return $this->category->type === 'document';
+        return $this->category?->type === 'document';
     }
 
     public function incrementViewCount()
