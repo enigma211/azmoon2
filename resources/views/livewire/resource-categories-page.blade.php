@@ -22,7 +22,7 @@
         </div>
 
         <!-- Categories Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-6xl mx-auto">
             @foreach($examType->resourceCategories as $category)
                 <a href="{{ route('educational-resources.posts', [$examType->slug, $category->slug]) }}" 
                    wire:navigate
