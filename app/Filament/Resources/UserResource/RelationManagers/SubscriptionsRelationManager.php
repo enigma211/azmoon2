@@ -37,10 +37,12 @@ class SubscriptionsRelationManager extends RelationManager
                     ->label('پلن اشتراک'),
                 Tables\Columns\TextColumn::make('starts_at')
                     ->label('تاریخ شروع')
-                    ->date('Y/m/d'),
+                    ->jalaliDate(),
+                    // ->formatStateUsing(fn ($state) => $state ? \Morilog\Jalali\Jalalian::fromDateTime($state)->format('Y/m/d') : '-'),
                 Tables\Columns\TextColumn::make('ends_at')
                     ->label('تاریخ پایان')
-                    ->date('Y/m/d'),
+                    ->jalaliDate(),
+                    // ->formatStateUsing(fn ($state) => $state ? \Morilog\Jalali\Jalalian::fromDateTime($state)->format('Y/m/d') : '-'),
                 Tables\Columns\TextColumn::make('status')
                     ->label('وضعیت')
                     ->badge()
