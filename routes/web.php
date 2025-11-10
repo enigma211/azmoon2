@@ -19,6 +19,10 @@ use App\Http\Controllers\PaymentController;
 use App\Livewire\AttemptsPage;
 use App\Livewire\SupportTicketsPage;
 use App\Livewire\Admin\LogsPage as AdminLogsPage;
+use App\Livewire\EducationalResourcesPage;
+use App\Livewire\ResourceCategoriesPage;
+use App\Livewire\ResourcePostsPage;
+use App\Livewire\ResourcePostDetailPage;
 
 // SPA-style routes powered by Livewire v3 (wire:navigate handled in views)
 Route::get('/', HomePage::class)->name('home');
@@ -62,6 +66,12 @@ Route::post('/exam/{exam}/finish', [ExamController::class, 'finish'])
 
 // Resource detail
 Route::get('/resource/{resource}', ResourceDetail::class)->name('resource.detail');
+
+// Educational Resources Routes
+Route::get('/educational-resources', EducationalResourcesPage::class)->name('educational-resources');
+Route::get('/educational-resources/{slug}', ResourceCategoriesPage::class)->name('educational-resources.categories');
+Route::get('/educational-resources/{examTypeSlug}/{categorySlug}', ResourcePostsPage::class)->name('educational-resources.posts');
+Route::get('/educational-resources/{examTypeSlug}/{categorySlug}/{postSlug}', ResourcePostDetailPage::class)->name('educational-resources.post');
 
 // Alias for Breeze/legacy links expecting a dashboard route
 Route::get('/dashboard', HomePage::class)->name('dashboard');
