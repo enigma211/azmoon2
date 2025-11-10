@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         @if ($isGuest)
             {{-- Guest User: Show Login Form --}}
-            <header class="mb-8">
+            <header class="mb-8 text-center">
                 <h1 class="text-3xl font-bold text-gray-900">پروفایل کاربری</h1>
                 <p class="text-sm text-gray-600 mt-2">برای دسترسی به پروفایل خود، لطفا وارد شوید</p>
             </header>
