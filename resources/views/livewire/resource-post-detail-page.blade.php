@@ -41,7 +41,28 @@
                         <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        {{ \Morilog\Jalali\Jalalian::fromDateTime($post->published_at)->format('Y/m/d') }}
+                        @php
+                            $published = $post->published_at;
+                            $dateText = '';
+                            if ($published) {
+                                if (function_exists('jdate')) {
+                                    try {
+                                        $dateText = jdate($published, 'Y/m/d');
+                                    } catch (\Throwable $e) {
+                                        $dateText = $published->format('Y/m/d');
+                                    }
+                                } elseif (class_exists(\Morilog\Jalali\Jalalian::class)) {
+                                    try {
+                                        $dateText = \Morilog\Jalali\Jalalian::fromDateTime($published)->format('Y/m/d');
+                                    } catch (\Throwable $e) {
+                                        $dateText = $published->format('Y/m/d');
+                                    }
+                                } else {
+                                    $dateText = $published->format('Y/m/d');
+                                }
+                            }
+                        @endphp
+                        {{ $dateText }}
                     </span>
                     <span class="flex items-center">
                         <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
