@@ -5,9 +5,6 @@
         <!-- Header -->
         <div class="text-center mb-12">
             <h1 class="text-2xl font-bold text-gray-900 mb-4">منابع آموزشی آزمون {{ $examType->title }}</h1>
-            @if($examType->description)
-                <p class="text-base text-gray-600">{{ $examType->description }}</p>
-            @endif
         </div>
 
         <!-- Categories Grid -->
@@ -32,15 +29,7 @@
                             @endif
                         </div>
 
-                        <!-- Title -->
-                        <h2 class="text-lg font-bold text-gray-900 mb-2 text-center group-hover:text-indigo-600 transition-colors">
-                            {{ $category->title }}
-                        </h2>
-
-                        <!-- Description -->
-                        @if($category->description)
-                            <p class="text-gray-600 text-sm text-center mb-3">{{ $category->description }}</p>
-                        @endif
+                        <!-- Title removed by request -->
 
                         <!-- Stats -->
                         <div class="flex items-center justify-center text-sm text-gray-500">

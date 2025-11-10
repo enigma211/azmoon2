@@ -3,7 +3,6 @@
         <!-- Header -->
         <div class="text-center mb-12">
             <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">منابع آموزشی</h1>
-            <p class="text-base text-gray-600">دسترسی به ویدیوها و جزوات آموزشی آزمون‌های مختلف</p>
         </div>
 
         <!-- Exam Types Grid -->
