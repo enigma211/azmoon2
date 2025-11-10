@@ -104,15 +104,7 @@ class UserResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
 
-                        Forms\Components\Select::make('role')
-                            ->label('نقش')
-                            ->options([
-                                'student' => 'دانش‌آموز',
-                                'admin' => 'مدیر',
-                            ])
-                            ->default('student')
-                            ->required(),
-
+                        
                         Forms\Components\TextInput::make('password')
                             ->label('رمز عبور')
                             ->password()
@@ -193,15 +185,16 @@ class UserResource extends Resource
                     ->copyable()
                     ->icon('heroicon-m-envelope'),
 
-                Tables\Columns\TextColumn::make('role')
-                    ->label('نقش')
-                    ->formatStateUsing(fn ($state) => match($state) {
-                        'admin' => 'مدیر',
-                        'student' => 'دانش‌آموز',
-                        default => $state,
-                    })
+                Tables\Columns\TextColumn::make('status')
+                    ->label('وضعیت')
                     ->badge()
-                    ->color(fn ($state) => $state === 'admin' ? 'danger' : 'success'),
+                    ->color(fn ($record) => match($record->getRoleStatus()) {
+                        'مدیر سیستم' => 'danger',
+                        'اشتراک ویژه' => 'warning',
+                        'کاربر رایگان' => 'success',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn ($record) => $record->getRoleStatus()),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('تاریخ ثبت‌نام')
@@ -209,12 +202,7 @@ class UserResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('role')
-                    ->label('نقش')
-                    ->options([
-                        'admin' => 'مدیر',
-                        'student' => 'دانش‌آموز',
-                    ]),
+                // Filters can be added here in the future if needed.
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -229,7 +217,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\SubscriptionsRelationManager::class,
         ];
     }
 

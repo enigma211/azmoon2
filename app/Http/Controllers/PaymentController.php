@@ -109,10 +109,15 @@ class PaymentController extends Controller
             $user = $payment->user;
             $plan = $payment->subscriptionPlan;
             
-            $user->update([
+            // Deactivate any other active subscriptions for this user
+            $user->subscriptions()->where('status', 'active')->update(['status' => 'expired']);
+
+            // Create a new subscription record
+            $user->subscriptions()->create([
                 'subscription_plan_id' => $plan->id,
-                'subscription_start' => now(),
-                'subscription_end' => now()->addDays($plan->duration_days),
+                'starts_at' => now(),
+                'ends_at' => now()->addDays($plan->duration_days),
+                'status' => 'active',
             ]);
 
             // لاگین کردن کاربر

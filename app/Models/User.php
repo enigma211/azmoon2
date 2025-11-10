@@ -146,4 +146,20 @@ class User extends Authenticatable implements FilamentUser
         // All users (free, guest, paid) can access all questions
         return true;
     }
+
+    /**
+     * Get the user's role status for display.
+     */
+    public function getRoleStatus(): string
+    {
+        if ($this->hasRole('admin')) {
+            return 'مدیر سیستم';
+        }
+
+        if ($this->hasPaidSubscription()) {
+            return 'اشتراک ویژه';
+        }
+
+        return 'کاربر رایگان';
+    }
 }

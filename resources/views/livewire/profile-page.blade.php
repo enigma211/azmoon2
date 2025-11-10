@@ -18,14 +18,14 @@
                                 خوش آمدید، {{ auth()->user()->name }}! 👋
                             </h1>
                             <p class="text-indigo-100 text-sm">
-                                پلن شما: 
-                                @if($subscription)
-                                    <span class="font-semibold">{{ $subscription->title }}</span>
+                                وضعیت اشتراک: 
+                                @if($subscription && !$isExpired)
+                                    <span class="font-semibold">اشتراک ویژه</span>
                                     @if($daysRemaining !== null)
-                                        <span class="text-xs">- {{ ceil($daysRemaining) }} روز باقیمانده</span>
+                                        <span class="text-xs"> ({{ ceil($daysRemaining) }} روز باقیمانده)</span>
                                     @endif
                                 @else
-                                    <span class="font-semibold">رایگان</span>
+                                    <span class="font-semibold">کاربر رایگان</span>
                                 @endif
                             </p>
                         </div>

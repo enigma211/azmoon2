@@ -17,40 +17,30 @@ class ProfilePage extends Component
 
     public function mount()
     {
-        // Check if user is logged in
         if (!Auth::check()) {
             $this->isGuest = true;
             return;
         }
 
         $user = Auth::user();
-        
-        // Get active subscription from UserSubscription table (new system)
         $activeSubscription = $user->activeSubscription()->first();
-        
-        if ($activeSubscription && $activeSubscription->status === 'active') {
+
+        if ($activeSubscription) {
             $this->subscription = $activeSubscription->subscriptionPlan;
-            
-            // Calculate days remaining
             if ($activeSubscription->ends_at) {
                 $this->daysRemaining = now()->diffInDays($activeSubscription->ends_at, false);
                 $this->isExpired = $this->daysRemaining <= 0;
             } else {
                 $this->daysRemaining = null; // Unlimited
-                $this->isExpired = false;
             }
         } else {
-            // Fallback to old system for backward compatibility
-            if ($user->subscription_plan_id && $user->subscription_end) {
-                $this->subscription = $user->subscriptionPlan;
-                $this->daysRemaining = now()->diffInDays($user->subscription_end, false);
-                $this->isExpired = $this->daysRemaining <= 0;
-            }
+            $this->subscription = null;
+            $this->isExpired = true;
         }
 
-        // Get available paid plans for upgrade
         $this->availablePlans = SubscriptionPlan::where('price_toman', '>', 0)
             ->where('is_active', true)
+            ->orderBy('price_toman', 'asc')
             ->get();
     }
 
