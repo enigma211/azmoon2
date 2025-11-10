@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Livewire\HomePage;
 use App\Livewire\DomainsPage;
-use App\Livewire\ResourcesPage;
 use App\Livewire\ProfilePage;
 use App\Livewire\BatchesPage;
 use App\Livewire\ExamsPage;
@@ -27,7 +26,7 @@ use App\Livewire\ResourcePostDetailPage;
 // SPA-style routes powered by Livewire v3 (wire:navigate handled in views)
 Route::get('/', HomePage::class)->name('home');
 Route::get('/domains', DomainsPage::class)->name('domains');
-Route::get('/resources', ResourcesPage::class)->name('resources');
+Route::get('/resources', EducationalResourcesPage::class)->name('resources'); // تغییر به سیستم جدید
 Route::get('/profile', ProfilePage::class)->name('profile');
 Route::get('/attempts', AttemptsPage::class)->middleware(['auth'])->name('attempts');
 Route::get('/support-tickets', SupportTicketsPage::class)->middleware(['auth'])->name('support-tickets');
