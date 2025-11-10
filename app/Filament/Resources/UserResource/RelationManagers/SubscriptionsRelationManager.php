@@ -16,7 +16,7 @@ class SubscriptionsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'id';
 
-    public static function getTitle(): string
+    public static function getTitle(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): string
     {
         return 'تاریخچه اشتراک‌ها';
     }
