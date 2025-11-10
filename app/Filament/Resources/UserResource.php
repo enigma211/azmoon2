@@ -185,16 +185,16 @@ class UserResource extends Resource
                     ->copyable()
                     ->icon('heroicon-m-envelope'),
 
-                Tables\Columns\TextColumn::make('status')
+                Tables\Columns\TextColumn::make('role_status')
                     ->label('وضعیت')
+                    ->state(fn (\App\Models\User $record) => $record->getRoleStatus())
                     ->badge()
-                    ->color(fn ($record) => match($record->getRoleStatus()) {
+                    ->color(fn (string $state) => match($state) {
                         'مدیر سیستم' => 'danger',
                         'اشتراک ویژه' => 'warning',
                         'کاربر رایگان' => 'success',
                         default => 'gray',
-                    })
-                    ->formatStateUsing(fn ($record) => $record->getRoleStatus()),
+                    }),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('تاریخ ثبت‌نام')

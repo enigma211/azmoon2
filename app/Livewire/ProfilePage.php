@@ -14,6 +14,7 @@ class ProfilePage extends Component
     public $daysRemaining = null;
     public $isExpired = false;
     public $isGuest = false;
+    public $isPremium = false;
 
     public function mount()
     {
@@ -25,13 +26,17 @@ class ProfilePage extends Component
         $user = Auth::user();
         $activeSubscription = $user->activeSubscription()->first();
 
+        // Determine premium status based on paid plan
+        $this->isPremium = $user->hasPaidSubscription();
+
         if ($activeSubscription) {
             $this->subscription = $activeSubscription->subscriptionPlan;
-            if ($activeSubscription->ends_at) {
+            // Only show remaining days for premium subscriptions
+            if ($this->isPremium && $activeSubscription->ends_at) {
                 $this->daysRemaining = now()->diffInDays($activeSubscription->ends_at, false);
                 $this->isExpired = $this->daysRemaining <= 0;
             } else {
-                $this->daysRemaining = null; // Unlimited
+                $this->daysRemaining = null;
             }
         } else {
             $this->subscription = null;

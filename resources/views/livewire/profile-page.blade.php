@@ -19,7 +19,7 @@
                             </h1>
                             <p class="text-indigo-100 text-sm">
                                 وضعیت اشتراک: 
-                                @if($subscription && !$isExpired)
+                                @if($isPremium)
                                     <span class="font-semibold">اشتراک ویژه</span>
                                     @if($daysRemaining !== null)
                                         <span class="text-xs"> ({{ ceil($daysRemaining) }} روز باقیمانده)</span>
