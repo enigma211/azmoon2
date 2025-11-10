@@ -22,20 +22,20 @@
                     <div class="p-4 md:p-0 md:block flex flex-row-reverse items-center gap-4">
                         <!-- Thumbnail (right on mobile) -->
                         @if($post->thumbnail)
-                            <div class="w-28 h-20 md:w-auto md:h-auto md:aspect-video overflow-hidden bg-gray-200 rounded-md md:rounded-none order-1">
+                            <div class="w-16 h-12 md:w-auto md:h-auto md:aspect-video overflow-hidden bg-gray-200 rounded-md md:rounded-none order-1">
                                 <img src="{{ $post->getThumbnailUrl() }}" 
                                      alt="{{ $post->title }}"
                                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                             </div>
                         @else
-                            <div class="w-28 h-20 md:w-auto md:h-auto md:aspect-video bg-gradient-to-br {{ $category->type === 'video' ? 'from-green-400 to-emerald-600' : 'from-blue-400 to-indigo-600' }} flex items-center justify-center rounded-md md:rounded-none order-1">
+                            <div class="w-16 h-12 md:w-auto md:h-auto md:aspect-video bg-gradient-to-br {{ $category->type === 'video' ? 'from-green-400 to-emerald-600' : 'from-blue-400 to-indigo-600' }} flex items-center justify-center rounded-md md:rounded-none order-1">
                                 @if($category->type === 'video')
-                                    <svg class="w-8 h-8 md:w-16 md:h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 md:w-16 md:h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 @else
-                                    <svg class="w-8 h-8 md:w-16 md:h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 md:w-16 md:h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                     </svg>
                                 @endif
