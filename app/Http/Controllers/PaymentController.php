@@ -90,7 +90,8 @@ class PaymentController extends Controller
 
         try {
             // تایید پرداخت
-            $receipt = PaymentGateway::amount($payment->amount)
+            // Important: verify with the same currency unit used in purchase (rials)
+            $receipt = PaymentGateway::amount($payment->amount * 10)
                 ->transactionId($authority)
                 ->verify();
 
