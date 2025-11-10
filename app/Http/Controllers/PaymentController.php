@@ -6,6 +6,7 @@ use App\Models\Payment;
 use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Shetabit\Multipay\Invoice;
 use Shetabit\Payment\Facade\Payment as PaymentGateway;
 use Shetabit\Multipay\Exceptions\InvalidPaymentException;
@@ -65,10 +66,17 @@ class PaymentController extends Controller
      */
     public function verify(Request $request)
     {
+        // Log all callback parameters for debugging
+        Log::info('Payment callback received', [
+            'all_params' => $request->all(),
+            'url' => $request->fullUrl(),
+        ]);
+
         $authority = $request->get('trackId') ?? $request->get('Authority');
         $status = $request->get('success') ?? $request->get('Status');
 
         if (!$authority) {
+            Log::error('Payment verification failed: No authority found');
             return redirect()->route('profile')
                 ->with('error', 'اطلاعات پرداخت نامعتبر است');
         }
@@ -77,23 +85,43 @@ class PaymentController extends Controller
         $payment = Payment::where('authority', $authority)->first();
 
         if (!$payment) {
+            Log::error('Payment not found in database', ['authority' => $authority]);
             return redirect()->route('profile')
                 ->with('error', 'پرداخت یافت نشد');
         }
 
+        Log::info('Payment found', [
+            'payment_id' => $payment->id,
+            'user_id' => $payment->user_id,
+            'amount' => $payment->amount,
+            'status' => $status,
+        ]);
+
         // بررسی لغو پرداخت
         if ($status == 'NOK' || $status == '0' || $status === false) {
+            Log::warning('Payment canceled by user', ['payment_id' => $payment->id]);
             $payment->update(['status' => 'canceled']);
             return redirect()->route('profile')
                 ->with('error', 'پرداخت توسط کاربر لغو شد');
         }
 
         try {
+            Log::info('Starting payment verification', [
+                'payment_id' => $payment->id,
+                'amount_rials' => $payment->amount * 10,
+                'authority' => $authority,
+            ]);
+
             // تایید پرداخت
             // Important: verify with the same currency unit used in purchase (rials)
             $receipt = PaymentGateway::amount($payment->amount * 10)
                 ->transactionId($authority)
                 ->verify();
+
+            Log::info('Payment verified successfully', [
+                'payment_id' => $payment->id,
+                'reference_id' => $receipt->getReferenceId(),
+            ]);
 
             // بروزرسانی وضعیت پرداخت
             $payment->update([
@@ -114,11 +142,18 @@ class PaymentController extends Controller
             $user->subscriptions()->where('status', 'active')->update(['status' => 'expired']);
 
             // Create a new subscription record
-            $user->subscriptions()->create([
+            $subscription = $user->subscriptions()->create([
                 'subscription_plan_id' => $plan->id,
                 'starts_at' => now(),
                 'ends_at' => now()->addDays($plan->duration_days),
                 'status' => 'active',
+            ]);
+
+            Log::info('Subscription created successfully', [
+                'subscription_id' => $subscription->id,
+                'user_id' => $user->id,
+                'plan_id' => $plan->id,
+                'ends_at' => $subscription->ends_at,
             ]);
 
             // لاگین کردن کاربر
@@ -128,10 +163,20 @@ class PaymentController extends Controller
                 ->with('subscription_success', "پرداخت با موفقیت انجام شد. کد پیگیری: {$receipt->getReferenceId()}");
 
         } catch (InvalidPaymentException $e) {
+            Log::error('Payment verification failed - InvalidPaymentException', [
+                'payment_id' => $payment->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $payment->update(['status' => 'failed']);
             return redirect()->route('profile')
                 ->with('error', 'پرداخت ناموفق بود: ' . $e->getMessage());
         } catch (\Exception $e) {
+            Log::error('Payment verification failed - Exception', [
+                'payment_id' => $payment->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $payment->update(['status' => 'failed']);
             return redirect()->route('profile')
                 ->with('error', 'خطا در تایید پرداخت: ' . $e->getMessage());
