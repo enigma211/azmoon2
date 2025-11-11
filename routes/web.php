@@ -15,6 +15,7 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SitemapController;
 use App\Livewire\AttemptsPage;
 use App\Livewire\SupportTicketsPage;
 use App\Livewire\Admin\LogsPage as AdminLogsPage;
@@ -40,6 +41,9 @@ Route::get('/offline', function () {
 Route::get('/pwa-test', function () {
     return view('pwa-test');
 })->name('pwa.test');
+
+// SEO Sitemap
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // PWA Debug page (برای عیب‌یابی موبایل)
 Route::get('/pwa-debug', function () {
