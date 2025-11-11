@@ -346,6 +346,9 @@ class ExamPlayer extends Component
             'question' => $question,
             'index' => $this->index,
             'total' => $questions->count(),
-        ])->layout('layouts.app');
+        ])->layout('layouts.app', [
+            'seoTitle' => $this->exam->seo_title ?: ($this->exam->title . ' - آزمون کده'),
+            'seoDescription' => $this->exam->seo_description ?? '',
+        ]);
     }
 }
