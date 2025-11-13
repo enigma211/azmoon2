@@ -2,84 +2,73 @@
     // Defensive checks to avoid errors before data is fully wired
     $q = $question ?? null;
 @endphp
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50" 
+<div class="mx-auto max-w-2xl p-4 space-y-4" 
      oncontextmenu="return false;" 
      onselectstart="return false;" 
      oncopy="return false;"
      oncut="return false;"
      style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
+    <!-- Exam Title -->
+    <div class="text-center mb-2">
+        <h1 class="text-sm font-bold text-gray-800">{{ $this->exam->title }}</h1>
+    </div>
     
-    <div class="mx-auto max-w-3xl px-4 py-6 space-y-5">
-        <!-- Header Card -->
-        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-5">
-            <!-- Exam Title -->
-            <div class="text-center mb-4">
-                <h1 class="text-sm font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                    {{ $this->exam->title }}
-                </h1>
-            </div>
-            
-            <!-- Assumptions Button -->
-            @if($this->exam->assumptions_text || $this->exam->assumptions_image)
-                <div class="flex justify-center mb-4">
-                    <button 
-                        @click="$dispatch('open-modal', 'assumptions-modal')"
-                        class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 px-5 py-2.5 text-white text-sm font-medium hover:from-amber-500 hover:to-orange-500 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        مشاهده مفروضات آزمون
-                    </button>
-                </div>
-            @endif
-            
-            <!-- Progress bar -->
-            <div class="space-y-2">
-                @php $pct = ($total ?? 0) > 0 ? intval((($index ?? 0)+1) / ($total ?? 1) * 100) : 0; @endphp
-                <div class="relative h-3 w-full rounded-full bg-gradient-to-r from-gray-100 to-gray-200 overflow-hidden shadow-inner">
-                    <div class="absolute inset-0 h-full rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-500 ease-out shadow-lg" 
-                         style="width: {{ $pct }}%"></div>
-                </div>
-                <div class="flex items-center justify-between text-xs">
-                    <span class="font-semibold text-indigo-600">سوال {{ ($index ?? 0) + 1 }} از {{ $total ?? 0 }}</span>
-                    <span class="font-medium text-gray-600">پیشرفت: {{ $pct }}%</span>
-                    <div class="flex items-center gap-1.5 text-gray-700">
-                        <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        @if(!is_null($durationSeconds))
-                            <span wire:poll.1s="tick" class="font-medium">
-                                {{ floor($remainingSeconds / 60) }} دقیقه
-                            </span>
-                        @else
-                            <span class="font-medium">بدون محدودیت</span>
-                        @endif
-                    </div>
-                </div>
-            </div>
+    <!-- Assumptions Button -->
+    @if($this->exam->assumptions_text || $this->exam->assumptions_image)
+        <div class="flex justify-center mb-3">
+            <button 
+                @click="$dispatch('open-modal', 'assumptions-modal')"
+                class="inline-flex items-center gap-2 rounded-lg bg-amber-100 px-4 py-2 text-amber-800 text-sm font-medium hover:bg-amber-200 transition shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                مشاهده مفروضات آزمون
+            </button>
         </div>
+    @endif
+    
+    <!-- Progress bar -->
+    <div>
+        @php $pct = ($total ?? 0) > 0 ? intval((($index ?? 0)+1) / ($total ?? 1) * 100) : 0; @endphp
+        <div class="h-2 w-full rounded bg-gray-200">
+            <div class="h-2 rounded bg-indigo-600" style="width: {{ $pct }}%"></div>
+        </div>
+        <div class="mt-1 text-[11px] text-gray-500">پیشرفت: {{ $pct }}%</div>
+    </div>
+
+    <div class="flex items-center justify-between">
+        <div class="text-sm text-gray-600">سوال {{ ($index ?? 0) + 1 }} از {{ $total ?? 0 }}</div>
+        <div class="text-xs text-gray-700">
+            @if(!is_null($durationSeconds))
+                <span wire:poll.1s="tick">
+                    زمان باقیمانده: {{ floor($remainingSeconds / 60) }} دقیقه
+                </span>
+            @else
+                <span>بدون محدودیت زمان</span>
+            @endif
+        </div>
+    </div>
 
     @if($q)
-        <!-- Question Card -->
-        <div wire:key="question-{{ $q->id }}" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6">
-            <article class="prose prose-sm max-w-none text-gray-800">
-                {!! $q->text !!}
-            </article>
+        <div wire:key="question-{{ $q->id }}">
+        <article class="prose prose-sm max-w-none">
+            {!! $q->text !!}
+        </article>
 
-            @if(!empty($q->image_path))
-                <div class="mt-5 flex justify-center">
-                    <img src="{{ Storage::url($q->image_path) }}" alt="image" class="max-w-full h-auto rounded-xl shadow-md border border-gray-100" style="width: auto;" />
-                </div>
-            @endif
+        @if(!empty($q->image_path))
+            <div class="mt-3 flex justify-center">
+                <img src="{{ Storage::url($q->image_path) }}" alt="image" class="max-w-full h-auto rounded" style="width: auto;" />
+            </div>
+        @endif
 
-            @if(!empty($q->image_path_2))
-                <div class="mt-4 flex justify-center">
-                    <img src="{{ Storage::url($q->image_path_2) }}" alt="image" class="max-w-full h-auto rounded-xl shadow-md border border-gray-100" style="width: auto;" />
-                </div>
-            @endif
+        @if(!empty($q->image_path_2))
+            <div class="mt-3 flex justify-center">
+                <img src="{{ Storage::url($q->image_path_2) }}" alt="image" class="max-w-full h-auto rounded" style="width: auto;" />
+            </div>
+        @endif
 
         @if($q->is_deleted)
-            <div class="mt-6 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 p-6 text-center shadow-md">
+            <div class="mt-6 rounded-lg border-2 border-amber-400 bg-amber-50 p-6 text-center">
                 <div class="flex items-center justify-center gap-2 text-amber-700">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
@@ -89,83 +78,70 @@
                 <p class="mt-2 text-sm text-amber-600">این سوال در محاسبه نمره نهایی شما لحاظ نخواهد شد. لطفاً به سوال بعدی بروید.</p>
             </div>
         @elseif($q->choices && $q->choices->count())
-            <div class="mt-5 space-y-3">
+            <div class="mt-3 space-y-2">
                 @foreach($q->choices as $choice)
-                    <label wire:key="choice-{{ $q->id }}-{{ $choice->id }}" 
-                           class="flex items-start gap-4 rounded-xl border-2 p-4 cursor-pointer transition-all duration-200 {{ ($answers[$q->id][$choice->id] ?? false) ? 'bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-400 shadow-md' : 'bg-white/50 border-gray-200 hover:border-indigo-300 hover:shadow-md hover:bg-white/80' }}">
+                    <label wire:key="choice-{{ $q->id }}-{{ $choice->id }}" class="flex items-start gap-3 rounded-lg border-2 p-4 cursor-pointer hover:bg-gray-50 hover:border-indigo-300 transition {{ ($answers[$q->id][$choice->id] ?? false) ? 'bg-indigo-50 border-indigo-400' : 'border-gray-200' }}">
                         @php $inputId = 'q'.$q->id.'_c'.$choice->id; @endphp
                         <input type="radio"
                                id="{{ $inputId }}"
                                name="question_{{ $q->id }}"
                                value="{{ $choice->id }}"
-                               class="h-5 w-5 mt-0.5 border-gray-300 text-indigo-600 focus:ring-indigo-500 focus:ring-2"
+                               class="h-5 w-5 mt-0.5 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                @checked(($answers[$q->id][$choice->id] ?? false) === true)
                                wire:click="saveAnswer({{ $q->id }}, {{ $choice->id }}, true)" />
-                        <span class="flex-1 text-gray-700 font-medium">{{ $choice->text }}</span>
+                        <span class="flex-1">{{ $choice->text }}</span>
                     </label>
                 @endforeach
             </div>
         @endif
-        </div>
 
-        <!-- Actions Card -->
-        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 space-y-5">
+        <div class="mt-8 space-y-4">
             <!-- Navigation buttons -->
-            <div class="flex items-center justify-center gap-4">
+            <div class="flex items-center justify-center gap-6">
                 <button wire:click="prev" 
-                        class="rounded-xl bg-gradient-to-r from-gray-100 to-gray-200 px-8 py-3 text-gray-700 disabled:opacity-50 hover:from-gray-200 hover:to-gray-300 transition-all font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none" 
+                        class="rounded bg-gray-100 px-8 py-2 text-gray-700 disabled:opacity-50 hover:bg-gray-200 transition font-medium" 
                         @disabled(($index ?? 0) === 0)>
-                    ← قبلی
+                    قبلی
                 </button>
                 <button wire:click="next" 
-                        class="rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3 text-white hover:from-indigo-600 hover:to-purple-700 transition-all font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none" 
+                        class="rounded bg-indigo-600 px-8 py-2 text-white hover:bg-indigo-700 transition font-medium" 
                         @disabled((($index ?? 0) + 1) >= ($total ?? 0))>
-                    بعدی →
+                    بعدی
                 </button>
             </div>
             
             <!-- Submit button -->
-            <div class="flex justify-center pt-2 border-t border-gray-200/50">
+            <div class="flex justify-center pt-4 border-t border-gray-200">
                 @auth
                     <form method="POST" action="{{ route('exam.finish', ['exam' => $this->exam->id]) }}" id="finishForm-{{ $this->exam->id }}" class="inline" data-loading-delay="4000">
                         @csrf
                         <input type="hidden" name="answers" value="{{ json_encode($this->answers) }}">
                         <button type="submit"
-                                class="rounded-xl px-8 py-3 text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 {{ ($this->requireAllAnswered && $this->unansweredCount() > 0) ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700' }}"
+                                class="rounded-lg px-6 py-2 text-white font-medium text-sm {{ ($this->requireAllAnswered && $this->unansweredCount() > 0) ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 shadow hover:shadow-lg' }} transition-all"
                                 @disabled($this->requireAllAnswered && $this->unansweredCount() > 0)>
-                            ✓ پایان آزمون و مشاهده کارنامه
+                            پایان آزمون و مشاهده کارنامه
                         </button>
                     </form>
                 @else
                     <button wire:click="submit"
-                            class="rounded-xl px-8 py-3 text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 {{ ($this->requireAllAnswered && $this->unansweredCount() > 0) ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700' }}"
+                            class="rounded-lg px-6 py-2 text-white font-medium text-sm {{ ($this->requireAllAnswered && $this->unansweredCount() > 0) ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 shadow hover:shadow-lg' }} transition-all"
                             @disabled($this->requireAllAnswered && $this->unansweredCount() > 0)>
-                        ✓ پایان آزمون و مشاهده کارنامه
+                        پایان آزمون و مشاهده کارنامه
                     </button>
                 @endauth
             </div>
             
             <!-- Report Issue Button -->
-            <div class="flex justify-center">
+            <div class="flex justify-center pt-2">
                 <button wire:click="$set('showReportModal', true)" 
-                        class="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-red-600 font-medium transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path>
-                    </svg>
+                        class="text-sm text-gray-600 hover:text-red-600 underline transition">
                     گزارش ایراد سوال
                 </button>
             </div>
-        </div>
     </div>
     @else
-        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-8 text-center">
-            <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            <p class="text-gray-600 font-medium">سوالی برای نمایش وجود ندارد.</p>
-        </div>
+        <div class="rounded border p-4 text-sm text-gray-600">سوالی برای نمایش وجود ندارد.</div>
     @endif
-    </div>
 </div>
 
 <!-- Report Issue Modal -->
