@@ -14,6 +14,7 @@ class Question extends Model
         'type',
         'text',
         'image_path',
+        'image_path_2',
         'order_column',
         'difficulty',
         'score',

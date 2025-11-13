@@ -61,6 +61,12 @@
             </div>
         @endif
 
+        @if(!empty($q->image_path_2))
+            <div class="mt-3 flex justify-center">
+                <img src="{{ Storage::url($q->image_path_2) }}" alt="image" class="max-w-full h-auto rounded" style="width: auto;" />
+            </div>
+        @endif
+
         @if($q->is_deleted)
             <div class="mt-6 rounded-lg border-2 border-amber-400 bg-amber-50 p-6 text-center">
                 <div class="flex items-center justify-center gap-2 text-amber-700">

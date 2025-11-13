@@ -90,7 +90,17 @@ class QuestionResource extends Resource
                         Forms\Components\Group::make()
                             ->schema([
                                 FileUpload::make('image_path')
-                                    ->label('تصویر سوال (اختیاری)')
+                                    ->label('تصویر اول سوال (اختیاری)')
+                                    ->image()
+                                    ->directory('questions')
+                                    ->acceptedFileTypes(['image/jpeg','image/png'])
+                                    ->openable()
+                                    ->downloadable()
+                                    ->imageEditor()
+                                    ->nullable(),
+
+                                FileUpload::make('image_path_2')
+                                    ->label('تصویر دوم سوال (اختیاری)')
                                     ->image()
                                     ->directory('questions')
                                     ->acceptedFileTypes(['image/jpeg','image/png'])
