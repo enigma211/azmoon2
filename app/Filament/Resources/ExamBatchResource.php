@@ -79,6 +79,12 @@ class ExamBatchResource extends Resource
                             ->default(0)
                             ->helperText('عدد کوچکتر = نمایش زودتر. برای مثال: 1، 2، 3، ...')
                             ->required(),
+
+                        Toggle::make('auto_generate_engineering_exams')
+                            ->label('ایجاد خودکار 16 آزمون نظام مهندسی')
+                            ->helperText('با فعال کردن این گزینه، 16 آزمون مرتبط با نظام مهندسی به صورت خودکار ایجاد می‌شود.')
+                            ->default(false)
+                            ->columnSpanFull(),
                     ])->columns(2),
 
                 Section::make('تنظیمات سئو')
