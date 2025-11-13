@@ -25,9 +25,9 @@ class QuestionReportResource extends Resource
     
     protected static ?string $pluralModelLabel = 'گزارش ایرادات';
     
-    protected static ?string $navigationGroup = 'مدیریت محتوا';
+    protected static ?string $navigationGroup = 'پشتیبانی';
     
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationBadge(): ?string
     {

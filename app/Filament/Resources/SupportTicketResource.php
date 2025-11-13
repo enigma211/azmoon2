@@ -23,7 +23,9 @@ class SupportTicketResource extends Resource
 
     protected static ?string $pluralModelLabel = 'تیکت‌های پشتیبانی';
 
-    protected static ?int $navigationSort = 6;
+    protected static ?string $navigationGroup = 'پشتیبانی';
+
+    protected static ?int $navigationSort = 1;
 
     public static function getNavigationBadge(): ?string
     {
