@@ -24,8 +24,8 @@ class ImportQuestions extends Page implements HasTable
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
     protected static string $view = 'filament.pages.import-questions';
     protected static ?string $navigationLabel = 'ایمپورت سوالات';
-    protected static ?string $navigationGroup = 'بانک سوالات';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationGroup = 'آزمون‌ها';
+    protected static ?int $navigationSort = 4;
 
     public function table(Table $table): Table
     {

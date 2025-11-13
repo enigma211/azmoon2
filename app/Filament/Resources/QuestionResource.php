@@ -44,7 +44,7 @@ class QuestionResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'بانک سوالات';
+        return 'آزمون‌ها';
     }
 
     public static function form(Form $form): Form
