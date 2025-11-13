@@ -35,9 +35,8 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'آزمون‌ها',
                 'کاربران',
-                'اشتراک‌ها',
-                'پرداخت‌ها',
                 'پشتیبانی',
+                'تنظیمات',
             ])
             // ->viteTheme('resources/css/filament/admin/theme.css') // disabled to ensure base Filament CSS loads
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

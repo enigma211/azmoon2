@@ -20,6 +20,8 @@ class UserSubscriptionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-identification';
 
+    protected static ?int $navigationSort = 2;
+
     public static function getNavigationLabel(): string
     {
         return 'اشتراک‌های کاربران';
@@ -37,7 +39,7 @@ class UserSubscriptionResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'اشتراک‌ها';
+        return 'کاربران';
     }
 
     public static function form(Form $form): Form

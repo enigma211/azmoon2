@@ -9,8 +9,8 @@ class ActivityLogsPage extends Page
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
     protected static string $view = 'filament.pages.activity-logs-page';
     protected static ?string $navigationLabel = 'لاگ و رخدادها';
-    protected static ?string $navigationGroup = 'سیستم';
-    protected static ?int $navigationSort = 100;
+    protected static ?string $navigationGroup = 'تنظیمات';
+    protected static ?int $navigationSort = 3;
 
     public function mount(): void
     {

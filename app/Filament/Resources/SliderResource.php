@@ -19,7 +19,7 @@ class SliderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-photo';
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 1;
 
     public static function getNavigationLabel(): string
     {
@@ -38,7 +38,7 @@ class SliderResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'محتوا';
+        return 'تنظیمات';
     }
 
     public static function form(Form $form): Form
