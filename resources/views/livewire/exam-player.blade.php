@@ -10,7 +10,7 @@
      style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
     <!-- Exam Title -->
     <div class="text-center mb-2">
-        <h1 class="text-xl font-bold text-gray-800">{{ $this->exam->title }}</h1>
+        <h1 class="text-sm font-bold text-gray-800">{{ $this->exam->title }}</h1>
     </div>
     
     <!-- Assumptions Button -->
