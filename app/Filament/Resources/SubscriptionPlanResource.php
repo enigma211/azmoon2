@@ -19,8 +19,6 @@ class SubscriptionPlanResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static ?int $navigationSort = 3;
-
     public static function getNavigationLabel(): string
     {
         return 'پلن‌های اشتراک';
@@ -38,7 +36,7 @@ class SubscriptionPlanResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'کاربران';
+        return 'اشتراک‌ها';
     }
 
     public static function form(Form $form): Form

@@ -19,9 +19,9 @@ class PaymentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static ?string $navigationGroup = 'کاربران';
+    protected static ?string $navigationGroup = 'پرداخت‌ها';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 1;
 
     public static function getNavigationLabel(): string
     {

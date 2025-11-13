@@ -11,8 +11,8 @@ class AdminSettingsPage extends Page
     protected static string $view = 'filament.pages.admin-settings-page';
     protected static ?string $navigationLabel = 'تنظیمات پیامک';
     protected static ?string $title = 'تنظیمات پیامک';
-    protected static ?string $navigationGroup = 'تنظیمات';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationGroup = 'سیستم';
+    protected static ?int $navigationSort = 99;
     // Re-enable navigation
     // protected static bool $shouldRegisterNavigation = false;
 
