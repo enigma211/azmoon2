@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\SelectFilter;
 
 class ExamResource extends Resource
 {
@@ -213,7 +214,10 @@ class ExamResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // is_published filter removed
+                SelectFilter::make('exam_batch_id')
+                    ->label('نوبت آزمون')
+                    ->relationship('batch', 'title')
+                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
