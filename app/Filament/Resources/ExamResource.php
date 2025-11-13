@@ -218,7 +218,7 @@ class ExamResource extends Resource
                     ->label('نوبت آزمون')
                     ->relationship('batch', 'title')
                     ->searchable(),
-            ], layout: Tables\Filters\Layout\Aside::class)
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
