@@ -65,7 +65,7 @@ class QuestionResource extends Resource
                         if (!$record || !$record->exam_id) {
                             return 'ابتدا آزمون را انتخاب و سوال را ذخیره کنید';
                         }
-                        $url = route('exam.play', ['exam' => $record->exam_id]);
+                        $url = route('exam.play', ['exam' => $record->exam_id, 'question_id' => $record->id]);
                         return new \Illuminate\Support\HtmlString(
                             '<a href="' . $url . '" target="_blank" class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

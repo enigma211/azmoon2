@@ -21,6 +21,9 @@ class ExamPlayer extends Component
 
     public int $index = 0;
 
+    #[Url(as: 'question_id')]
+    public ?int $questionId = null;
+
     public array $answers = [];
 
     public ?int $durationSeconds = null;
@@ -38,6 +41,15 @@ class ExamPlayer extends Component
     {
         // Questions are linked directly to Exam now
         $this->exam = $exam->load(['questions.choices']);
+
+        // If a specific question is requested, start from that question index
+        if ($this->questionId) {
+            $questions = $this->exam->questions->where('is_deleted', false)->values();
+            $position = $questions->search(fn ($q) => $q->id === $this->questionId);
+            if ($position !== false) {
+                $this->index = (int) $position;
+            }
+        }
 
         // Always start with a clean state on each entry (as per requirement)
         $this->answers = [];
