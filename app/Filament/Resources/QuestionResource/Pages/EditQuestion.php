@@ -49,6 +49,12 @@ class EditQuestion extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('save')
+                ->label('ذخیره تغییرات')
+                ->action('save')
+                ->color('success')
+                ->icon('heroicon-o-check-circle')
+                ->keyBindings(['mod+s']),
             Actions\DeleteAction::make(),
         ];
     }
