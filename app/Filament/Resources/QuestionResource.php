@@ -59,6 +59,24 @@ class QuestionResource extends Resource
                     ->preload()
                     ->required(),
 
+                Forms\Components\Placeholder::make('preview_link')
+                    ->label('پیش‌نمایش سوال')
+                    ->content(function ($record) {
+                        if (!$record || !$record->exam_id) {
+                            return 'ابتدا آزمون را انتخاب و سوال را ذخیره کنید';
+                        }
+                        $url = route('exam.play', ['exam' => $record->exam_id]);
+                        return new \Illuminate\Support\HtmlString(
+                            '<a href="' . $url . '" target="_blank" class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                </svg>
+                                مشاهده این سوال در آزمون (تب جدید)
+                            </a>'
+                        );
+                    })
+                    ->hiddenOn('create'),
+
                 TextInput::make('order_column')
                     ->label('شماره سوال')
                     ->numeric()
