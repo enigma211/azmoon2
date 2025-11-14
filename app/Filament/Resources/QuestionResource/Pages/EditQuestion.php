@@ -49,10 +49,6 @@ class EditQuestion extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\SaveAction::make()
-                ->label('ذخیره تغییرات')
-                ->color('primary'),
-
             Actions\DeleteAction::make(),
         ];
     }
