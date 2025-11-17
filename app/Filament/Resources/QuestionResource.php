@@ -173,7 +173,7 @@ class QuestionResource extends Resource
                             ->default(false),
                         TextInput::make('order')->numeric()->label('ترتیب')->default(0)->hidden(),
                     ])
-                    ->grid(1)
+                    ->grid(2)
                     ->orderColumn('order')
                     ->reorderable(false)
                     ->collapsible(false)
