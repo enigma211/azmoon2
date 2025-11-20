@@ -45,21 +45,59 @@
         @endif
     </head>
     <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased selection:bg-indigo-200 selection:text-indigo-900" style="font-family: Vazirmatn, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
-        <div id="pwa-launch-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-[#fff7ed] via-[#fff1d6] to-[#ffe4ba] text-amber-900 gap-5">
-            <div class="flex flex-col items-center gap-3 text-center">
-                <div class="w-20 h-20 rounded-2xl bg-white/70 border border-white/80 flex items-center justify-center shadow-xl">
-                    <img src="/icons/icon-192x192.png" alt="آزمون کده" class="w-12 h-12" loading="lazy">
+        <!-- PWA Splash Screen / Initial Loading -->
+        <div id="pwa-splash" class="fixed inset-0 z-[9999] bg-gradient-to-b from-gray-50 to-white flex flex-col items-center justify-center">
+            <div class="flex flex-col items-center gap-6 px-6">
+                <!-- Logo -->
+                <div class="animate-pulse">
+                    @php
+                        $logo = \App\Helpers\BrandingHelper::getLogo();
+                    @endphp
+                    @if($logo)
+                        <img src="{{ $logo }}" alt="آزمون کده" class="h-24 w-auto">
+                    @else
+                        <div class="text-4xl font-bold text-indigo-600">آزمون کده</div>
+                    @endif
                 </div>
-                <div>
-                    <p class="text-lg font-semibold">به آزمون کده خوش آمدید</p>
-                    <p class="text-sm text-amber-700/80">در حال بارگذاری صفحه…</p>
+                
+                <!-- Welcome Text -->
+                <div class="text-center space-y-2">
+                    <h1 class="text-xl font-semibold text-gray-800">به آزمون کده خوش آمدید</h1>
+                    <p class="text-sm text-gray-600">در حال بارگذاری صفحه...</p>
                 </div>
-            </div>
-            <div class="flex flex-col items-center gap-2 text-amber-800">
-                <span class="sr-only">در حال بارگذاری…</span>
-                <div class="h-12 w-12 rounded-full border-4 border-amber-200 border-t-amber-500 animate-spin"></div>
+                
+                <!-- Loading Spinner -->
+                <div class="flex items-center gap-2">
+                    <svg class="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-64 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-indigo-600 rounded-full animate-progress"></div>
+                </div>
             </div>
         </div>
+        
+        <style>
+            @keyframes progress {
+                0% { width: 0%; }
+                100% { width: 100%; }
+            }
+            .animate-progress {
+                animation: progress 2s ease-in-out infinite;
+            }
+            #pwa-splash {
+                transition: opacity 0.3s ease-out;
+            }
+            #pwa-splash.hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
+        </style>
+        
         <div id="app" class="min-h-dvh flex flex-col">
             <!-- Top Navigation (optional) -->
             <livewire:layout.navigation />
@@ -135,6 +173,31 @@
         </div>
 
         @livewireScripts
+        
+        {{-- PWA Splash Screen Handler --}}
+        <script>
+            // Hide splash screen when page is fully loaded
+            window.addEventListener('load', function() {
+                const splash = document.getElementById('pwa-splash');
+                if (splash) {
+                    setTimeout(() => {
+                        splash.classList.add('hidden');
+                        setTimeout(() => splash.remove(), 300);
+                    }, 500); // Small delay for smooth transition
+                }
+            });
+            
+            // Also hide on DOMContentLoaded as fallback
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(() => {
+                    const splash = document.getElementById('pwa-splash');
+                    if (splash && !splash.classList.contains('hidden')) {
+                        splash.classList.add('hidden');
+                        setTimeout(() => splash.remove(), 300);
+                    }
+                }, 1500);
+            });
+        </script>
         
         {{-- User Preferences Script --}}
         <script>
@@ -213,13 +276,6 @@
         
         {{-- PWA Service Worker Registration --}}
         <script>
-            window.addEventListener('load', () => {
-                const splash = document.getElementById('pwa-launch-screen');
-                if (splash) {
-                    splash.classList.add('opacity-0');
-                    setTimeout(() => splash.remove(), 300);
-                }
-            });
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('/service-worker.js')
