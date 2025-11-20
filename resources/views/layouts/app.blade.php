@@ -99,31 +99,6 @@
         </style>
         
         <div id="app" class="min-h-dvh flex flex-col">
-            <!-- PWA Install Banner (Mobile Only) -->
-            <div id="pwa-install-banner" class="hidden fixed top-0 left-0 right-0 z-50 bg-indigo-600 text-white shadow-lg">
-                <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-                    <div class="flex items-center gap-3 flex-1">
-                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                        </svg>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium">آزمون کده را روی گوشی خود نصب کنید</p>
-                            <p class="text-xs opacity-90">دسترسی سریع‌تر و تجربه بهتر</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2 flex-shrink-0">
-                        <button id="pwa-install-btn" class="px-3 py-1.5 bg-white text-indigo-600 rounded-md text-sm font-medium hover:bg-gray-100 transition">
-                            نصب
-                        </button>
-                        <button id="pwa-install-dismiss" class="p-1.5 hover:bg-indigo-700 rounded transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
             <!-- Top Navigation (optional) -->
             <livewire:layout.navigation />
 
@@ -297,69 +272,6 @@
                     setTimeout(() => notification.remove(), 300);
                 }, 2000);
             };
-        </script>
-        
-        {{-- PWA Install Banner Logic --}}
-        <script>
-            (function() {
-                let deferredPrompt;
-                const banner = document.getElementById('pwa-install-banner');
-                const installBtn = document.getElementById('pwa-install-btn');
-                const dismissBtn = document.getElementById('pwa-install-dismiss');
-                
-                // Check if user dismissed the banner before
-                const isDismissed = localStorage.getItem('pwa-install-dismissed') === 'true';
-                
-                // Check if running in standalone mode (already installed)
-                const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
-                    || window.navigator.standalone 
-                    || document.referrer.includes('android-app://');
-                
-                // Check if mobile device
-                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                
-                // Listen for beforeinstallprompt event
-                window.addEventListener('beforeinstallprompt', (e) => {
-                    e.preventDefault();
-                    deferredPrompt = e;
-                    
-                    // Show banner only if: mobile, not dismissed, not installed
-                    if (isMobile && !isDismissed && !isStandalone && banner) {
-                        banner.classList.remove('hidden');
-                    }
-                });
-                
-                // Install button click
-                if (installBtn) {
-                    installBtn.addEventListener('click', async () => {
-                        if (!deferredPrompt) return;
-                        
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        
-                        if (outcome === 'accepted') {
-                            console.log('PWA installed');
-                        }
-                        
-                        deferredPrompt = null;
-                        banner.classList.add('hidden');
-                    });
-                }
-                
-                // Dismiss button click
-                if (dismissBtn) {
-                    dismissBtn.addEventListener('click', () => {
-                        banner.classList.add('hidden');
-                        localStorage.setItem('pwa-install-dismissed', 'true');
-                    });
-                }
-                
-                // Hide banner if already installed
-                window.addEventListener('appinstalled', () => {
-                    banner.classList.add('hidden');
-                    localStorage.setItem('pwa-install-dismissed', 'true');
-                });
-            })();
         </script>
         
         {{-- PWA Service Worker Registration --}}
