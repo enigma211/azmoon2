@@ -45,6 +45,21 @@
         @endif
     </head>
     <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased selection:bg-indigo-200 selection:text-indigo-900" style="font-family: Vazirmatn, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
+        <div id="pwa-launch-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-[#fff7ed] via-[#fff1d6] to-[#ffe4ba] text-amber-900 gap-5">
+            <div class="flex flex-col items-center gap-3 text-center">
+                <div class="w-20 h-20 rounded-2xl bg-white/70 border border-white/80 flex items-center justify-center shadow-xl">
+                    <img src="/icons/icon-192x192.png" alt="آزمون کده" class="w-12 h-12" loading="lazy">
+                </div>
+                <div>
+                    <p class="text-lg font-semibold">به آزمون کده خوش آمدید</p>
+                    <p class="text-sm text-amber-700/80">در حال بارگذاری صفحه…</p>
+                </div>
+            </div>
+            <div class="flex flex-col items-center gap-2 text-amber-800">
+                <span class="sr-only">در حال بارگذاری…</span>
+                <div class="h-12 w-12 rounded-full border-4 border-amber-200 border-t-amber-500 animate-spin"></div>
+            </div>
+        </div>
         <div id="app" class="min-h-dvh flex flex-col">
             <!-- Top Navigation (optional) -->
             <livewire:layout.navigation />
@@ -198,6 +213,13 @@
         
         {{-- PWA Service Worker Registration --}}
         <script>
+            window.addEventListener('load', () => {
+                const splash = document.getElementById('pwa-launch-screen');
+                if (splash) {
+                    splash.classList.add('opacity-0');
+                    setTimeout(() => splash.remove(), 300);
+                }
+            });
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('/service-worker.js')
