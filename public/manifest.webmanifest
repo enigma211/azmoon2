@@ -70,26 +70,26 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/home-mobile-1080x1920.png",
-      "sizes": "1080x1920",
+      "src": "/screenshots/home-mobile-661x1280.png",
+      "sizes": "661x1280",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "/screenshots/domains-mobile-1080x1920.png",
-      "sizes": "1080x1920",
+      "src": "/screenshots/domains-mobile-652x1271.png",
+      "sizes": "652x1271",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "/screenshots/exam-mobile-1080x1920.png",
-      "sizes": "1080x1920",
+      "src": "/screenshots/exam-mobile-658x1278.png",
+      "sizes": "658x1278",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "/screenshots/result-mobile-1080x1920.png",
-      "sizes": "1080x1920",
+      "src": "/screenshots/result-mobile-661x1280.png",
+      "sizes": "661x1280",
       "type": "image/png",
       "form_factor": "narrow"
     }
