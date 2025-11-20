@@ -176,27 +176,38 @@
         
         {{-- PWA Splash Screen Handler --}}
         <script>
-            // Hide splash screen when page is fully loaded
-            window.addEventListener('load', function() {
+            // فقط در اولین بارگذاری صفحه splash را نشان بده
+            (function() {
                 const splash = document.getElementById('pwa-splash');
-                if (splash) {
-                    setTimeout(() => {
+                if (!splash) return;
+                
+                // چک کن که آیا قبلاً بارگذاری شده یا نه
+                const hasLoadedBefore = sessionStorage.getItem('app-loaded');
+                
+                if (hasLoadedBefore) {
+                    // اگر قبلاً بارگذاری شده، بلافاصله splash را حذف کن
+                    splash.remove();
+                } else {
+                    // اولین بار است، splash را نشان بده و بعد از لود پنهان کن
+                    function hideSplash() {
                         splash.classList.add('hidden');
-                        setTimeout(() => splash.remove(), 300);
-                    }, 500); // Small delay for smooth transition
-                }
-            });
-            
-            // Also hide on DOMContentLoaded as fallback
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(() => {
-                    const splash = document.getElementById('pwa-splash');
-                    if (splash && !splash.classList.contains('hidden')) {
-                        splash.classList.add('hidden');
-                        setTimeout(() => splash.remove(), 300);
+                        setTimeout(() => {
+                            splash.remove();
+                            // علامت بزن که اپ بارگذاری شده
+                            sessionStorage.setItem('app-loaded', 'true');
+                        }, 300);
                     }
-                }, 1500);
-            });
+                    
+                    // منتظر بمان تا صفحه کامل لود شود
+                    if (document.readyState === 'complete') {
+                        setTimeout(hideSplash, 500);
+                    } else {
+                        window.addEventListener('load', function() {
+                            setTimeout(hideSplash, 500);
+                        });
+                    }
+                }
+            })();
         </script>
         
         {{-- User Preferences Script --}}
