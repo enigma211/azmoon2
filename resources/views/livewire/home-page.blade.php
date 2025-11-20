@@ -119,13 +119,6 @@
     <!-- Footer با لوگوی اینماد - فقط دسکتاپ -->
     <footer class="site-footer" style="margin-top: 5rem; padding: 2.5rem 0 2rem; background-color: #f3f4f6; border-top: 2px solid #d1d5db;">
         <div class="flex flex-col items-center justify-center space-y-4">
-            <!-- لوگوی اینماد -->
-            <div>
-                <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=668272&Code=OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse'>
-                    <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=668272&Code=OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse' alt='اینماد' style='cursor:pointer; max-width: 100px; height: auto;' code='OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse'>
-                </a>
-            </div>
-            
             <!-- متن کپی‌رایت -->
             <div class="text-center text-sm text-gray-600">
                 <p>© {{ date('Y') }} {{ config('app.name', 'آزمون کده') }} - تمامی حقوق محفوظ است.</p>
