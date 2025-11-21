@@ -31,6 +31,10 @@
                             <span class="font-medium">OTP Enabled:</span>
                             <code class="bg-gray-100 px-2 py-1 rounded">{{ config('melipayamak.otp_enabled', env('OTP_ENABLED', true)) ? 'فعال' : 'غیرفعال' }}</code>
                         </div>
+                        <div>
+                            <span class="font-medium">OTP Body ID (الگو):</span>
+                            <code class="bg-gray-100 px-2 py-1 rounded">{{ config('melipayamak.otp_body_id') ?: 'تنظیم نشده' }}</code>
+                        </div>
                     </div>
                 </div>
 
@@ -53,6 +57,10 @@
                             <span class="font-medium">OTP_ENABLED:</span>
                             <code class="bg-gray-100 px-2 py-1 rounded">{{ env('OTP_ENABLED', 'true') }}</code>
                         </div>
+                        <div>
+                            <span class="font-medium">MELIPAYAMAK_OTP_BODY_ID:</span>
+                            <code class="bg-gray-100 px-2 py-1 rounded">{{ env('MELIPAYAMAK_OTP_BODY_ID') ?: 'تنظیم نشده' }}</code>
+                        </div>
                     </div>
                 </div>
 
@@ -69,6 +77,30 @@
                         @endphp
                         <span class="font-medium">Melipayamak Facade:</span>
                         <code class="bg-gray-100 px-2 py-1 rounded">{{ $facadeStatus }}</code>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 border border-green-200 rounded p-4 mb-4">
+                    <h3 class="font-semibold text-green-800 mb-2">✅ خط خدماتی (الگو) - توصیه شده</h3>
+                    <div class="text-sm text-green-700 space-y-2">
+                        <p><strong>وضعیت:</strong> 
+                            @if(config('melipayamak.otp_body_id'))
+                                <span class="bg-green-200 px-2 py-1 rounded">فعال ✓</span>
+                            @else
+                                <span class="bg-red-200 px-2 py-1 rounded">غیرفعال ✗</span>
+                            @endif
+                        </p>
+                        <p><strong>مزایا:</strong></p>
+                        <ul class="list-disc list-inside mr-4">
+                            <li>ارسال به تمام شماره‌ها (حتی لیست سیاه مخابرات)</li>
+                            <li>سرعت ارسال بالاتر</li>
+                            <li>نرخ تحویل بهتر</li>
+                        </ul>
+                        @if(!config('melipayamak.otp_body_id'))
+                            <p class="bg-yellow-100 p-2 rounded mt-2">
+                                <strong>برای فعال‌سازی:</strong> مقدار <code>MELIPAYAMAK_OTP_BODY_ID=396503</code> را به فایل .env اضافه کنید
+                            </p>
+                        @endif
                     </div>
                 </div>
 
