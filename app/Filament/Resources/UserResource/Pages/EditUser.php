@@ -68,7 +68,7 @@ class EditUser extends EditRecord
             // Create new subscription
             // If subscription_days is very large (e.g., 36500 = 100 years), treat as unlimited
             $endsAt = $subscriptionDays >= 36500 
-                ? now()->addYears(100)
+                ? null  // Unlimited = null (no expiration)
                 : now()->addDays($subscriptionDays);
 
             UserSubscription::create([

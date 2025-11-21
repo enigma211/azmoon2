@@ -21,8 +21,8 @@ class CreateUserSubscription extends CreateRecord
             if ($durationDays > 0) {
                 $data['ends_at'] = $start->copy()->addDays($durationDays)->format('Y-m-d');
             } else {
-                // If DB column is NOT NULL, ensure a value: set far-future for unlimited plans
-                $data['ends_at'] = $start->copy()->addYears(100)->format('Y-m-d');
+                // Unlimited plan: set ends_at to null
+                $data['ends_at'] = null;
             }
         }
 

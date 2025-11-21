@@ -31,10 +31,10 @@ class SubscriptionController extends Controller
         // Activate from purchase day, inclusive. Only date is important in UI, but we store datetime for DB.
         $startsAt = Carbon::now()->startOfDay();
         $durationDays = (int) ($plan->duration_days ?? 0);
-        // If plan has no duration limit, set a far-future end date to satisfy NOT NULL DB constraint
+        // If plan has no duration limit, set to null (unlimited)
         $endsAt = $durationDays > 0
             ? $startsAt->copy()->addDays($durationDays)->endOfDay()
-            : $startsAt->copy()->addYears(100)->endOfDay();
+            : null;  // Unlimited = null (no expiration)
 
         UserSubscription::create([
             'user_id' => $user->id,
