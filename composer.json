@@ -13,7 +13,7 @@
         "laravel/tinker": "2.10.1",
         "livewire/livewire": "3.6.4",
         "livewire/volt": "1.7.0",
-        "melipayamak/laravel": "^1.0",
+        "melipayamak/laravel": "1.0.0",
         "minishlink/web-push": "^9.0",
         "shetabit/multipay": "^2.7",
         "shetabit/payment": "^6.3",
