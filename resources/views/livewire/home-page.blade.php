@@ -1,35 +1,4 @@
 <div>
-    @php
-        $activeSub = auth()->check() ? auth()->user()->activeSubscription()->first() : null;
-        $isTrial = $activeSub && $activeSub->subscriptionPlan->price_toman <= 0 && $activeSub->ends_at;
-        $hoursRemaining = $isTrial ? now()->diffInHours($activeSub->ends_at, false) : 0;
-    @endphp
-
-    @if($isTrial && $hoursRemaining > 0)
-        <div class="bg-amber-50 border-b border-amber-200">
-            <div class="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between flex-wrap">
-                    <div class="w-0 flex-1 flex items-center">
-                        <span class="flex p-2 rounded-lg bg-amber-500">
-                            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </span>
-                        <p class="mr-3 font-medium text-amber-900 truncate">
-                            <span class="md:hidden">هدیه ثبت‌نام: {{ $hoursRemaining }} ساعت مانده</span>
-                            <span class="hidden md:inline">🎁 اشتراک هدیه ثبت‌نام فعال است: {{ $hoursRemaining }} ساعت فرصت دارید تا سامانه را رایگان تست کنید.</span>
-                        </p>
-                    </div>
-                    <div class="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
-                        <a href="{{ route('domains') }}" class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-amber-800 bg-white hover:bg-amber-50">
-                            شروع آزمون
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
-
     <div class="max-w-4xl mx-auto px-4">
         <!-- Slider Section -->
         <section class="py-6">

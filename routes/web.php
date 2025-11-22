@@ -61,11 +61,14 @@ Route::get('/batches/{batch}/exams', ExamsPage::class)->name('exams');
 
 // Exam journey
 Route::get('/exam/{exam}', ExamLanding::class)->name('exam.landing');
-Route::get('/exam/{exam}/play', ExamPlayer::class)->name('exam.play');
-Route::get('/exam/{exam}/result', ExamResult::class)->name('exam.result');
-Route::post('/exam/{exam}/finish', [ExamController::class, 'finish'])
-    ->middleware(['auth', 'throttle:10,1'])
-    ->name('exam.finish');
+
+Route::middleware(['auth', \App\Http\Middleware\EnsureSubscribed::class])->group(function () {
+    Route::get('/exam/{exam}/play', ExamPlayer::class)->name('exam.play');
+    Route::get('/exam/{exam}/result', ExamResult::class)->name('exam.result');
+    Route::post('/exam/{exam}/finish', [ExamController::class, 'finish'])
+        ->middleware('throttle:10,1')
+        ->name('exam.finish');
+});
 
 // Resource detail
 Route::get('/resource/{resource}', ResourceDetail::class)->name('resource.detail');
