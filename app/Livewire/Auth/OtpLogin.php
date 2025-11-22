@@ -5,6 +5,7 @@ namespace App\Livewire\Auth;
 use App\Models\User;
 use App\Models\SubscriptionPlan;
 use App\Models\UserSubscription;
+use App\Models\SystemSetting;
 use App\Services\SmsService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -155,16 +156,15 @@ class OtpLogin extends Component
                 ->first();
 
             if ($freePlan) {
-                // Calculate end date - if duration is 0 or null, set to null (unlimited)
-                $endsAt = ($freePlan->duration_days == 0 || $freePlan->duration_days === null)
-                    ? null  // Unlimited = null (no expiration)
-                    : now()->addDays($freePlan->duration_days);
+                // Get trial duration from system settings (default 48 hours)
+                $settings = SystemSetting::first();
+                $trialHours = $settings ? ($settings->free_trial_hours ?? 48) : 48;
 
                 UserSubscription::create([
                     'user_id' => $user->id,
                     'subscription_plan_id' => $freePlan->id,
                     'starts_at' => now(),
-                    'ends_at' => $endsAt,
+                    'ends_at' => now()->addHours($trialHours),
                     'status' => 'active',
                 ]);
             }
