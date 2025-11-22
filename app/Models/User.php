@@ -27,9 +27,6 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'mobile',
         'role',
-        'subscription_plan_id',
-        'subscription_start',
-        'subscription_end',
         'font_size',
         'theme',
     ];
@@ -108,21 +105,19 @@ class User extends Authenticatable implements FilamentUser
      */
     public function subscriptionPlan()
     {
-        return $this->belongsTo(SubscriptionPlan::class);
-    }
-
-    /**
-     * Check if subscription is expired and reset to free plan
-     */
-    public function checkAndResetExpiredSubscription(): void
-    {
-        if ($this->subscription_end && $this->subscription_end < now()) {
-            $this->update([
-                'subscription_plan_id' => null,
-                'subscription_start' => null,
-                'subscription_end' => null,
-            ]);
-        }
+        // Return the plan of the active subscription
+        return $this->hasOneThrough(
+            SubscriptionPlan::class,
+            UserSubscription::class,
+            'user_id', // Foreign key on user_subscriptions table...
+            'id', // Foreign key on subscription_plans table...
+            'id', // Local key on users table...
+            'subscription_plan_id' // Local key on user_subscriptions table...
+        )->where('user_subscriptions.status', 'active')
+         ->where(function($query) {
+             $query->whereNull('user_subscriptions.ends_at')
+                   ->orWhere('user_subscriptions.ends_at', '>', now());
+         });
     }
 
     /**

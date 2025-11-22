@@ -114,48 +114,6 @@ class UserResource extends Resource
                             ->helperText('برای ویرایش خالی بگذارید تا تغییر نکند'),
                     ])
                     ->columns(2),
-
-                Forms\Components\Section::make('مدیریت اشتراک ویژه')
-                    ->schema([
-                        Forms\Components\Toggle::make('grant_subscription')
-                            ->label('اعطای اشتراک ویژه')
-                            ->helperText('با فعال کردن این گزینه، می‌توانید به کاربر اشتراک ویژه بدهید')
-                            ->live()
-                            ->dehydrated(false),
-
-                        Forms\Components\TextInput::make('subscription_days')
-                            ->label('تعداد روز اشتراک')
-                            ->numeric()
-                            ->minValue(1)
-                            ->maxValue(3650)
-                            ->default(90)
-                            ->suffix('روز')
-                            ->helperText('پیش‌فرض: 90 روز (3 ماه)')
-                            ->visible(fn (callable $get) => $get('grant_subscription'))
-                            ->dehydrated(false),
-
-                        Forms\Components\Placeholder::make('current_subscription')
-                            ->label('اشتراک فعلی')
-                            ->content(function ($record) {
-                                if (!$record) return 'کاربر جدید - اشتراکی ندارد';
-                                
-                                $subscription = \App\Models\UserSubscription::where('user_id', $record->id)
-                                    ->where('status', 'active')
-                                    ->latest('starts_at')
-                                    ->first();
-                                
-                                if (!$subscription) return 'بدون اشتراک فعال';
-                                
-                                $plan = \App\Models\SubscriptionPlan::find($subscription->subscription_plan_id);
-                                $planTitle = $plan?->title ?? 'نامشخص';
-                                $starts = $subscription->starts_at ? $subscription->starts_at->format('Y/m/d') : '-';
-                                $ends = $subscription->ends_at ? $subscription->ends_at->format('Y/m/d') : 'نامحدود';
-                                
-                                return "📦 {$planTitle} | 📅 از {$starts} تا {$ends}";
-                            }),
-                    ])
-                    ->columns(1)
-                    ->visible(fn (string $operation) => $operation === 'edit'),
             ]);
     }
 
