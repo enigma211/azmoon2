@@ -26,13 +26,18 @@ class ProfilePage extends Component
         $user = Auth::user();
         $activeSubscription = $user->activeSubscription()->first();
 
-        // Determine premium status based on paid plan
-        $this->isPremium = $user->hasPaidSubscription();
-
         if ($activeSubscription) {
             $this->subscription = $activeSubscription->subscriptionPlan;
-            // Only show remaining days for premium subscriptions
-            if ($this->isPremium && $activeSubscription->ends_at) {
+            
+            // User is premium if:
+            // 1. Has a paid subscription (price > 0), OR
+            // 2. Has an active trial with expiration date (ends_at is set)
+            $isPaidPlan = $this->subscription && $this->subscription->price_toman > 0;
+            $isActiveTrial = $activeSubscription->ends_at !== null;
+            $this->isPremium = $isPaidPlan || $isActiveTrial;
+            
+            // Show remaining days for any subscription with ends_at
+            if ($activeSubscription->ends_at) {
                 $this->daysRemaining = now()->diffInDays($activeSubscription->ends_at, false);
                 $this->isExpired = $this->daysRemaining <= 0;
             } else {
@@ -40,6 +45,7 @@ class ProfilePage extends Component
             }
         } else {
             $this->subscription = null;
+            $this->isPremium = false;
             $this->isExpired = true;
         }
 

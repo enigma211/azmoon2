@@ -61,9 +61,24 @@
                             <p class="text-indigo-100 text-sm">
                                 وضعیت اشتراک: 
                                 @if($isPremium)
-                                    <span class="font-semibold">اشتراک ویژه</span>
-                                    @if($daysRemaining !== null)
-                                        <span class="text-xs"> ({{ ceil($daysRemaining) }} روز باقیمانده)</span>
+                                    @php
+                                        $currentSub = auth()->user()->activeSubscription()->first();
+                                        $isTrialSub = $currentSub && $currentSub->subscriptionPlan->price_toman <= 0 && $currentSub->ends_at;
+                                    @endphp
+                                    
+                                    @if($isTrialSub)
+                                        <span class="font-semibold">اشتراک هدیه</span>
+                                        @php
+                                            $hoursLeft = (int) ceil(now()->diffInHours($currentSub->ends_at, false));
+                                        @endphp
+                                        @if($hoursLeft > 0)
+                                            <span class="text-xs"> ({{ $hoursLeft }} ساعت باقیمانده)</span>
+                                        @endif
+                                    @else
+                                        <span class="font-semibold">اشتراک ویژه</span>
+                                        @if($daysRemaining !== null && $daysRemaining > 0)
+                                            <span class="text-xs"> ({{ ceil($daysRemaining) }} روز باقیمانده)</span>
+                                        @endif
                                     @endif
                                 @else
                                     <span class="font-semibold">کاربر رایگان</span>
