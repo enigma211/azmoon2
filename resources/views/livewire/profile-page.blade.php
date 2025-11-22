@@ -43,7 +43,7 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-lg font-bold text-amber-800">🎁 اشتراک هدیه ثبت‌نام</h3>
+                                <h3 class="text-lg font-bold text-amber-800">اشتراک هدیه ثبت‌نام</h3>
                                 <p class="text-amber-900 font-medium">
                                     شما یک اشتراک هدیه به مدت {{ $totalHours }} ساعت دارید.
                                 </p>
@@ -56,7 +56,7 @@
                     <div class="flex items-start justify-between">
                         <div class="flex-1">
                             <h1 class="text-xl font-bold mb-1">
-                                خوش آمدید، {{ auth()->user()->name }}! 👋
+                                خوش آمدید، {{ auth()->user()->name }}!
                             </h1>
                             <p class="text-indigo-100 text-sm">
                                 وضعیت اشتراک: 
