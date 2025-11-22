@@ -31,10 +31,10 @@
                 @php
                     $activeSub = auth()->user()->activeSubscription()->first();
                     $isTrial = $activeSub && $activeSub->subscriptionPlan->price_toman <= 0 && $activeSub->ends_at;
-                    $hoursRemaining = $isTrial ? now()->diffInHours($activeSub->ends_at, false) : 0;
+                    $totalHours = $isTrial ? (int) ceil($activeSub->starts_at->diffInHours($activeSub->ends_at, false)) : 0;
                 @endphp
 
-                @if($isTrial && $hoursRemaining > 0)
+                @if($isTrial && $totalHours > 0)
                     <div class="mb-6 bg-gradient-to-r from-amber-100 to-orange-100 border border-amber-200 rounded-xl p-4 shadow-sm">
                         <div class="flex items-center gap-3">
                             <div class="bg-amber-500 text-white p-2 rounded-lg">
@@ -45,7 +45,7 @@
                             <div>
                                 <h3 class="text-lg font-bold text-amber-800">🎁 اشتراک هدیه ثبت‌نام</h3>
                                 <p class="text-amber-900 font-medium">
-                                    {{ $hoursRemaining }} ساعت از فرصت تست رایگان شما باقی مانده است.
+                                    شما یک اشتراک هدیه به مدت {{ $totalHours }} ساعت دارید.
                                 </p>
                             </div>
                         </div>

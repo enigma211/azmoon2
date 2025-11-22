@@ -92,6 +92,52 @@
             @endif
         </section>
 
+        <!-- Gift Subscription Status (Below Slider) -->
+        @auth
+            @php
+                $latestSub = auth()->user()->subscriptions()->latest('created_at')->first();
+                // Check if it was a trial (price 0 and has specific end time)
+                $isTrial = $latestSub && 
+                           $latestSub->subscriptionPlan && 
+                           $latestSub->subscriptionPlan->price_toman <= 0 && 
+                           $latestSub->ends_at;
+                
+                $totalHours = $isTrial ? (int) ceil($latestSub->starts_at->diffInHours($latestSub->ends_at, false)) : 0;
+                $isExpired = $isTrial && $latestSub->ends_at < now();
+            @endphp
+
+            @if($isTrial)
+                <div class="mb-6 rounded-xl p-4 shadow-sm border {{ $isExpired ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200' }}">
+                    <div class="flex items-center gap-3">
+                        <div class="{{ $isExpired ? 'bg-red-500' : 'bg-amber-500' }} text-white p-2 rounded-lg">
+                            @if($isExpired)
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            @else
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            @endif
+                        </div>
+                        <div>
+                            @if($isExpired)
+                                <h3 class="text-lg font-bold text-red-800">مدت اعتبار هدیه تمام شده است</h3>
+                                <p class="text-red-900 font-medium">
+                                    فرصت استفاده رایگان شما به پایان رسیده است. برای ادامه لطفاً اشتراک تهیه کنید.
+                                </p>
+                            @else
+                                <h3 class="text-lg font-bold text-amber-800">🎁 اشتراک هدیه فعال است</h3>
+                                <p class="text-amber-900 font-medium">
+                                    شما یک اشتراک هدیه به مدت {{ $totalHours }} ساعت دارید.
+                                </p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endauth
+
         <!-- Exam Domains Section -->
         <section class="py-6">
 
