@@ -9,6 +9,7 @@ class SystemSetting extends Model
     protected $fillable = [
         'key',
         'value',
+        'free_trial_hours',
         'otp_enabled',
         'sms_provider',
         'sms_api_key',
@@ -17,6 +18,7 @@ class SystemSetting extends Model
 
     protected $casts = [
         'value' => 'string',
+        'free_trial_hours' => 'integer',
         'otp_enabled' => 'string',
         'sms_provider' => 'string',
         'sms_api_key' => 'string',

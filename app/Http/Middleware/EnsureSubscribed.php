@@ -29,7 +29,8 @@ class EnsureSubscribed
             ->first();
 
         if (!$subscription) {
-            return redirect()->route('pricing');
+            session()->flash('warning', 'فرصت استفاده رایگان ۴۸ ساعته شما به پایان رسیده است. برای ادامه استفاده از سامانه و شرکت در آزمون‌ها، لطفاً اشتراک ویژه تهیه کنید.');
+            return redirect()->route('profile');
         }
 
         $plan = $subscription->subscriptionPlan;
