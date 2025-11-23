@@ -22,11 +22,16 @@ class EnsureSubscribed
             return redirect()->route('login');
         }
 
+        // Admins have unlimited access
+        if ($user->hasRole('admin')) {
+            return $next($request);
+        }
+
         // Use the model's relationship to ensure consistency (handles NULL ends_at correctly)
         $subscription = $user->activeSubscription()->first();
 
         if (!$subscription) {
-            session()->flash('warning', 'فرصت استفاده رایگان ۴۸ ساعته شما به پایان رسیده است. برای ادامه استفاده از سامانه و شرکت در آزمون‌ها، لطفاً اشتراک ویژه تهیه کنید.');
+            session()->flash('warning', 'فرصت استفاده رایگان شما به پایان رسیده است. برای ادامه استفاده از سامانه و شرکت در آزمون‌ها، لطفاً اشتراک ویژه تهیه کنید.');
             return redirect()->route('profile');
         }
 

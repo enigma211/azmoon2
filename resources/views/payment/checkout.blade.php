@@ -43,15 +43,6 @@
                     <form action="{{ route('payment.request', $plan) }}" method="POST">
                         @csrf
                         
-                        <div class="mb-6">
-                            <div class="flex items-center">
-                                <input type="checkbox" id="terms" name="terms" required class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                <label for="terms" class="mr-2 text-sm text-gray-600">
-                                    قوانین و مقررات را مطالعه کرده و می‌پذیرم
-                                </label>
-                            </div>
-                        </div>
-
                         <div class="flex flex-col sm:flex-row gap-4" dir="rtl">
                             <button type="submit" class="w-full sm:flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition duration-150 shadow-lg">
                                 💳 پرداخت و فعال‌سازی اشتراک

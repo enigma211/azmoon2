@@ -25,7 +25,57 @@ class SubscriptionsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                // This form is read-only as it's for history.
+                Forms\Components\Select::make('subscription_plan_id')
+                    ->label('پلن اشتراک')
+                    ->relationship('subscriptionPlan', 'title')
+                    ->required()
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if ($state) {
+                            $plan = \App\Models\SubscriptionPlan::find($state);
+                            if ($plan && $plan->duration_days > 0) {
+                                $set('ends_at', now()->addDays($plan->duration_days)->format('Y-m-d H:i:s'));
+                                $set('days', $plan->duration_days);
+                            } elseif ($plan && $plan->duration_days == 0) {
+                                // Unlimited
+                                $set('ends_at', null);
+                                $set('days', null);
+                            }
+                        }
+                    }),
+
+                Forms\Components\TextInput::make('days')
+                    ->label('تعداد روز اعتبار')
+                    ->numeric()
+                    ->helperText('با تغییر این عدد، تاریخ پایان به صورت خودکار محاسبه می‌شود')
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        $startDate = $get('starts_at') ? \Carbon\Carbon::parse($get('starts_at')) : now();
+                        if ($state > 0) {
+                            $set('ends_at', $startDate->copy()->addDays($state)->format('Y-m-d H:i:s'));
+                        } else {
+                            $set('ends_at', null);
+                        }
+                    }),
+
+                Forms\Components\DateTimePicker::make('starts_at')
+                    ->label('تاریخ شروع')
+                    ->default(now())
+                    ->required(),
+
+                Forms\Components\DateTimePicker::make('ends_at')
+                    ->label('تاریخ پایان')
+                    ->helperText('خالی رها کردن به معنی اشتراک نامحدود است'),
+
+                Forms\Components\Select::make('status')
+                    ->label('وضعیت')
+                    ->options([
+                        'active' => 'فعال',
+                        'expired' => 'منقضی شده',
+                        'cancelled' => 'لغو شده',
+                    ])
+                    ->default('active')
+                    ->required(),
             ]);
     }
 
@@ -34,15 +84,19 @@ class SubscriptionsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('subscriptionPlan.title')
-                    ->label('پلن اشتراک'),
+                    ->label('پلن اشتراک')
+                    ->sortable(),
+                
                 Tables\Columns\TextColumn::make('starts_at')
                     ->label('تاریخ شروع')
-                    ->jalaliDate(),
-                    // ->formatStateUsing(fn ($state) => $state ? \Morilog\Jalali\Jalalian::fromDateTime($state)->format('Y/m/d') : '-'),
+                    ->jalaliDateTime()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('ends_at')
                     ->label('تاریخ پایان')
-                    ->jalaliDate(),
-                    // ->formatStateUsing(fn ($state) => $state ? \Morilog\Jalali\Jalalian::fromDateTime($state)->format('Y/m/d') : '-'),
+                    ->jalaliDateTime()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('status')
                     ->label('وضعیت')
                     ->badge()
@@ -58,27 +112,27 @@ class SubscriptionsRelationManager extends RelationManager
                         'cancelled' => 'لغو شده',
                         default => $state,
                     }),
+                
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('تاریخ ایجاد')
+                    ->jalaliDateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('starts_at', 'desc');
-    }
-
-    public function canCreate(): bool
-    {
-        return false;
-    }
-
-    public function canEdit($record): bool
-    {
-        return false;
-    }
-
-    public function canDelete($record): bool
-    { 
-        return false;
-    }
-
-    public function canDeleteAny(): bool
-    {
-        return false;
+            ->defaultSort('created_at', 'desc')
+            ->headerActions([
+                Tables\Actions\CreateAction::make()
+                    ->label('اعطای اشتراک جدید')
+                    ->modalHeading('اعطای اشتراک دستی به کاربر'),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 }

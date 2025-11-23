@@ -159,8 +159,27 @@ class User extends Authenticatable implements FilamentUser
             return 'مدیر سیستم';
         }
 
-        if ($this->hasPaidSubscription()) {
+        $subscription = $this->activeSubscription()->first();
+
+        if (!$subscription) {
+            return 'کاربر رایگان';
+        }
+
+        $plan = $subscription->subscriptionPlan;
+
+        // Paid subscription
+        if ($plan && $plan->price_toman > 0) {
             return 'اشتراک ویژه';
+        }
+
+        // Free trial subscription (active)
+        if ($plan && $plan->price_toman <= 0 && $subscription->ends_at) {
+            return 'اشتراک هدیه';
+        }
+
+        // Unlimited free plan (if any)
+        if ($plan && $plan->price_toman <= 0 && !$subscription->ends_at) {
+            return 'کاربر رایگان';
         }
 
         return 'کاربر رایگان';

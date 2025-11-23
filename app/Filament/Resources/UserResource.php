@@ -150,6 +150,7 @@ class UserResource extends Resource
                     ->color(fn (string $state) => match($state) {
                         'مدیر سیستم' => 'danger',
                         'اشتراک ویژه' => 'warning',
+                        'اشتراک هدیه' => 'info',
                         'کاربر رایگان' => 'success',
                         default => 'gray',
                     }),
