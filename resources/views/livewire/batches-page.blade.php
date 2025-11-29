@@ -1,64 +1,62 @@
-<div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
+<div class="min-h-screen bg-gray-50">
+    <div class="mx-auto max-w-md px-4 py-8">
         <!-- Header -->
-        <header class="mb-8">
-            <div class="text-center">
-                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto">تمام آزمون‌هایی که در لیست زیر مشاهده می‌کنید آزمون‌های رسمی می‌باشد که توسط دفتر مقررات ملی ساختمان برگزار گردیده است و تمام سوالات مربوط به دوره‌های گذشته است</p>
-            </div>
+        <header class="mb-8 text-center">
+            <h1 class="text-2xl font-bold text-gray-900">آزمون‌های رسمی دوره‌های گذشته</h1>
         </header>
 
-        <!-- Batches Grid -->
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Batches List -->
+        <div class="flex flex-col gap-5">
             @php
-                $gradients = [
-                    'bg-gradient-to-br from-pink-100 via-rose-100 to-red-100 hover:from-pink-200 hover:via-rose-200 hover:to-red-200',
-                    'bg-gradient-to-br from-purple-100 via-violet-100 to-indigo-100 hover:from-purple-200 hover:via-violet-200 hover:to-indigo-200',
-                    'bg-gradient-to-br from-blue-100 via-cyan-100 to-teal-100 hover:from-blue-200 hover:via-cyan-200 hover:to-teal-200',
-                    'bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 hover:from-green-200 hover:via-emerald-200 hover:to-teal-200',
-                    'bg-gradient-to-br from-yellow-100 via-amber-100 to-orange-100 hover:from-yellow-200 hover:via-amber-200 hover:to-orange-200',
-                    'bg-gradient-to-br from-orange-100 via-red-100 to-pink-100 hover:from-orange-200 hover:via-red-200 hover:to-pink-200',
-                    'bg-gradient-to-br from-fuchsia-100 via-purple-100 to-pink-100 hover:from-fuchsia-200 hover:via-purple-200 hover:to-pink-200',
-                    'bg-gradient-to-br from-sky-100 via-blue-100 to-indigo-100 hover:from-sky-200 hover:via-blue-200 hover:to-indigo-200',
+                $styles = [
+                    ['bg' => 'bg-[#154c79]', 'btn' => 'bg-[#154c79] hover:bg-[#0f3a5d]'], // Deep Blue
+                    ['bg' => 'bg-[#2d8b88]', 'btn' => 'bg-[#2d8b88] hover:bg-[#236e6b]'], // Teal
+                    ['bg' => 'bg-[#cfa438]', 'btn' => 'bg-[#cfa438] hover:bg-[#b38d2f]'], // Gold/Mustard
+                    ['bg' => 'bg-[#8e44ad]', 'btn' => 'bg-[#8e44ad] hover:bg-[#732d91]'], // Purple
+                    ['bg' => 'bg-[#c0392b]', 'btn' => 'bg-[#c0392b] hover:bg-[#a93226]'], // Red
                 ];
             @endphp
+
             @foreach($batches as $index => $batch)
                 @php
-                    $gradientClass = $gradients[$index % count($gradients)];
+                    $style = $styles[$index % count($styles)];
+                    $bgColor = $style['bg'];
+                    $btnColor = $style['btn'];
                 @endphp
-                <a href="{{ route('exams', ['batch' => $batch->id]) }}" 
-                   wire:navigate 
-                   class="group relative rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden {{ $gradientClass }} border-2 border-white/30">
-                    
-                    <!-- Content -->
-                    <div class="p-6">
-                        <h3 class="font-bold text-gray-900 mb-3 text-lg line-clamp-2">
+
+                <div class="relative rounded-2xl shadow-md bg-white overflow-hidden">
+                    <!-- Inactive Badge -->
+                    @if(!$batch->is_active)
+                        <div class="absolute top-2 left-14 bg-gray-200 text-gray-600 text-xs font-bold px-2 py-1 rounded-md z-10">
+                            غیرفعال
+                        </div>
+                    @endif
+
+                    <!-- Card Header (Colored) -->
+                    <div class="{{ $bgColor }} px-6 py-5 flex items-center justify-between text-white">
+                        <!-- Title (Right) -->
+                        <h3 class="text-xl font-bold">
                             {{ $batch->title }}
                         </h3>
-                        
-                        <!-- Additional Info -->
-                        <div class="flex items-center justify-between text-sm mb-4">
-                            <span class="text-gray-900 font-medium">نوبت آزمون</span>
-                            
-                            @if($batch->is_active)
-                                <span class="inline-flex items-center rounded-full bg-green-500 text-white text-xs font-medium px-3 py-1 shadow-sm">
-                                    فعال
-                                </span>
-                            @else
-                                <span class="inline-flex items-center rounded-full bg-gray-400 text-white text-xs font-medium px-3 py-1 shadow-sm">
-                                    غیرفعال
-                                </span>
-                            @endif
-                        </div>
-                        
-                        <!-- Arrow -->
-                        <div class="flex items-center text-gray-900 text-sm font-semibold">
-                            <span class="group-hover:translate-x-1 transition-transform">مشاهده آزمون‌ها</span>
-                            <svg class="w-4 h-4 mr-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                            </svg>
-                        </div>
+
+                        <!-- Calendar Icon (Left) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 opacity-90">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                        </svg>
                     </div>
-                </a>
+
+                    <!-- Card Body -->
+                    <div class="p-6 bg-white">
+                        <a href="{{ route('exams', ['batch' => $batch->id]) }}" wire:navigate class="block w-full">
+                            <div class="{{ $btnColor }} text-white font-bold text-center py-3 rounded-xl shadow transition-colors flex items-center justify-center gap-2">
+                                <span>مشاهده آزمون‌ها</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                </svg>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             @endforeach
         </div>
         
