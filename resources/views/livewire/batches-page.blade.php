@@ -26,7 +26,7 @@
 
                 <div class="relative rounded-2xl shadow-md bg-white overflow-hidden">
                     <!-- Card Header (Colored) -->
-                    <div class="{{ $bgColor }} px-6 py-3 flex items-center justify-between text-white">
+                    <div class="{{ $bgColor }} px-6 py-2 flex items-center justify-between text-white">
                         <!-- Title (Right) -->
                         <h3 class="text-lg font-bold">
                             {{ $batch->title }}
@@ -39,9 +39,9 @@
                     </div>
 
                     <!-- Card Body -->
-                    <div class="p-4 bg-white flex flex-col items-center">
+                    <div class="p-7 bg-white flex flex-col items-center">
                         <a href="{{ route('exams', ['batch' => $batch->id]) }}" wire:navigate class="block w-fit mx-auto">
-                            <div class="{{ $btnColor }} text-white font-bold text-center py-2 px-8 rounded-xl shadow transition-colors flex items-center justify-center gap-2 text-sm">
+                            <div class="{{ $btnColor }} text-white font-bold text-center py-2 px-3 rounded-xl shadow transition-colors flex items-center justify-center gap-2 text-sm">
                                 <span>مشاهده آزمون‌ها</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
