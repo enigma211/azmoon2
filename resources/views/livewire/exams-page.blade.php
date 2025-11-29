@@ -1,84 +1,88 @@
-<div class="mx-auto max-w-3xl p-4 sm:p-6">
+<div class="mx-auto max-w-md p-4 sm:p-6">
     <!-- Header -->
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 mb-1">فهرست آزمون‌ها</h1>
-        <p class="text-sm text-gray-500">آزمون مورد نظر خود را انتخاب کنید</p>
+    <div class="mb-8 text-center">
+        <h1 class="text-2xl font-bold text-gray-900">فهرست آزمون‌ها</h1>
         
         <!-- توضیحات نمره منفی -->
-        <div class="mt-4 p-4 bg-amber-50 border-r-4 border-amber-400 rounded-lg">
+        <div class="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-right">
             <div class="flex items-start gap-3">
                 <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                 </svg>
                 <div>
-                    <p class="text-sm font-semibold text-amber-900 mb-1">توجه مهم:</p>
-                    <p class="text-sm text-amber-800 leading-relaxed">
-                        این آزمون‌ها دارای نمره منفی می‌باشند و هر 3 سوال منفی، 1 سوال مثبت را از بین می‌برد و در نمره نهایی شما تاثیر می‌گذارد.
+                    <p class="text-sm font-bold text-amber-800 mb-1">توجه مهم:</p>
+                    <p class="text-xs text-amber-800 leading-relaxed">
+                        این آزمون‌ها دارای نمره منفی می‌باشند و هر ۳ سوال منفی، ۱ سوال مثبت را از بین می‌برد.
                     </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Exams Grid -->
-    <div class="grid gap-5 sm:grid-cols-2">
+    <!-- Exams List -->
+    <div class="flex flex-col gap-5">
         @php
-            $examGradients = [
-                'bg-gradient-to-br from-rose-100 via-pink-100 to-fuchsia-100 hover:from-rose-200 hover:via-pink-200 hover:to-fuchsia-200',
-                'bg-gradient-to-br from-violet-100 via-purple-100 to-indigo-100 hover:from-violet-200 hover:via-purple-200 hover:to-indigo-200',
-                'bg-gradient-to-br from-cyan-100 via-sky-100 to-blue-100 hover:from-cyan-200 hover:via-sky-200 hover:to-blue-200',
-                'bg-gradient-to-br from-teal-100 via-emerald-100 to-green-100 hover:from-teal-200 hover:via-emerald-200 hover:to-green-200',
-                'bg-gradient-to-br from-amber-100 via-orange-100 to-red-100 hover:from-amber-200 hover:via-orange-200 hover:to-red-200',
-                'bg-gradient-to-br from-lime-100 via-green-100 to-emerald-100 hover:from-lime-200 hover:via-green-200 hover:to-emerald-200',
-                'bg-gradient-to-br from-indigo-100 via-blue-100 to-cyan-100 hover:from-indigo-200 hover:via-blue-200 hover:to-cyan-200',
-                'bg-gradient-to-br from-pink-100 via-rose-100 to-red-100 hover:from-pink-200 hover:via-rose-200 hover:to-red-200',
+            $styles = [
+                ['color' => 'bg-rose-500', 'text' => 'text-rose-600', 'border' => 'border-rose-100', 'shadow' => 'shadow-rose-100'],
+                ['color' => 'bg-violet-600', 'text' => 'text-violet-600', 'border' => 'border-violet-100', 'shadow' => 'shadow-violet-100'],
+                ['color' => 'bg-blue-600', 'text' => 'text-blue-600', 'border' => 'border-blue-100', 'shadow' => 'shadow-blue-100'],
+                ['color' => 'bg-teal-600', 'text' => 'text-teal-600', 'border' => 'border-teal-100', 'shadow' => 'shadow-teal-100'],
+                ['color' => 'bg-amber-500', 'text' => 'text-amber-600', 'border' => 'border-amber-100', 'shadow' => 'shadow-amber-100'],
             ];
         @endphp
+        
         @foreach($exams as $index => $exam)
             @php
-                $examGradientClass = $examGradients[$index % count($examGradients)];
+                $style = $styles[$index % count($styles)];
+                $accentColor = $style['color'];
+                $textColor = $style['text'];
+                $shadowColor = $style['shadow'];
             @endphp
+
             <a href="{{ route('exam.play', ['exam' => $exam->id]) }}" 
                wire:navigate 
-               class="group relative rounded-xl p-6 hover:shadow-2xl transition-all duration-300 overflow-hidden {{ $examGradientClass }} border-2 border-white/30 shadow-lg">
+               class="group relative block bg-white rounded-2xl p-6 shadow-lg {{ $shadowColor }} hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-50">
                 
-                <!-- Content -->
-                <div class="relative">
+                <!-- Left Accent Bar -->
+                <div class="absolute left-0 top-3 bottom-3 w-1.5 rounded-r-full {{ $accentColor }}"></div>
+                
+                <!-- Content Container -->
+                <div class="relative z-10 pl-3 flex flex-col items-center">
+                    
                     <!-- Title -->
-                    <h3 class="font-bold text-gray-900 mb-3 text-lg">
+                    <h3 class="font-black text-xl text-gray-800 mb-4 text-center leading-tight">
                         {{ $exam->title }}
                     </h3>
                     
                     <!-- Meta Info -->
-                    <div class="flex items-center gap-4 mb-3 text-sm">
+                    <div class="flex items-center justify-center gap-6 mb-6 w-full">
+                        <!-- Question Count -->
                         @php
                             $questionCount = $exam->questions()->where('is_deleted', false)->count();
                         @endphp
-                        @if($questionCount > 0)
-                            <span class="text-gray-900 font-medium">{{ $questionCount }} سوال</span>
-                        @endif
-                        
-                        @if($exam->duration_minutes)
-                            <span class="text-gray-900 font-medium">{{ $exam->duration_minutes }} دقیقه</span>
-                        @else
-                            <span class="text-gray-900 font-medium">بدون محدودیت زمان</span>
-                        @endif
+                        <div class="flex items-center gap-1.5 text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                            </svg>
+                            <span class="text-sm font-bold">{{ $questionCount }} سوال</span>
+                        </div>
+
+                        <!-- Duration -->
+                        <div class="flex items-center gap-1.5 text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            <span class="text-sm font-bold">
+                                {{ $exam->duration_minutes ? $exam->duration_minutes . ' دقیقه' : 'بدون محدودیت' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Start Button -->
+                    <div class="w-full {{ $accentColor }} text-white font-bold text-lg py-3 rounded-xl shadow-md text-center transition-transform group-hover:scale-[1.02]">
+                        شروع آزمون
                     </div>
                     
-                    <!-- Description -->
-                    @if($exam->description)
-                        <p class="text-sm text-gray-900 line-clamp-2 leading-relaxed mb-3">
-                            {{ \Illuminate\Support\Str::limit($exam->description, 100) }}
-                        </p>
-                    @endif
-                    
-                    <!-- Arrow icon -->
-                    <div class="flex items-center text-gray-900 text-sm font-semibold">
-                        <span class="group-hover:translate-x-1 transition-transform">شروع آزمون</span>
-                        <svg class="w-4 h-4 mr-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
-                    </div>
                 </div>
             </a>
         @endforeach
