@@ -35,7 +35,7 @@ class Login extends BaseLogin
         return app(LoginResponse::class);
     }
 
-    protected function getRateLimitKey($method, $component = null): string
+    protected function getRateLimitKey($method): string
     {
         // Use email as key to prevent IP bypass
         $email = $this->data['email'] ?? '';
