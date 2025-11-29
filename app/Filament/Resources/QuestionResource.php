@@ -115,7 +115,7 @@ class QuestionResource extends Resource
                                     ->acceptedFileTypes(['image/jpeg','image/png'])
                                     ->openable()
                                     ->downloadable()
-                                    ->imageEditor()
+                                    // ->imageEditor()
                                     ->nullable(),
 
                                 FileUpload::make('image_path_2')
@@ -126,7 +126,7 @@ class QuestionResource extends Resource
                                     ->acceptedFileTypes(['image/jpeg','image/png'])
                                     ->openable()
                                     ->downloadable()
-                                    ->imageEditor()
+                                    // ->imageEditor()
                                     ->nullable(),
 
                                 Toggle::make('is_deleted')
