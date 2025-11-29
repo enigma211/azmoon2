@@ -164,7 +164,7 @@
                                 $accentColor = 'bg-amber-600';
                                 $shadowColor = 'shadow-amber-100';
                                 $btnBgClass = 'bg-[#E67E22] group-hover:bg-[#d35400]';
-                                if (!$subtitle) $subtitle = 'بانک جامع سوالات سال های گذشته';
+                                if (!$subtitle) $subtitle = 'بانک جامع سوالات سال های قبل';
                             } else {
                                 $accentColor = 'bg-gray-400';
                                 $shadowColor = 'shadow-gray-100';
