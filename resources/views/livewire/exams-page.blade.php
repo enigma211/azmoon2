@@ -3,17 +3,36 @@
     <div class="mb-8 text-center">
         <h1 class="text-2xl font-bold text-gray-900">فهرست آزمون‌ها</h1>
         
-        <!-- توضیحات نمره منفی -->
-        <div class="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-right">
-            <div class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                </svg>
-                <div>
-                    <p class="text-sm font-bold text-amber-800 mb-1">توجه مهم:</p>
-                    <p class="text-xs text-amber-800 leading-relaxed">
-                        این آزمون‌ها دارای نمره منفی می‌باشند و هر ۳ سوال منفی، ۱ سوال مثبت را از بین می‌برد.
-                    </p>
+        <!-- Alerts Container -->
+        <div class="mt-6 space-y-3">
+            <!-- Alert 1 -->
+            <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl text-right">
+                <div class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    <div>
+                        <p class="text-sm font-bold text-amber-800 mb-1">هشدار ۱:</p>
+                        <p class="text-xs text-amber-800 leading-relaxed">
+                            این آزمون‌ها دارای نمره منفی می‌باشند و هر ۳ سوال منفی، ۱ سوال مثبت را از بین می‌برد.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alert 2 -->
+            <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl text-right">
+                <div class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div>
+                        <p class="text-sm font-bold text-blue-800 mb-1">هشدار ۲:</p>
+                        <p class="text-xs text-blue-800 leading-relaxed">
+                            کاربر گرامی برای استفاده راحت‌تر از سامانه، می‌توانید از طریق مرورگر کامپیوتر به وب‌سایت ما مراجعه کنید:
+                            <a href="https://www.azmoonkade.com" class="font-bold underline decoration-blue-400 hover:text-blue-600 mr-1 dir-ltr inline-block">https://www.azmoonkade.com</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
