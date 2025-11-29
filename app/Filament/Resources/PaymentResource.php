@@ -116,7 +116,8 @@ class PaymentResource extends Resource
                 Tables\Columns\TextColumn::make('amount')
                     ->label('مبلغ')
                     ->formatStateUsing(fn ($state) => number_format($state) . ' تومان')
-                    ->sortable(),
+                    ->sortable()
+                    ->summarize(Tables\Columns\Summarizers\Sum::make()->label('مجموع')->formatStateUsing(fn ($state) => number_format($state) . ' تومان')),
 
                 Tables\Columns\BadgeColumn::make('status')
                     ->label('وضعیت')
@@ -167,6 +168,22 @@ class PaymentResource extends Resource
                         'failed' => 'ناموفق',
                         'canceled' => 'لغو شده',
                     ]),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')->label('از تاریخ'),
+                        Forms\Components\DatePicker::make('created_until')->label('تا تاریخ'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
