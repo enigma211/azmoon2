@@ -23,7 +23,7 @@ class OtpLogin extends Component
     public $countdown = 0;
 
     protected $rules = [
-        'mobile' => 'required|regex:/^09\d{9}$/',
+        'mobile' => ['required', \App\Rules\IranianMobile::class],
         'otp' => 'required|digits:6',
         'firstName' => 'required|string|min:2|max:50',
         'lastName' => 'required|string|min:2|max:50',
@@ -62,13 +62,8 @@ class OtpLogin extends Component
             return;
         }
 
-        // Store OTP in session
-        session([
-            'otp' => $otp,
-            'mobile' => $this->mobile,
-            'otp_expires_at' => now()->addMinutes(5),
-            'user_exists' => $this->userExists,
-        ]);
+        // Store OTP in Cache (5 minutes expiration)
+        \Illuminate\Support\Facades\Cache::put("otp_{$this->mobile}", $otp, now()->addMinutes(5));
 
         $this->otpSent = true;
         $this->step = 'otp';
@@ -81,38 +76,34 @@ class OtpLogin extends Component
     {
         $this->validate(['otp' => $this->rules['otp']], $this->messages);
 
-        $expectedOtp = session('otp');
-        $sessionMobile = session('mobile');
-        $expires = session('otp_expires_at');
-        $userExists = session('user_exists', false);
+        // Retrieve OTP from Cache
+        $cachedOtp = \Illuminate\Support\Facades\Cache::get("otp_{$this->mobile}");
 
-        if (!$expectedOtp || !$sessionMobile) {
-            $this->addError('otp', 'جلسه منقضی شده است. لطفا دوباره تلاش کنید.');
-            $this->reset(['step', 'mobile', 'otp', 'otpSent']);
-            return;
-        }
-
-        if ($expires && now()->greaterThan($expires)) {
+        if (!$cachedOtp) {
             $this->addError('otp', 'کد تایید منقضی شده است. لطفا دوباره درخواست دهید.');
+            $this->reset(['step', 'otp', 'otpSent']);
             return;
         }
 
-        if ($this->otp !== $expectedOtp) {
+        if ($this->otp !== $cachedOtp) {
             $this->addError('otp', 'کد تایید نادرست است.');
             return;
         }
 
-        // OTP is valid
-        if ($userExists) {
-            // Login existing user
-            $user = User::where('mobile', $sessionMobile)->first();
-            Auth::login($user);
+        // OTP is valid - Clear it
+        \Illuminate\Support\Facades\Cache::forget("otp_{$this->mobile}");
 
-            session()->forget(['otp', 'mobile', 'otp_expires_at', 'user_exists']);
+        if ($this->userExists) {
+            // Login existing user
+            $user = User::where('mobile', $this->mobile)->first();
+            Auth::login($user);
             
             return redirect()->route('profile');
         } else {
-            // New user - ask for name
+            // New user - Mark mobile as verified in Cache for 10 minutes to allow registration
+            \Illuminate\Support\Facades\Cache::put("verified_{$this->mobile}", true, now()->addMinutes(10));
+            
+            // Ask for name
             $this->step = 'register';
         }
     }
@@ -125,10 +116,10 @@ class OtpLogin extends Component
             'email' => $this->rules['email'],
         ], $this->messages);
 
-        $sessionMobile = session('mobile');
-
-        if (!$sessionMobile) {
-            $this->addError('firstName', 'جلسه منقضی شده است. لطفا دوباره تلاش کنید.');
+        // Verify that this mobile number was actually verified recently
+        if (!\Illuminate\Support\Facades\Cache::get("verified_{$this->mobile}")) {
+            $this->addError('firstName', 'زمان مجاز ثبت‌نام تمام شده است. لطفا مجددا احراز هویت کنید.');
+            $this->resetForm();
             return;
         }
 
@@ -144,10 +135,10 @@ class OtpLogin extends Component
             $user = User::create([
                 'name' => trim($this->firstName . ' ' . $this->lastName),
                 'email' => $this->email,
-                'username' => $sessionMobile, // Use mobile as username
+                'username' => $this->mobile, // Use mobile as username
                 'password' => bcrypt(str()->random(16)),
-                'mobile' => $sessionMobile,
-                'role' => 'student',
+                'mobile' => $this->mobile,
+                // Role is handled by default or logic elsewhere
             ]);
 
             // Assign free plan to new user
@@ -172,7 +163,8 @@ class OtpLogin extends Component
             // Login the new user
             Auth::login($user);
 
-            session()->forget(['otp', 'mobile', 'otp_expires_at', 'user_exists']);
+            // Cleanup
+            \Illuminate\Support\Facades\Cache::forget("verified_{$this->mobile}");
 
             session()->flash('success', 'ثبت‌نام با موفقیت انجام شد. خوش آمدید!');
 
@@ -187,7 +179,7 @@ class OtpLogin extends Component
     public function resetForm()
     {
         $this->reset(['step', 'mobile', 'otp', 'firstName', 'lastName', 'email', 'otpSent', 'userExists', 'countdown']);
-        session()->forget(['otp', 'mobile', 'otp_expires_at', 'user_exists']);
+        // No session to clear
     }
 
     public function render()

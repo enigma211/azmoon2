@@ -57,26 +57,39 @@ class ExamPlayer extends Component
 
         // Initialize or create DB attempt for authenticated users
         if (Auth::check()) {
-            // Delete any previous attempts for this exam/user to ensure clean state
-            // This handles the unique constraint on (exam_id, user_id)
-            ExamAttempt::where('exam_id', $this->exam->id)
+            // Check if there's an in-progress attempt for this exam
+            $existingAttempt = ExamAttempt::where('exam_id', $this->exam->id)
                 ->where('user_id', Auth::id())
-                ->delete();
+                ->where('status', 'in_progress')
+                ->first();
 
-            // Create a fresh attempt with in_progress status
-            $this->attempt = ExamAttempt::create([
-                'exam_id' => $this->exam->id,
-                'user_id' => Auth::id(),
-                'started_at' => now(),
-                'status' => 'in_progress',
-            ]);
+            if ($existingAttempt) {
+                // Continue the existing in-progress attempt
+                $this->attempt = $existingAttempt;
+                
+                // Log resume
+                ActivityLogger::log('exam_resumed', [
+                    'index' => $this->index,
+                    'duration_seconds' => $this->durationSeconds,
+                    'remaining_seconds' => $this->remainingSeconds,
+                ], $this->exam->id, $this->attempt->id);
+            } else {
+                // Create a fresh attempt with in_progress status
+                // Note: Completed attempts are preserved for history
+                $this->attempt = ExamAttempt::create([
+                    'exam_id' => $this->exam->id,
+                    'user_id' => Auth::id(),
+                    'started_at' => now(),
+                    'status' => 'in_progress',
+                ]);
 
-            // Log start
-            ActivityLogger::log('exam_started', [
-                'index' => $this->index,
-                'duration_seconds' => $this->durationSeconds,
-                'remaining_seconds' => $this->remainingSeconds,
-            ], $this->exam->id, $this->attempt->id);
+                // Log start
+                ActivityLogger::log('exam_started', [
+                    'index' => $this->index,
+                    'duration_seconds' => $this->durationSeconds,
+                    'remaining_seconds' => $this->remainingSeconds,
+                ], $this->exam->id, $this->attempt->id);
+            }
         }
 
         // Initialize countdown timer based on duration_minutes

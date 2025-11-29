@@ -37,23 +37,26 @@ Route::get('/offline', function () {
     return view('offline');
 })->name('offline');
 
-// PWA Test page (فقط در محیط development)
-Route::get('/pwa-test', function () {
-    return view('pwa-test');
-})->name('pwa.test');
+// Debug/Test routes (only in local environment)
+if (App::environment('local')) {
+    // PWA Test page (فقط در محیط development)
+    Route::get('/pwa-test', function () {
+        return view('pwa-test');
+    })->name('pwa.test');
+
+    // PWA Debug page (برای عیب‌یابی موبایل)
+    Route::get('/pwa-debug', function () {
+        return view('pwa-debug');
+    })->name('pwa.debug');
+
+    // Push Notifications Test page
+    Route::get('/push-test', function () {
+        return view('push-test');
+    })->name('push.test');
+}
 
 // SEO Sitemap
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
-
-// PWA Debug page (برای عیب‌یابی موبایل)
-Route::get('/pwa-debug', function () {
-    return view('pwa-debug');
-})->name('pwa.debug');
-
-// Push Notifications Test page
-Route::get('/push-test', function () {
-    return view('push-test');
-})->name('push.test');
 
 // Domain -> Batches -> Exams flow
 Route::get('/domains/{domain}/batches', BatchesPage::class)->name('batches');
@@ -96,14 +99,7 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verifyOt
 // Admin Logs and SMS test
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/logs', AdminLogsPage::class)->name('admin.logs');
-    Route::post('/admin/sms-test', function (Request $request, \App\Services\SmsService $sms) {
-        $data = $request->validate([
-            'mobile' => ['required','regex:/^09\\d{9}$/'],
-            'text'   => ['required','string','max:500'],
-        ]);
-        $ok = $sms->sendText($data['mobile'], $data['text']);
-        return back()->with($ok ? 'success' : 'error', $ok ? 'پیامک با موفقیت ارسال شد.' : 'ارسال پیامک ناموفق بود.');
-    })->name('admin.sms.test');
+    Route::post('/admin/sms-test', [\App\Http\Controllers\AdminController::class, 'sendTestSms'])->name('admin.sms.test');
     
     // SMS Debug page
     Route::get('/admin/sms-debug', function () {
