@@ -92,6 +92,30 @@
             @endif
         </section>
 
+        <!-- Desktop Access Alert -->
+        <div class="mb-6 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-600 p-4 shadow-lg text-white mx-auto max-w-4xl relative overflow-hidden">
+            <!-- Background Decoration -->
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+            <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-20 h-20 bg-black/10 rounded-full blur-xl"></div>
+
+            <div class="relative flex items-start gap-4">
+                <div class="bg-white/20 p-2.5 rounded-lg backdrop-blur-sm shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m-9-12V15a2.25 2.25 0 0 0 2.25 2.25h9A2.25 2.25 0 0 0 19.5 15V5.25m-9-12h9A2.25 2.25 0 0 1 21.75 7.5v7.5A2.25 2.25 0 0 1 19.5 17.25h-9A2.25 2.25 0 0 1 8.25 15V7.5A2.25 2.25 0 0 1 10.5 5.25Z" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-1 text-white">دسترسی راحت‌تر با کامپیوتر</h4>
+                    <p class="text-indigo-50 text-sm leading-relaxed">
+                        کاربر گرامی برای استفاده راحت‌تر از سامانه، می‌توانید از طریق مرورگر کامپیوتر به وب‌سایت ما مراجعه کنید:
+                    </p>
+                    <a href="https://www.azmoonkade.com" class="inline-block mt-2 text-white font-bold bg-white/20 px-3 py-1 rounded-md hover:bg-white/30 transition dir-ltr text-sm">
+                        https://www.azmoonkade.com
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Gift Subscription Status (Below Slider) -->
         @auth
             @php
