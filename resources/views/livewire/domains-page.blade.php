@@ -1,32 +1,66 @@
 <div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <section class="py-6">
-            <h2 class="text-base font-semibold mb-4">دسته‌بندی آزمون‌ها</h2>
+            <h2 class="text-lg font-bold mb-6 text-center text-gray-600">دسته‌بندی آزمون‌ها</h2>
 
             @if(($domains ?? collect())->isEmpty())
-                <div class="p-6 rounded-lg bg-white dark:bg-gray-800 shadow text-gray-500 dark:text-gray-400 text-sm">
+                <div class="p-6 rounded-lg bg-white shadow text-gray-500 text-sm text-center">
                     هنوز دسته‌بندی فعالی وجود ندارد.
                 </div>
             @else
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-5">
                     @foreach ($domains as $domain)
                         @php
-                            $colors = [
-                                ['bg' => 'bg-gradient-to-br from-blue-50 to-blue-100', 'icon' => 'text-blue-600', 'text' => 'text-blue-900'],
-                                ['bg' => 'bg-gradient-to-br from-purple-50 to-purple-100', 'icon' => 'text-purple-600', 'text' => 'text-purple-900'],
-                                ['bg' => 'bg-gradient-to-br from-green-50 to-green-100', 'icon' => 'text-green-600', 'text' => 'text-green-900'],
-                                ['bg' => 'bg-gradient-to-br from-amber-50 to-amber-100', 'icon' => 'text-amber-600', 'text' => 'text-amber-900'],
-                                ['bg' => 'bg-gradient-to-br from-rose-50 to-rose-100', 'icon' => 'text-rose-600', 'text' => 'text-rose-900'],
-                                ['bg' => 'bg-gradient-to-br from-cyan-50 to-cyan-100', 'icon' => 'text-cyan-600', 'text' => 'text-cyan-900'],
-                            ];
-                            $color = $colors[$loop->index % count($colors)];
+                            $isNezam = str_contains($domain->title, 'نظام مهندسی');
+                            $isKarshenas = str_contains($domain->title, 'کارشناس رسمی');
+                            
+                            $subtitle = $domain->description;
+
+                            // Define colors and text based on type
+                            if ($isNezam) {
+                                $accentColor = 'bg-blue-600';
+                                $shadowColor = 'shadow-blue-100';
+                                $btnBgClass = 'bg-blue-600 group-hover:bg-blue-700';
+                                if (!$subtitle) $subtitle = 'شبیه سازی دقیق سوالات دوره های گذشته';
+                            } elseif ($isKarshenas) {
+                                $accentColor = 'bg-amber-600';
+                                $shadowColor = 'shadow-amber-100';
+                                $btnBgClass = 'bg-[#E67E22] group-hover:bg-[#d35400]';
+                                if (!$subtitle) $subtitle = 'بانک جامع سوالات سال های قبل';
+                            } else {
+                                $accentColor = 'bg-gray-400';
+                                $shadowColor = 'shadow-gray-100';
+                                $btnBgClass = 'bg-gray-600 group-hover:bg-gray-700';
+                                if (!$subtitle) $subtitle = 'مجموعه آزمون‌های تخصصی و شبیه‌سازی';
+                            }
                         @endphp
-                        <a href="{{ route('batches', $domain) }}" wire:navigate class="group block p-6 rounded-xl {{ $color['bg'] }} shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                            <div class="flex flex-col items-center text-center">
-                                {{-- Icon --}}
-                                @svg('heroicon-o-academic-cap', 'w-12 h-12 ' . $color['icon'] . ' group-hover:scale-110 transition-transform duration-300')
-                                {{-- Title --}}
-                                <div class="mt-3 font-semibold {{ $color['text'] }}">{{ $domain->title }}</div>
+                        
+                        <a href="{{ route('batches', $domain) }}" wire:navigate class="group relative block w-full bg-white rounded-2xl p-5 shadow-lg {{ $shadowColor }} hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-50">
+                            <!-- Accent Bar (Left Side) -->
+                            <div class="absolute left-0 top-3 bottom-3 w-1.5 rounded-r-full {{ $accentColor }}"></div>
+
+                            <div class="flex items-center justify-between relative z-10 pl-3">
+                                <!-- Content (Right Side in RTL) -->
+                                <div class="flex flex-col items-start gap-1.5 flex-1">
+                                    <!-- Title -->
+                                    <h3 class="text-lg font-bold text-gray-800 leading-tight">
+                                        {{ $domain->title }}
+                                    </h3>
+                                    <!-- Subtitle -->
+                                    <p class="text-gray-500 text-xs sm:text-sm font-medium leading-relaxed pr-1">
+                                        {{ $subtitle }}
+                                    </p>
+                                </div>
+
+                                <!-- Button (Left Side in RTL) -->
+                                <div class="shrink-0">
+                                    <div class="flex items-center gap-1 {{ $btnBgClass }} text-white text-sm font-bold py-2 px-3 sm:px-4 rounded-lg shadow-md transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                        </svg>
+                                        <span>شروع آزمون</span>
+                                    </div>
+                                </div>
                             </div>
                         </a>
                     @endforeach
