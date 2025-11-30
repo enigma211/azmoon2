@@ -1,56 +1,73 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12">
-    <div class="container mx-auto px-4">
-        <!-- Header -->
-        <div class="text-center mb-12">
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">منابع آموزشی</h1>
-        </div>
+<div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section class="py-6">
+            <h2 class="text-lg font-bold mb-6 text-center text-gray-600">منابع آموزشی</h2>
 
-        <!-- Exam Types Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            @foreach($examTypes as $examType)
-                <a href="{{ route('educational-resources.categories', $examType->slug) }}" 
-                   wire:navigate
-                   class="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
-                    <div class="p-6 text-center">
-                        <!-- Icon - ابزار مهندسی (خط کش، تراز، پرگار) -->
-                        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <!-- خط کش و تراز مهندسی -->
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
-                            </svg>
-                        </div>
-
-                        <!-- Title -->
-                        <h2 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
-                            {{ $examType->title }}
-                        </h2>
-
-                        <!-- Description -->
-                        @if($examType->description)
-                            <p class="text-gray-600 mb-4">{{ $examType->description }}</p>
-                        @endif
-
-                        <!-- Arrow -->
-                        <div class="flex items-center justify-center text-indigo-600 font-semibold">
-                            <span class="ml-2">مشاهده منابع</span>
-                            <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-            @endforeach
-        </div>
-
-        @if($examTypes->isEmpty())
-            <div class="text-center py-12">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-200 rounded-full mb-4">
-                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
+            @if(($examTypes ?? collect())->isEmpty())
+                <div class="p-6 rounded-lg bg-white shadow text-gray-500 text-sm text-center">
+                    هنوز منابع آموزشی اضافه نشده است.
                 </div>
-                <p class="text-gray-600 text-lg">هنوز منابع آموزشی اضافه نشده است.</p>
-            </div>
-        @endif
+            @else
+                <div class="flex flex-col gap-5">
+                    @foreach($examTypes as $examType)
+                        @php
+                            $isNezam = str_contains($examType->title, 'نظام مهندسی');
+                            $isKarshenas = str_contains($examType->title, 'کارشناس رسمی');
+                            
+                            $subtitle = $examType->description;
+
+                            // Define colors and text based on type
+                            if ($isNezam) {
+                                $accentColor = 'bg-blue-600';
+                                $shadowColor = 'shadow-blue-100';
+                                $btnBgClass = 'bg-blue-600 group-hover:bg-blue-700';
+                                if (!$subtitle) $subtitle = 'جزوات و منابع آزمون نظام مهندسی';
+                            } elseif ($isKarshenas) {
+                                $accentColor = 'bg-amber-600';
+                                $shadowColor = 'shadow-amber-100';
+                                $btnBgClass = 'bg-[#E67E22] group-hover:bg-[#d35400]';
+                                if (!$subtitle) $subtitle = 'منابع تخصصی آزمون کارشناس رسمی';
+                            } else {
+                                $accentColor = 'bg-gray-400';
+                                $shadowColor = 'shadow-gray-100';
+                                $btnBgClass = 'bg-gray-600 group-hover:bg-gray-700';
+                                if (!$subtitle) $subtitle = 'مجموعه منابع آموزشی تخصصی';
+                            }
+                        @endphp
+
+                        <a href="{{ route('educational-resources.categories', $examType->slug) }}" 
+                           wire:navigate 
+                           class="group relative block w-full bg-white rounded-2xl p-5 shadow-lg {{ $shadowColor }} hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-50">
+                            <!-- Accent Bar (Left Side) -->
+                            <div class="absolute left-0 top-3 bottom-3 w-1.5 rounded-r-full {{ $accentColor }}"></div>
+
+                            <div class="flex items-center justify-between relative z-10 pl-3">
+                                <!-- Content (Right Side in RTL) -->
+                                <div class="flex flex-col items-start gap-1.5 flex-1">
+                                    <!-- Title -->
+                                    <h3 class="text-lg font-bold text-gray-800 leading-tight">
+                                        {{ $examType->title }}
+                                    </h3>
+                                    <!-- Subtitle -->
+                                    <p class="text-gray-500 text-xs sm:text-sm font-medium leading-relaxed pr-1">
+                                        {{ $subtitle }}
+                                    </p>
+                                </div>
+
+                                <!-- Button (Left Side in RTL) -->
+                                <div class="shrink-0">
+                                    <div class="flex items-center gap-1 {{ $btnBgClass }} text-white text-sm font-bold py-2 px-3 sm:px-4 rounded-lg shadow-md transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                        </svg>
+                                        <span>مشاهده منابع</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            @endif
+        </section>
     </div>
 </div>
