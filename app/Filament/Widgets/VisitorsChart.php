@@ -8,10 +8,38 @@ use Morilog\Jalali\Jalalian;
 
 class VisitorsChart extends ChartWidget
 {
-    protected static ?string $heading = 'آمار بازدید (کاربران واقعی)';
+    // protected static ?string $heading = 'آمار بازدید (کاربران واقعی)';
     protected static ?int $sort = 3;
     protected int | string | array $columnSpan = 'full';
     public ?string $filter = '24h';
+
+    public function getHeading(): string
+    {
+        $filter = $this->filter;
+        $count = 0;
+
+        if ($filter === '24h') {
+            $count = VisitLog::query()
+                ->where('created_at', '>=', now()->subHours(23)->startOfHour())
+                ->distinct('ip')
+                ->count('ip');
+            return 'آمار بازدید (۲۴ ساعت گذشته) - تعداد کاربر یکتا: ' . number_format($count);
+        } elseif ($filter === '7d') {
+            $count = VisitLog::query()
+                ->whereDate('created_at', '>=', now()->subDays(6))
+                ->distinct('ip')
+                ->count('ip');
+            return 'آمار بازدید (۷ روز گذشته) - تعداد کاربر یکتا: ' . number_format($count);
+        } elseif ($filter === '30d') {
+            $count = VisitLog::query()
+                ->whereDate('created_at', '>=', now()->subDays(29))
+                ->distinct('ip')
+                ->count('ip');
+            return 'آمار بازدید (۳۰ روز گذشته) - تعداد کاربر یکتا: ' . number_format($count);
+        }
+
+        return 'آمار بازدید';
+    }
 
     protected function getFilters(): ?array
     {
