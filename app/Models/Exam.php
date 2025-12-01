@@ -23,6 +23,7 @@ class Exam extends Model
         'assumptions_image',
         'seo_title',
         'seo_description',
+        'sort_order',
     ];
 
     protected $casts = [

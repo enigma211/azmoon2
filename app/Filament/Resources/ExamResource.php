@@ -60,6 +60,12 @@ class ExamResource extends Resource
                             ->required()
                             ->maxLength(255),
 
+                        Forms\Components\TextInput::make('sort_order')
+                            ->label('ترتیب نمایش')
+                            ->numeric()
+                            ->default(0)
+                            ->helperText('عدد کمتر اول نمایش داده می‌شود'),
+
                         Forms\Components\TextInput::make('slug')
                             ->label('نامک')
                             ->required()
@@ -226,7 +232,9 @@ class ExamResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('sort_order')
+            ->reorderable('sort_order');
     }
 
     public static function getRelations(): array
