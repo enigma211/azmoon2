@@ -23,7 +23,7 @@ class OtpLogin extends Component
     public $countdown = 0;
 
     protected $rules = [
-        'mobile' => ['required', \App\Rules\IranianMobile::class],
+        'mobile' => ['required', 'regex:/^09\d{9}$/'],
         'otp' => 'required|digits:6',
         'firstName' => 'required|string|min:2|max:50',
         'lastName' => 'required|string|min:2|max:50',
