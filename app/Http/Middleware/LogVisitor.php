@@ -29,19 +29,21 @@ class LogVisitor
 
         try {
             $ip = $request->ip();
-            // Log unique visitor per hour
-            $key = 'visit_log_' . $ip . '_' . now()->format('Y-m-d_H');
+            
+            // Check DB directly to ensure we don't log multiple times per hour for the same IP
+            // This is more robust than Cache which might be cleared or misconfigured
+            $exists = VisitLog::where('ip', $ip)
+                ->where('created_at', '>=', now()->subHour())
+                ->exists();
 
-            if (!Cache::has($key)) {
+            if (!$exists) {
                 VisitLog::create([
                     'ip' => $ip,
-                    'user_agent' => substr($request->userAgent() ?? '', 0, 255), // limit length just in case
+                    'user_agent' => substr($request->userAgent() ?? '', 0, 255),
                 ]);
-                
-                Cache::put($key, true, 3600); // Cache for 1 hour
             }
         } catch (\Exception $e) {
-            // Fail silently so we don't break the site if DB is down or something
+            // Fail silently
         }
 
         return $next($request);
