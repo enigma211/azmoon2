@@ -22,11 +22,15 @@ class AttemptsPage extends Component
     {
         $query = ExamAttempt::query()
             ->with(['exam'])
+            ->withCount('answers')
             ->where('user_id', Auth::id())
             ->orderByDesc('started_at');
 
         if ($this->status !== 'all') {
             $query->where('status', $this->status);
+        } else {
+            // By default, exclude cancelled attempts (incomplete/abandoned)
+            $query->where('status', '!=', 'cancelled');
         }
 
         $attempts = $query->paginate(10);
