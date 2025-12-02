@@ -262,6 +262,15 @@ class ExamPlayer extends Component
 
     public function submit(ScoringService $scoring = null)
     {
+        // Fail-safe: If attemptId is lost, try to recover the active attempt
+        if (!$this->attemptId && Auth::check()) {
+            $this->attemptId = ExamAttempt::where('exam_id', $this->exam->id)
+                ->where('user_id', Auth::id())
+                ->where('status', 'in_progress')
+                ->latest('id')
+                ->first()?->id;
+        }
+
         // Ensure pending changes are saved to DB before scoring/redirect
         $this->flushDirty();
         if ($this->requireAllAnswered && $this->unansweredCount() > 0) {
