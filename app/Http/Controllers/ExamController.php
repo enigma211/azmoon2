@@ -21,10 +21,22 @@ class ExamController extends Controller
                 ->with('error', 'برای اتمام آزمون باید وارد شوید.');
         }
 
-        $attempt = ExamAttempt::firstOrCreate(
-            ['exam_id' => $exam->id, 'user_id' => Auth::id()],
-            ['started_at' => now()]
-        );
+        // Find the current in_progress attempt (created by ExamPlayer mount)
+        $attempt = ExamAttempt::where('exam_id', $exam->id)
+            ->where('user_id', Auth::id())
+            ->where('status', 'in_progress')
+            ->latest('id')
+            ->first();
+
+        // If no in_progress attempt found, create one (fallback)
+        if (!$attempt) {
+            $attempt = ExamAttempt::create([
+                'exam_id' => $exam->id,
+                'user_id' => Auth::id(),
+                'started_at' => now(),
+                'status' => 'in_progress',
+            ]);
+        }
 
         // Answers can come from request (preferred) or session fallback
         $answers = $request->input('answers');
@@ -66,6 +78,7 @@ class ExamController extends Controller
             'submitted_at' => now(),
             'score' => $percentage,
             'passed' => $percentage >= $passThreshold,
+            'status' => 'submitted',
         ]);
 
         // Clear session answers after submit
