@@ -29,7 +29,7 @@ class ExamPlayer extends Component
     public ?int $durationSeconds = null;
     public int $remainingSeconds = 0;
 
-    public ?ExamAttempt $attempt = null;
+    public ?int $attemptId = null;
     protected array $dirtyQueue = [];
 
     public bool $requireAllAnswered = false;
@@ -65,19 +65,20 @@ class ExamPlayer extends Component
                 ->update(['status' => 'cancelled']);
 
             // Always create a fresh attempt
-            $this->attempt = ExamAttempt::create([
+            $attempt = ExamAttempt::create([
                 'exam_id' => $this->exam->id,
                 'user_id' => Auth::id(),
                 'started_at' => now(),
                 'status' => 'in_progress',
             ]);
+            $this->attemptId = $attempt->id;
 
             // Log start
             ActivityLogger::log('exam_started', [
                 'index' => $this->index,
                 'duration_seconds' => $this->durationSeconds,
                 'remaining_seconds' => $this->remainingSeconds,
-            ], $this->exam->id, $this->attempt->id);
+            ], $this->exam->id, $this->attemptId);
         }
 
         // Initialize countdown timer based on duration_minutes
@@ -175,7 +176,7 @@ class ExamPlayer extends Component
 
     public function flushDirty(): void
     {
-        if (!$this->attempt || empty($this->dirtyQueue)) {
+        if (!$this->attemptId || empty($this->dirtyQueue)) {
             return;
         }
 
@@ -192,7 +193,7 @@ class ExamPlayer extends Component
 
             // For single choice/true_false: delete all existing rows for this question and reinsert current selections
             if (in_array($question->type, ['single_choice','true_false'], true)) {
-                AttemptAnswer::where('exam_attempt_id', $this->attempt->id)
+                AttemptAnswer::where('exam_attempt_id', $this->attemptId)
                     ->where('question_id', $qid)
                     ->delete();
 
@@ -201,7 +202,7 @@ class ExamPlayer extends Component
                     if ($isOn) {
                         AttemptAnswer::updateOrCreate(
                             [
-                                'exam_attempt_id' => $this->attempt->id,
+                                'exam_attempt_id' => $this->attemptId,
                                 'question_id' => $qid,
                                 'choice_id' => (int)$cid,
                             ],
@@ -217,7 +218,7 @@ class ExamPlayer extends Component
                 foreach ($current as $cid => $isOn) {
                     AttemptAnswer::updateOrCreate(
                         [
-                            'exam_attempt_id' => $this->attempt->id,
+                            'exam_attempt_id' => $this->attemptId,
                             'question_id' => $qid,
                             'choice_id' => (int)$cid,
                         ],
@@ -278,9 +279,10 @@ class ExamPlayer extends Component
         $earned = (float)($scores['earned'] ?? 0.0);
         $total = (float)($scores['total'] ?? 100.0);
 
-        if ($this->attempt) {
+        if ($this->attemptId) {
             $passThreshold = property_exists($this->exam, 'pass_threshold') ? ((float) ($this->exam->pass_threshold ?? 0)) : 0.0;
-            $this->attempt->update([
+            
+            ExamAttempt::where('id', $this->attemptId)->update([
                 'submitted_at' => now(),
                 'score' => $percentage,
                 'passed' => $percentage >= $passThreshold,
@@ -292,7 +294,7 @@ class ExamPlayer extends Component
                 'correct' => $correct,
                 'wrong' => $wrong,
                 'unanswered' => $unanswered,
-            ], $this->exam->id, $this->attempt->id);
+            ], $this->exam->id, $this->attemptId);
         }
 
         // Persist results for result page (not flash to be safe with SPA navigation)
@@ -314,8 +316,8 @@ class ExamPlayer extends Component
 
         // Server-side redirect ensures a full navigation without relying on Alpine/Livewire SPA
         $params = ['exam' => $this->exam->id];
-        if ($this->attempt) {
-            $params['attempt'] = $this->attempt->id;
+        if ($this->attemptId) {
+            $params['attempt'] = $this->attemptId;
         }
         return redirect()->route('exam.result', $params);
     }
