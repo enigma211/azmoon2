@@ -29,7 +29,7 @@ class ExamPlayer extends Component
     public ?int $durationSeconds = null;
     public int $remainingSeconds = 0;
 
-    protected ?ExamAttempt $attempt = null;
+    public ?ExamAttempt $attempt = null;
     protected array $dirtyQueue = [];
 
     public bool $requireAllAnswered = false;
@@ -181,6 +181,8 @@ class ExamPlayer extends Component
             'checked' => $checked,
             'type' => $question?->type,
         ];
+
+        $this->flushDirty();
     }
 
     public function flushDirty(): void
