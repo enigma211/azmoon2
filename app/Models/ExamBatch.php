@@ -14,6 +14,7 @@ class ExamBatch extends Model
         'title',
         'slug',
         'is_active',
+        'is_free',
         'sort_order',
         'seo_title',
         'seo_description',
@@ -21,6 +22,7 @@ class ExamBatch extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_free' => 'boolean',
     ];
 
     public function domain()

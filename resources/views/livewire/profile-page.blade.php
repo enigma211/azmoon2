@@ -28,30 +28,6 @@
         @else
             {{-- Logged In User: Show Profile --}}
             <header class="mb-8">
-                @php
-                    $activeSub = auth()->user()->activeSubscription()->first();
-                    $isTrial = $activeSub && $activeSub->subscriptionPlan->price_toman <= 0 && $activeSub->ends_at;
-                    $totalHours = $isTrial ? (int) ceil($activeSub->starts_at->diffInHours($activeSub->ends_at, false)) : 0;
-                @endphp
-
-                @if($isTrial && $totalHours > 0)
-                    <div class="mb-6 bg-gradient-to-r from-amber-100 to-orange-100 border border-amber-200 rounded-xl p-4 shadow-sm">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-amber-500 text-white p-2 rounded-lg">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-bold text-amber-800">اشتراک هدیه ثبت‌نام</h3>
-                                <p class="text-amber-900 font-medium">
-                                    شما یک اشتراک هدیه به مدت {{ $totalHours }} ساعت دارید.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
                 <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg p-4 text-white">
                     <div class="flex items-start justify-between">
                         <div class="flex-1">
@@ -61,24 +37,9 @@
                             <p class="text-indigo-100 text-sm">
                                 وضعیت اشتراک: 
                                 @if($isPremium)
-                                    @php
-                                        $currentSub = auth()->user()->activeSubscription()->first();
-                                        $isTrialSub = $currentSub && $currentSub->subscriptionPlan->price_toman <= 0 && $currentSub->ends_at;
-                                    @endphp
-                                    
-                                    @if($isTrialSub)
-                                        <span class="font-semibold">اشتراک هدیه</span>
-                                        @php
-                                            $hoursLeft = (int) ceil(now()->diffInHours($currentSub->ends_at, false));
-                                        @endphp
-                                        @if($hoursLeft > 0)
-                                            <span class="text-xs"> ({{ $hoursLeft }} ساعت باقیمانده)</span>
-                                        @endif
-                                    @else
-                                        <span class="font-semibold">اشتراک ویژه</span>
-                                        @if($daysRemaining !== null && $daysRemaining > 0)
-                                            <span class="text-xs"> ({{ ceil($daysRemaining) }} روز باقیمانده)</span>
-                                        @endif
+                                    <span class="font-semibold">اشتراک ویژه</span>
+                                    @if($daysRemaining !== null && $daysRemaining > 0)
+                                        <span class="text-xs"> ({{ ceil($daysRemaining) }} روز باقیمانده)</span>
                                     @endif
                                 @else
                                     <span class="font-semibold">کاربر رایگان</span>
