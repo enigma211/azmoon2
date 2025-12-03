@@ -15,8 +15,8 @@ class ExamsPage extends Component
     {
         $this->batch = $batch->load('exams');
         
-        // Check access: user is premium OR batch is free
-        $isPremium = Auth::check() && Auth::user()->hasPaidSubscription();
+        // Check access: user is premium OR batch is free (guest users are not premium)
+        $isPremium = Auth::check() ? Auth::user()->hasPaidSubscription() : false;
         $this->canAccess = $isPremium || $batch->is_free;
     }
 

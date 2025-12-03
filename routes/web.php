@@ -58,9 +58,11 @@ if (App::environment('local')) {
 // SEO Sitemap
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
-// Domain -> Batches -> Exams flow
-Route::get('/domains/{domain}/batches', BatchesPage::class)->name('batches');
-Route::get('/batches/{batch}/exams', ExamsPage::class)->name('exams');
+// Domain -> Batches -> Exams flow (requires authentication)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/domains/{domain}/batches', BatchesPage::class)->name('batches');
+    Route::get('/batches/{batch}/exams', ExamsPage::class)->name('exams');
+});
 
 // Exam journey
 Route::get('/exam/{exam}', ExamLanding::class)->name('exam.landing');

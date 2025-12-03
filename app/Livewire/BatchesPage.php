@@ -18,8 +18,8 @@ class BatchesPage extends Component
 
     public function render()
     {
-        // Check if user has paid subscription
-        $isPremium = Auth::check() && Auth::user()->hasPaidSubscription();
+        // Check if user has paid subscription (guest users are not premium)
+        $isPremium = Auth::check() ? Auth::user()->hasPaidSubscription() : false;
 
         return view('livewire.batches-page', [
             'batches' => $this->domain->batches()->orderBy('sort_order', 'asc')->orderBy('created_at', 'desc')->get(),
