@@ -27,11 +27,24 @@ class EnsureSubscribed
             return $next($request);
         }
 
+        // Check if we are accessing an exam and if its batch is free
+        $exam = $request->route('exam');
+        if ($exam) {
+            // If $exam is an ID string, resolve it (safety check)
+            if (!($exam instanceof \App\Models\Exam)) {
+                 $exam = \App\Models\Exam::find($exam);
+            }
+
+            if ($exam && $exam->batch && $exam->batch->is_free) {
+                return $next($request);
+            }
+        }
+
         // Use the model's relationship to ensure consistency (handles NULL ends_at correctly)
         $subscription = $user->activeSubscription()->first();
 
         if (!$subscription) {
-            session()->flash('warning', 'فرصت استفاده رایگان شما به پایان رسیده است. برای ادامه استفاده از سامانه و شرکت در آزمون‌ها، لطفاً اشتراک ویژه تهیه کنید.');
+            session()->flash('warning', 'برای شرکت در این آزمون، لطفاً اشتراک ویژه تهیه کنید.');
             return redirect()->route('profile');
         }
 
