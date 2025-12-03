@@ -116,7 +116,11 @@ class ExamBatchResource extends Resource
                 TextColumn::make('updated_at')->formatStateUsing(fn ($state) => jdate_time($state))->label('ویرایش')->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('exam_domain_id')
+                    ->label('دامنه آزمون')
+                    ->relationship('domain', 'title')
+                    ->searchable()
+                    ->preload(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
