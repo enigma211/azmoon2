@@ -9,4 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 // Schedule subscription expiration check daily
-Schedule::command('subscriptions:expire')->daily();
+Schedule::command('subscription:check-expiry')->hourly();
