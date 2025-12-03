@@ -38,105 +38,107 @@
                 </div>
             </div>
         @else
-            <!-- Access Denied Message -->
-            <div class="mt-6 p-6 bg-red-50 border border-red-200 rounded-xl text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 text-red-600">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-                    </svg>
-                </div>
-                <h3 class="text-lg font-bold text-red-800 mb-2">دسترسی محدود</h3>
-                <p class="text-sm text-red-700 mb-4">برای دسترسی به آزمون‌های این دوره، نیاز به اشتراک ویژه دارید.</p>
-                <a href="{{ route('profile') }}" wire:navigate class="inline-flex items-center gap-2 bg-red-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-red-700 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                    </svg>
-                    خرید اشتراک ویژه
-                </a>
+            <!-- Access Info Message -->
+            <div class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-xl text-center">
+                <p class="text-sm text-gray-600">
+                    برای شرکت در آزمون‌ها نیاز به اشتراک ویژه دارید. می‌توانید عناوین آزمون‌ها را مشاهده کنید.
+                </p>
             </div>
         @endif
     </div>
 
-    @if($canAccess)
-        <!-- Exams List -->
-        <div class="flex flex-col gap-5">
+    <!-- Exams List -->
+    <div class="flex flex-col gap-5">
+        @php
+            $styles = [
+                ['color' => 'bg-rose-500', 'text' => 'text-rose-600', 'border' => 'border-rose-100', 'shadow' => 'shadow-rose-100'],
+                ['color' => 'bg-violet-600', 'text' => 'text-violet-600', 'border' => 'border-violet-100', 'shadow' => 'shadow-violet-100'],
+                ['color' => 'bg-blue-600', 'text' => 'text-blue-600', 'border' => 'border-blue-100', 'shadow' => 'shadow-blue-100'],
+                ['color' => 'bg-teal-600', 'text' => 'text-teal-600', 'border' => 'border-teal-100', 'shadow' => 'shadow-teal-100'],
+                ['color' => 'bg-amber-500', 'text' => 'text-amber-600', 'border' => 'border-amber-100', 'shadow' => 'shadow-amber-100'],
+            ];
+        @endphp
+        
+        @foreach($exams as $index => $exam)
             @php
-                $styles = [
-                    ['color' => 'bg-rose-500', 'text' => 'text-rose-600', 'border' => 'border-rose-100', 'shadow' => 'shadow-rose-100'],
-                    ['color' => 'bg-violet-600', 'text' => 'text-violet-600', 'border' => 'border-violet-100', 'shadow' => 'shadow-violet-100'],
-                    ['color' => 'bg-blue-600', 'text' => 'text-blue-600', 'border' => 'border-blue-100', 'shadow' => 'shadow-blue-100'],
-                    ['color' => 'bg-teal-600', 'text' => 'text-teal-600', 'border' => 'border-teal-100', 'shadow' => 'shadow-teal-100'],
-                    ['color' => 'bg-amber-500', 'text' => 'text-amber-600', 'border' => 'border-amber-100', 'shadow' => 'shadow-amber-100'],
-                ];
+                $style = $styles[$index % count($styles)];
+                $accentColor = $style['color'];
+                $textColor = $style['text'];
+                $shadowColor = $style['shadow'];
             @endphp
-            
-            @foreach($exams as $index => $exam)
-                @php
-                    $style = $styles[$index % count($styles)];
-                    $accentColor = $style['color'];
-                    $textColor = $style['text'];
-                    $shadowColor = $style['shadow'];
-                @endphp
 
-                <a href="{{ route('exam.play', ['exam' => $exam->id]) }}" 
-                   wire:navigate 
-                   class="group relative block bg-white rounded-2xl p-6 shadow-lg {{ $shadowColor }} hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-50">
+            <a href="{{ $canAccess ? route('exam.play', ['exam' => $exam->id]) : route('profile') }}" 
+               wire:navigate 
+               class="group relative block bg-white rounded-2xl p-6 shadow-lg {{ $shadowColor }} hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-50">
+                
+                <!-- Left Accent Bar -->
+                <div class="absolute left-0 top-3 bottom-3 w-1.5 rounded-r-full {{ $canAccess ? $accentColor : 'bg-gray-400' }}"></div>
+                
+                <!-- Content Container -->
+                <div class="relative z-10 pl-3 flex flex-col items-center">
                     
-                    <!-- Left Accent Bar -->
-                    <div class="absolute left-0 top-3 bottom-3 w-1.5 rounded-r-full {{ $accentColor }}"></div>
+                    <!-- Title -->
+                    <h3 class="font-black text-xl text-gray-800 mb-4 text-center leading-tight flex items-center gap-2">
+                        {{ $exam->title }}
+                        @if(!$canAccess)
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                            </svg>
+                        @endif
+                    </h3>
                     
-                    <!-- Content Container -->
-                    <div class="relative z-10 pl-3 flex flex-col items-center">
-                        
-                        <!-- Title -->
-                        <h3 class="font-black text-xl text-gray-800 mb-4 text-center leading-tight">
-                            {{ $exam->title }}
-                        </h3>
-                        
-                        <!-- Meta Info -->
-                        <div class="flex items-center justify-center gap-6 mb-6 w-full">
-                            <!-- Question Count -->
-                            @php
-                                $questionCount = $exam->questions()->where('is_deleted', false)->count();
-                            @endphp
-                            <div class="flex items-center gap-1.5 text-gray-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
-                                </svg>
-                                <span class="text-sm font-bold">{{ $questionCount }} سوال</span>
-                            </div>
-
-                            <!-- Duration -->
-                            <div class="flex items-center gap-1.5 text-gray-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                </svg>
-                                <span class="text-sm font-bold">
-                                    {{ $exam->duration_minutes ? $exam->duration_minutes . ' دقیقه' : 'بدون محدودیت' }}
-                                </span>
-                            </div>
+                    <!-- Meta Info -->
+                    <div class="flex items-center justify-center gap-6 mb-6 w-full">
+                        <!-- Question Count -->
+                        @php
+                            $questionCount = $exam->questions()->where('is_deleted', false)->count();
+                        @endphp
+                        <div class="flex items-center gap-1.5 text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                            </svg>
+                            <span class="text-sm font-bold">{{ $questionCount }} سوال</span>
                         </div>
 
-                        <!-- Start Button -->
+                        <!-- Duration -->
+                        <div class="flex items-center gap-1.5 text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            <span class="text-sm font-bold">
+                                {{ $exam->duration_minutes ? $exam->duration_minutes . ' دقیقه' : 'بدون محدودیت' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    @if($canAccess)
                         <div class="w-full {{ $accentColor }} text-white font-bold text-lg py-3 rounded-xl shadow-md text-center transition-transform group-hover:scale-[1.02]">
                             شروع آزمون
                         </div>
-                        
-                    </div>
-                </a>
-            @endforeach
-        </div>
-        
-        <!-- Empty state -->
-        @if($exams->isEmpty())
-            <div class="text-center py-12">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
-                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
+                    @else
+                        <div class="w-full bg-gray-500 text-white font-bold text-lg py-3 rounded-xl shadow-md text-center transition-transform group-hover:scale-[1.02] flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                            </svg>
+                            خرید اشتراک
+                        </div>
+                    @endif
+                    
                 </div>
-                <p class="text-gray-500">هنوز آزمونی در این نوبت موجود نیست.</p>
+            </a>
+        @endforeach
+    </div>
+    
+    <!-- Empty state -->
+    @if($exams->isEmpty())
+        <div class="text-center py-12">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
             </div>
-        @endif
+            <p class="text-gray-500">هنوز آزمونی در این نوبت موجود نیست.</p>
+        </div>
     @endif
 </div>
