@@ -97,7 +97,7 @@ class QuestionResource extends Resource
 
                 Forms\Components\Grid::make(12)
                     ->schema([
-                        Forms\Components\Group::make()
+                        Forms\Components\Section::make()
                             ->schema([
                                 RichEditor::make('text')
                                     ->label('متن سوال (پشتیبانی فرمول)')
@@ -114,7 +114,7 @@ class QuestionResource extends Resource
                             ])
                             ->columnSpan(8),
 
-                        Forms\Components\Group::make()
+                        Forms\Components\Section::make()
                             ->schema([
                                 FileUpload::make('image_path')
                                     ->label('تصویر اول سوال (اختیاری)')
