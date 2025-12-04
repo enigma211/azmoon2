@@ -1,43 +1,43 @@
-<div class="min-h-screen bg-gray-50 py-6 px-4 sm:px-6">
+<div class="min-h-screen bg-gray-50 py-4 px-4 sm:px-6">
     <div class="max-w-3xl mx-auto">
         
-        <!-- Top Navigation Bar -->
-        <div class="flex items-center justify-between mb-6">
-            <a href="{{ route('exams', ['batch' => $exam->exam_batch_id]) }}" class="group flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 transition-transform group-hover:-translate-x-1">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                </svg>
-                <span class="text-sm font-bold">بازگشت به لیست</span>
-            </a>
-            
-            <div class="px-4 py-1.5 bg-white rounded-full shadow-sm border border-gray-100 text-sm font-bold text-gray-700 flex items-center gap-2">
-                <span class="text-gray-400 text-xs">سوال</span>
-                <span class="text-indigo-600 text-lg">{{ $currentQuestionIndex + 1 }}</span>
-                <span class="text-gray-300">/</span>
-                <span>{{ count($questions) }}</span>
-            </div>
-        </div>
-
-        <!-- Beautiful Exam Title Header -->
-        <div class="text-center mb-6 relative">
-            <div class="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent -z-10"></div>
-            <div class="inline-block bg-gray-50 px-4">
-                <h1 class="text-lg sm:text-xl font-bold text-gray-700 leading-tight">
+        <!-- Header Section -->
+        <div class="mb-6">
+            <!-- Row 1: Beautiful Exam Title -->
+            <div class="text-center mb-4 pb-3 border-b border-gray-200/60">
+                <h1 class="text-lg sm:text-xl font-bold text-indigo-900 leading-tight">
                     {{ $exam->title }}
                 </h1>
+            </div>
+
+            <!-- Row 2: Navigation Bar -->
+            <div class="flex items-center justify-between">
+                <a href="{{ route('exams', ['batch' => $exam->exam_batch_id]) }}" class="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 transition-transform group-hover:-translate-x-0.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                    </svg>
+                    <span class="text-sm font-bold">بازگشت</span>
+                </a>
+                
+                <div class="px-3 py-1 bg-white rounded-full shadow-sm border border-gray-100 text-xs font-bold text-gray-700 flex items-center gap-1.5">
+                    <span class="text-gray-400">سوال</span>
+                    <span class="text-indigo-600 text-base">{{ $currentQuestionIndex + 1 }}</span>
+                    <span class="text-gray-300">/</span>
+                    <span>{{ count($questions) }}</span>
+                </div>
             </div>
         </div>
 
         <!-- Question Card -->
         <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-6 relative">
             <!-- Progress Bar -->
-            <div class="h-1.5 w-full bg-gray-100">
+            <div class="h-1 w-full bg-gray-100">
                 <div class="h-full bg-blue-500 transition-all duration-300" style="width: {{ (($currentQuestionIndex + 1) / count($questions)) * 100 }}%"></div>
             </div>
 
-            <div class="p-6 sm:p-8">
+            <div class="p-5 sm:p-6">
                 <!-- Question Text -->
-                <div class="text-base sm:text-lg font-bold text-gray-900 mb-6 leading-loose text-right" dir="rtl">
+                <div class="text-sm sm:text-base font-bold text-gray-900 mb-6 leading-loose text-right" dir="rtl">
                     {!! $this->currentQuestion->text !!}
                 </div>
 
@@ -54,14 +54,14 @@
                 @endif
 
                 <!-- Options -->
-                <div class="space-y-3">
+                <div class="space-y-2.5">
                     @foreach($this->currentQuestion->choices as $choice)
                         @php
                             $isSelected = $selectedOption == $choice->id;
                             $isCorrect = $choice->is_correct;
                             
                             // Determine classes based on state
-                            $baseClasses = "w-full text-right p-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-3 relative overflow-hidden";
+                            $baseClasses = "w-full text-right p-3.5 rounded-xl border transition-all duration-200 flex items-center gap-3 relative overflow-hidden";
                             
                             if ($isAnswerRevealed) {
                                 if ($isCorrect) {
@@ -85,15 +85,15 @@
                             class="{{ $baseClasses }} {{ $colorClasses }}"
                         >
                             <!-- Indicator Circle -->
-                            <div class="shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors duration-200
+                            <div class="shrink-0 w-5 h-5 rounded-full border flex items-center justify-center transition-colors duration-200
                                 {{ $isAnswerRevealed && $isCorrect ? 'border-green-500 bg-green-500 text-white' : ($isSelected ? 'border-blue-500 bg-blue-500 text-white' : 'border-gray-300 text-transparent') }}">
                                 @if($isAnswerRevealed && $isCorrect)
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
                                         <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
                                     </svg>
                                 @elseif($isSelected)
                                     {{-- Always show checkmark for selection, even if wrong (until revealed) --}}
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
                                         <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
                                     </svg>
                                 @else
@@ -102,7 +102,7 @@
                             </div>
 
                             <!-- Option Text -->
-                            <span class="font-medium text-base leading-relaxed">
+                            <span class="font-medium text-sm leading-relaxed">
                                 {{ $choice->text }}
                             </span>
                         </div>
