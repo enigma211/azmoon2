@@ -67,9 +67,7 @@
                 $shadowColor = $style['shadow'];
             @endphp
 
-            <a href="{{ $canAccess ? route('exam.play', ['exam' => $exam->id]) : route('profile') }}" 
-               wire:navigate 
-               class="group relative block bg-white rounded-2xl p-6 shadow-lg {{ $shadowColor }} hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-50">
+            <div class="group relative block bg-white rounded-2xl p-6 shadow-lg {{ $shadowColor }} hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-50">
                 
                 <!-- Left Accent Bar -->
                 <div class="absolute left-0 top-3 bottom-3 w-1.5 rounded-r-full {{ $canAccess ? $accentColor : 'bg-gray-400' }}"></div>
@@ -111,22 +109,37 @@
                         </div>
                     </div>
 
-                    <!-- Action Button -->
+                    <!-- Action Buttons -->
                     @if($canAccess)
-                        <div class="w-full {{ $accentColor }} text-white font-bold text-lg py-3 rounded-xl shadow-md text-center transition-transform group-hover:scale-[1.02]">
-                            شروع آزمون
+                        <div class="flex flex-col sm:flex-row gap-3 w-full">
+                            <a href="{{ route('exam.play', ['exam' => $exam->id]) }}" wire:navigate class="w-full">
+                                <div class="w-full {{ $accentColor }} text-white font-bold text-lg py-3 rounded-xl shadow-md text-center transition-transform hover:scale-[1.02]">
+                                    شروع آزمون
+                                </div>
+                            </a>
+                            
+                            <a href="{{ route('exam.study', ['exam' => $exam->id]) }}" wire:navigate class="w-full">
+                                <div class="w-full bg-emerald-500 text-white font-bold text-lg py-3 rounded-xl shadow-md text-center transition-transform hover:scale-[1.02] flex items-center justify-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                                    </svg>
+                                    مطالعه آموزشی
+                                </div>
+                            </a>
                         </div>
                     @else
-                        <div class="w-full bg-gray-500 text-white font-bold text-lg py-3 rounded-xl shadow-md text-center transition-transform group-hover:scale-[1.02] flex items-center justify-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-                            </svg>
-                            خرید اشتراک
-                        </div>
+                        <a href="{{ route('profile') }}" wire:navigate class="w-full">
+                            <div class="w-full bg-gray-500 text-white font-bold text-lg py-3 rounded-xl shadow-md text-center transition-transform hover:scale-[1.02] flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                </svg>
+                                خرید اشتراک
+                            </div>
+                        </a>
                     @endif
                     
                 </div>
-            </a>
+            </div>
         @endforeach
     </div>
     

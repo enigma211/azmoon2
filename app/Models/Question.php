@@ -20,6 +20,7 @@ class Question extends Model
         'score',
         'negative_score',
         'explanation',
+        'explanation_image_path',
         'is_deleted',
     ];
 

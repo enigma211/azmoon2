@@ -105,6 +105,23 @@ class QuestionResource extends Resource
                             ])
                             ->columnSpan(8),
 
+                        RichEditor::make('explanation')
+                            ->label('پاسخ تشریحی (متن)')
+                            ->toolbarButtons([
+                                'bold','italic','strike','underline','link','orderedList','bulletList','codeBlock'
+                            ])
+                            ->columnSpan(8),
+                        
+                        FileUpload::make('explanation_image_path')
+                            ->label('تصویر پاسخ تشریحی')
+                            ->image()
+                            ->disk('public')
+                            ->directory('explanations')
+                            ->acceptedFileTypes(['image/jpeg','image/png'])
+                            ->openable()
+                            ->downloadable()
+                            ->columnSpan(8),
+
                         Forms\Components\Group::make()
                             ->schema([
                                 FileUpload::make('image_path')
