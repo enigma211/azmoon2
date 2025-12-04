@@ -24,7 +24,7 @@
 
             <div class="p-6 sm:p-8">
                 <!-- Question Text -->
-                <div class="text-lg sm:text-xl font-bold text-gray-900 mb-6 leading-loose text-right" dir="rtl">
+                <div class="text-base sm:text-lg font-bold text-gray-900 mb-6 leading-loose text-right" dir="rtl">
                     {!! $this->currentQuestion->text !!}
                 </div>
 
@@ -72,18 +72,19 @@
                             class="{{ $baseClasses }} {{ $colorClasses }}"
                         >
                             <!-- Indicator Circle -->
-                            <div class="shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center
+                            <div class="shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors duration-200
                                 {{ $isAnswerRevealed && $isCorrect ? 'border-green-500 bg-green-500 text-white' : ($isSelected ? 'border-blue-500 bg-blue-500 text-white' : 'border-gray-300 text-transparent') }}">
                                 @if($isAnswerRevealed && $isCorrect)
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                         <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
                                     </svg>
-                                @elseif($isAnswerRevealed && $isSelected && !$isCorrect)
+                                @elseif($isSelected)
+                                    {{-- Always show checkmark for selection, even if wrong (until revealed) --}}
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                                        <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                        <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
                                     </svg>
                                 @else
-                                    <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
+                                    {{-- Empty space for alignment --}}
                                 @endif
                             </div>
 
