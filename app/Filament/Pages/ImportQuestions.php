@@ -71,6 +71,26 @@ class ImportQuestions extends Page implements HasTable
                     ->action(function (Exam $record, array $data): void {
                         $this->importQuestions($record->id, $data['csv_file']);
                     }),
+                Action::make('import_explanations')
+                    ->label('وارد کردن پاسخ تشریحی')
+                    ->icon('heroicon-o-document-text')
+                    ->color('success')
+                    ->form([
+                        Section::make()
+                            ->schema([
+                                FileUpload::make('explanation_csv_file')
+                                    ->label('فایل CSV پاسخ تشریحی')
+                                    ->acceptedFileTypes(['text/csv', 'text/plain', 'application/csv'])
+                                    ->required()
+                                    ->helperText('فایل CSV باید شامل 2 ستون باشد: شماره سوال، متن پاسخ تشریحی')
+                                    ->disk('local')
+                                    ->directory('temp-imports')
+                                    ->maxSize(5120),
+                            ])
+                    ])
+                    ->action(function (Exam $record, array $data): void {
+                        $this->importExplanations($record->id, $data['explanation_csv_file']);
+                    }),
                 Action::make('view_questions')
                     ->label('سوالات')
                     ->icon('heroicon-o-list-bullet')
@@ -86,6 +106,100 @@ class ImportQuestions extends Page implements HasTable
                     ),
             ])
             ->defaultSort('created_at', 'desc');
+    }
+
+    public function importExplanations(int $examId, string $csvFile): void
+    {
+        try {
+            $filePath = Storage::disk('local')->path($csvFile);
+            
+            if (!file_exists($filePath)) {
+                throw new \Exception('فایل یافت نشد');
+            }
+
+            $file = fopen($filePath, 'r');
+            
+            // Skip UTF-8 BOM if present
+            $bom = fread($file, 3);
+            if ($bom !== "\xEF\xBB\xBF") {
+                rewind($file);
+            }
+            
+            $importedCount = 0;
+            $errors = [];
+            $lineNumber = 0;
+
+            while (($row = fgetcsv($file)) !== false) {
+                $lineNumber++;
+                
+                // Skip empty rows
+                if (empty(array_filter($row))) {
+                    continue;
+                }
+
+                // Validate row has at least 2 columns
+                if (count($row) < 2) {
+                    $errors[] = "خط {$lineNumber}: تعداد ستون‌ها کافی نیست (باید حداقل 2 ستون باشد)";
+                    continue;
+                }
+
+                try {
+                    $orderColumn = (int) trim($row[0]);
+                    $explanationText = trim($row[1]);
+
+                    // Find the question
+                    $question = Question::where('exam_id', $examId)
+                        ->where('order_column', $orderColumn)
+                        ->first();
+
+                    if ($question) {
+                        $question->update([
+                            'explanation' => $explanationText
+                        ]);
+                        $importedCount++;
+                    } else {
+                        $errors[] = "خط {$lineNumber}: سوال شماره {$orderColumn} در این آزمون یافت نشد";
+                    }
+                } catch (\Exception $e) {
+                    $errors[] = "خط {$lineNumber}: " . $e->getMessage();
+                }
+            }
+
+            fclose($file);
+
+            // Delete temporary file
+            Storage::disk('local')->delete($csvFile);
+
+            // Show result notification
+            if ($importedCount > 0) {
+                $message = "{$importedCount} پاسخ تشریحی با موفقیت وارد شد";
+                if (!empty($errors)) {
+                    $message .= "\n\nخطاها:\n" . implode("\n", array_slice($errors, 0, 5));
+                    if (count($errors) > 5) {
+                        $message .= "\n... و " . (count($errors) - 5) . " خطای دیگر";
+                    }
+                }
+                
+                Notification::make()
+                    ->title('ایمپورت موفق')
+                    ->body($message)
+                    ->success()
+                    ->send();
+            } else {
+                Notification::make()
+                    ->title('خطا')
+                    ->body('هیچ پاسخی وارد نشد. خطاها: ' . implode(', ', $errors))
+                    ->danger()
+                    ->send();
+            }
+
+        } catch (\Exception $e) {
+            Notification::make()
+                ->title('خطا در پردازش فایل')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+        }
     }
 
     public function importQuestions(int $examId, string $csvFile): void
