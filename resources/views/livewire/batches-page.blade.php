@@ -2,7 +2,7 @@
     <div class="mx-auto max-w-md px-4 py-8">
         <!-- Header -->
         <header class="mb-8 text-center">
-            <h1 class="text-2xl font-bold text-gray-900">آزمون‌های رسمی دوره‌های گذشته</h1>
+            <h1 class="text-lg font-bold text-gray-900">آزمون‌های رسمی دوره‌های گذشته</h1>
         </header>
 
         <!-- Batches List -->

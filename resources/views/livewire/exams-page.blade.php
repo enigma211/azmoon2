@@ -1,7 +1,7 @@
 <div class="mx-auto max-w-md p-4 sm:p-6">
     <!-- Header -->
     <div class="mb-8 text-center">
-        <h1 class="text-2xl font-bold text-gray-900">فهرست آزمون‌ها</h1>
+        <h1 class="text-lg font-bold text-gray-900">فهرست آزمون‌ها</h1>
         
         @if($canAccess)
             <!-- Alerts Container -->
