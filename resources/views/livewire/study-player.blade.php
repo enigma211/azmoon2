@@ -1,17 +1,30 @@
 <div class="min-h-screen bg-gray-50 py-6 px-4 sm:px-6">
     <div class="max-w-3xl mx-auto">
         
-        <!-- Header: Exam Title & Progress -->
-        <div class="mb-6 flex items-center justify-between">
-            <a href="{{ route('exams', ['batch' => $exam->exam_batch_id]) }}" class="text-gray-500 hover:text-gray-700 flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+        <!-- Top Navigation Bar -->
+        <div class="flex items-center justify-between mb-6">
+            <a href="{{ route('exams', ['batch' => $exam->exam_batch_id]) }}" class="group flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 transition-transform group-hover:-translate-x-1">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                 </svg>
-                <span class="text-sm font-bold">بازگشت</span>
+                <span class="text-sm font-bold">بازگشت به لیست</span>
             </a>
             
-            <div class="text-sm font-bold text-gray-700">
-                سوال {{ $currentQuestionIndex + 1 }} از {{ count($questions) }}
+            <div class="px-4 py-1.5 bg-white rounded-full shadow-sm border border-gray-100 text-sm font-bold text-gray-700 flex items-center gap-2">
+                <span class="text-gray-400 text-xs">سوال</span>
+                <span class="text-indigo-600 text-lg">{{ $currentQuestionIndex + 1 }}</span>
+                <span class="text-gray-300">/</span>
+                <span>{{ count($questions) }}</span>
+            </div>
+        </div>
+
+        <!-- Beautiful Exam Title Header -->
+        <div class="text-center mb-6 relative">
+            <div class="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent -z-10"></div>
+            <div class="inline-block bg-gray-50 px-4">
+                <h1 class="text-lg sm:text-xl font-bold text-gray-700 leading-tight">
+                    {{ $exam->title }}
+                </h1>
             </div>
         </div>
 
