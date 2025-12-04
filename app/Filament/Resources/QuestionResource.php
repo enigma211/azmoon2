@@ -97,29 +97,21 @@ class QuestionResource extends Resource
 
                 Forms\Components\Grid::make(12)
                     ->schema([
-                        RichEditor::make('text')
-                            ->label('متن سوال (پشتیبانی فرمول)')
-                            ->required()
-                            ->toolbarButtons([
-                                'bold','italic','strike','underline','link','orderedList','bulletList','codeBlock'
-                            ])
-                            ->columnSpan(8),
+                        Forms\Components\Group::make()
+                            ->schema([
+                                RichEditor::make('text')
+                                    ->label('متن سوال (پشتیبانی فرمول)')
+                                    ->required()
+                                    ->toolbarButtons([
+                                        'bold','italic','strike','underline','link','orderedList','bulletList','codeBlock'
+                                    ]),
 
-                        RichEditor::make('explanation')
-                            ->label('پاسخ تشریحی (متن)')
-                            ->toolbarButtons([
-                                'bold','italic','strike','underline','link','orderedList','bulletList','codeBlock'
+                                RichEditor::make('explanation')
+                                    ->label('پاسخ تشریحی (متن)')
+                                    ->toolbarButtons([
+                                        'bold','italic','strike','underline','link','orderedList','bulletList','codeBlock'
+                                    ]),
                             ])
-                            ->columnSpan(8),
-                        
-                        FileUpload::make('explanation_image_path')
-                            ->label('تصویر پاسخ تشریحی')
-                            ->image()
-                            ->disk('public')
-                            ->directory('explanations')
-                            ->acceptedFileTypes(['image/jpeg','image/png'])
-                            ->openable()
-                            ->downloadable()
                             ->columnSpan(8),
 
                         Forms\Components\Group::make()
@@ -132,7 +124,6 @@ class QuestionResource extends Resource
                                     ->acceptedFileTypes(['image/jpeg','image/png'])
                                     ->openable()
                                     ->downloadable()
-                                    // ->imageEditor()
                                     ->nullable(),
 
                                 FileUpload::make('image_path_2')
@@ -143,8 +134,16 @@ class QuestionResource extends Resource
                                     ->acceptedFileTypes(['image/jpeg','image/png'])
                                     ->openable()
                                     ->downloadable()
-                                    // ->imageEditor()
                                     ->nullable(),
+
+                                FileUpload::make('explanation_image_path')
+                                    ->label('تصویر پاسخ تشریحی')
+                                    ->image()
+                                    ->disk('public')
+                                    ->directory('explanations')
+                                    ->acceptedFileTypes(['image/jpeg','image/png'])
+                                    ->openable()
+                                    ->downloadable(),
 
                                 Toggle::make('is_deleted')
                                     ->label('سوال حذف شده')
