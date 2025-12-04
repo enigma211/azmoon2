@@ -76,7 +76,7 @@
                 <div class="relative z-10 pl-3 flex flex-col items-center">
                     
                     <!-- Title -->
-                    <h3 class="font-black text-xl text-gray-800 mb-4 text-center leading-tight flex items-center gap-2">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 text-center leading-tight flex items-center gap-2">
                         {{ $exam->title }}
                         @if(!$canAccess)
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-400">
@@ -92,7 +92,7 @@
                             $questionCount = $exam->questions()->where('is_deleted', false)->count();
                         @endphp
                         <div class="flex items-center gap-1.5 text-gray-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
                             </svg>
                             <span class="text-sm font-bold">{{ $questionCount }} سوال</span>
@@ -100,7 +100,7 @@
 
                         <!-- Duration -->
                         <div class="flex items-center gap-1.5 text-gray-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
                             <span class="text-sm font-bold">
@@ -113,14 +113,14 @@
                     @if($canAccess)
                         <div class="flex flex-col sm:flex-row gap-3 w-full">
                             <a href="{{ route('exam.play', ['exam' => $exam->id]) }}" wire:navigate class="w-full">
-                                <div class="w-full {{ $accentColor }} text-white font-bold text-lg py-3 rounded-xl shadow-md text-center transition-transform hover:scale-[1.02]">
+                                <div class="w-full {{ $accentColor }} text-white font-bold text-sm sm:text-base py-2.5 rounded-xl shadow-md text-center transition-transform hover:scale-[1.02]">
                                     شروع آزمون
                                 </div>
                             </a>
                             
                             <a href="{{ route('exam.study', ['exam' => $exam->id]) }}" wire:navigate class="w-full">
-                                <div class="w-full bg-emerald-100 text-emerald-800 hover:bg-emerald-200 font-bold text-lg py-3 rounded-xl shadow-sm border border-emerald-200 text-center transition-transform hover:scale-[1.02] flex items-center justify-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <div class="w-full bg-emerald-100 text-emerald-800 hover:bg-emerald-200 font-bold text-sm sm:text-base py-2.5 rounded-xl shadow-sm border border-emerald-200 text-center transition-transform hover:scale-[1.02] flex items-center justify-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                                     </svg>
                                     مطالعه آموزشی
@@ -129,8 +129,8 @@
                         </div>
                     @else
                         <a href="{{ route('profile') }}" wire:navigate class="w-full">
-                            <div class="w-full bg-gray-500 text-white font-bold text-lg py-3 rounded-xl shadow-md text-center transition-transform hover:scale-[1.02] flex items-center justify-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                            <div class="w-full bg-gray-500 text-white font-bold text-sm sm:text-base py-2.5 rounded-xl shadow-md text-center transition-transform hover:scale-[1.02] flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
                                 </svg>
                                 خرید اشتراک
