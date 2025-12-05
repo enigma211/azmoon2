@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\Attributes\Url;
 use App\Models\Question;
-use App\Models\Domain;
+use App\Models\ExamDomain;
 use Illuminate\Database\Eloquent\Builder;
 
 class SearchPage extends Component
@@ -23,7 +23,7 @@ class SearchPage extends Component
 
     public function render()
     {
-        $domains = Domain::where('is_active', true)->get();
+        $domains = ExamDomain::where('is_active', true)->get();
         
         $results = collect();
 
@@ -35,7 +35,7 @@ class SearchPage extends Component
             // Filter by domain if selected
             if ($this->domain) {
                 $q->whereHas('exam.batch', function (Builder $b) {
-                    $b->where('domain_id', $this->domain);
+                    $b->where('exam_domain_id', $this->domain);
                 });
             }
 
