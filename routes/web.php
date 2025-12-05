@@ -27,6 +27,7 @@ use App\Livewire\ResourcePostDetailPage;
 
 // SPA-style routes powered by Livewire v3 (wire:navigate handled in views)
 Route::get('/', HomePage::class)->name('home');
+Route::get('/search', \App\Livewire\SearchPage::class)->name('search'); // Added search route
 Route::get('/domains', DomainsPage::class)->name('domains');
 Route::get('/resources', EducationalResourcesPage::class)->name('resources'); // تغییر به سیستم جدید
 Route::get('/profile', ProfilePage::class)->name('profile');
