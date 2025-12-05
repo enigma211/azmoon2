@@ -28,6 +28,15 @@ class StudyPlayer extends Component
         if ($this->questions->isEmpty()) {
             return redirect()->route('exams', ['batch' => $this->exam->exam_batch_id]);
         }
+
+        // If a specific question ID is passed via query string, jump to it
+        $questionId = request()->query('q');
+        if ($questionId) {
+            $index = $this->questions->search(fn($q) => $q->id == $questionId);
+            if ($index !== false) {
+                $this->currentQuestionIndex = $index;
+            }
+        }
     }
 
     public function getCurrentQuestionProperty()
