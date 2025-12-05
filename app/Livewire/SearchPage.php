@@ -39,37 +39,32 @@ class SearchPage extends Component
                 });
             }
 
-            // Search logic
-            $q->where(function($subQ) {
-                // 1. Robust LIKE search: Replace spaces with % to handle ZWNJ (half-space) and word distance
-                // e.g. "پی سازی" will match "پی سازی", "پی‌سازی" (ZWNJ), "پی و سازی"
-                $searchTerms = explode(' ', trim($this->query));
-                $likeQuery = '%' . implode('%', $searchTerms) . '%';
+            // Search logic: Handle Persian text with ZWNJ (نیم‌فاصله) properly
+            // For multi-word queries like "پی سازی", we need to find them as a phrase
+            // not as separate words scattered in the text
+            
+            $searchQuery = trim($this->query);
+            
+            // Build multiple LIKE patterns to handle:
+            // 1. Exact match with space: "پی سازی"
+            // 2. Match with ZWNJ (half-space): "پی‌سازی" 
+            // 3. Match without any separator: "پیسازی"
+            $q->where(function($subQ) use ($searchQuery) {
+                // Pattern 1: Exact query as-is
+                $subQ->where('text', 'LIKE', '%' . $searchQuery . '%');
                 
-                $subQ->where('text', 'LIKE', $likeQuery);
-
-                // 2. Boolean FullText search (stricter than Natural Language)
-                // We prepend '+' to each word to enforce AND logic (must contain all words)
-                $booleanQuery = '';
-                foreach ($searchTerms as $term) {
-                    if (mb_strlen($term) > 1) { 
-                        $booleanQuery .= '+' . $term . ' ';
-                    }
+                // Pattern 2: Replace spaces with ZWNJ character (U+200C)
+                $withZwnj = str_replace(' ', "\u{200C}", $searchQuery);
+                if ($withZwnj !== $searchQuery) {
+                    $subQ->orWhere('text', 'LIKE', '%' . $withZwnj . '%');
                 }
-                $booleanQuery = trim($booleanQuery);
-
-                if (!empty($booleanQuery)) {
-                    // Use Raw for Boolean Mode
-                    $subQ->orWhereRaw("MATCH(text) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                
+                // Pattern 3: Remove all spaces (words joined together)
+                $noSpaces = str_replace(' ', '', $searchQuery);
+                if ($noSpaces !== $searchQuery) {
+                    $subQ->orWhere('text', 'LIKE', '%' . $noSpaces . '%');
                 }
             });
-            
-            // Order by relevance: Exact/LIKE matches first, then others
-            // We use a raw order clause. 
-            // Note: In standard SQL, boolean result is 1/0. DESC puts 1 (match) first.
-            // We reconstruct the like query for the ordering clause
-            $likeQueryRaw = '%' . implode('%', explode(' ', trim($this->query))) . '%';
-            $q->orderByRaw("CASE WHEN text LIKE ? THEN 1 ELSE 0 END DESC", [$likeQueryRaw]);
 
             $results = $q->latest()->limit(100)->get();
         }
