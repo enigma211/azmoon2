@@ -25,6 +25,11 @@ class SearchPage extends Component
         $this->resetPage();
     }
 
+    public function paginationView()
+    {
+        return 'livewire.custom-pagination';
+    }
+
     public function render()
     {
         $domains = ExamDomain::where('is_active', true)->get();
