@@ -39,12 +39,37 @@ class SearchPage extends Component
                 });
             }
 
-            // Search logic: Try FullText first, fallback/combine with LIKE for better coverage of partial words
+            // Search logic
             $q->where(function($subQ) {
-                // Use LIKE for broader matching especially with Persian characters
-                $subQ->where('text', 'LIKE', '%' . $this->query . '%')
-                     ->orWhereFullText('text', $this->query);
+                // 1. Robust LIKE search: Replace spaces with % to handle ZWNJ (half-space) and word distance
+                // e.g. "پی سازی" will match "پی سازی", "پی‌سازی" (ZWNJ), "پی و سازی"
+                $searchTerms = explode(' ', trim($this->query));
+                $likeQuery = '%' . implode('%', $searchTerms) . '%';
+                
+                $subQ->where('text', 'LIKE', $likeQuery);
+
+                // 2. Boolean FullText search (stricter than Natural Language)
+                // We prepend '+' to each word to enforce AND logic (must contain all words)
+                $booleanQuery = '';
+                foreach ($searchTerms as $term) {
+                    if (mb_strlen($term) > 1) { 
+                        $booleanQuery .= '+' . $term . ' ';
+                    }
+                }
+                $booleanQuery = trim($booleanQuery);
+
+                if (!empty($booleanQuery)) {
+                    // Use Raw for Boolean Mode
+                    $subQ->orWhereRaw("MATCH(text) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                }
             });
+            
+            // Order by relevance: Exact/LIKE matches first, then others
+            // We use a raw order clause. 
+            // Note: In standard SQL, boolean result is 1/0. DESC puts 1 (match) first.
+            // We reconstruct the like query for the ordering clause
+            $likeQueryRaw = '%' . implode('%', explode(' ', trim($this->query))) . '%';
+            $q->orderByRaw("CASE WHEN text LIKE ? THEN 1 ELSE 0 END DESC", [$likeQueryRaw]);
 
             $results = $q->latest()->limit(100)->get();
         }
