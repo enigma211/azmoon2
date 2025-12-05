@@ -44,7 +44,7 @@ class EnsureSubscribed
         $subscription = $user->activeSubscription()->first();
 
         if (!$subscription) {
-            session()->flash('warning', 'برای شرکت در این آزمون، لطفاً اشتراک ویژه تهیه کنید.');
+            session()->flash('warning', 'لطفاً اشتراک ویژه تهیه کنید.');
             return redirect()->route('profile');
         }
 
