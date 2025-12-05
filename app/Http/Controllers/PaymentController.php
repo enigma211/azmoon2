@@ -166,8 +166,29 @@ class PaymentController extends Controller
             Log::error('Payment verification failed - InvalidPaymentException', [
                 'payment_id' => $payment->id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'current_status' => $payment->status,
             ]);
+            
+            // اگر پرداخت قبلاً موفق بوده، وضعیت را تغییر نده
+            // این حالت زمانی رخ می‌دهد که کاربر صفحه callback را refresh کند
+            if ($payment->status === 'success') {
+                Log::info('Payment was already successful, redirecting user', ['payment_id' => $payment->id]);
+                return redirect()->route('profile')
+                    ->with('subscription_success', 'پرداخت شما قبلاً با موفقیت انجام شده است.');
+            }
+            
+            // اگر خطا "previously verified" باشد، یعنی پرداخت موفق بوده ولی ما ثبت نکردیم
+            // این یک edge case است که نباید رخ دهد، ولی برای اطمینان چک می‌کنیم
+            if (str_contains(strtolower($e->getMessage()), 'previously') || str_contains(strtolower($e->getMessage()), 'verified')) {
+                Log::warning('Payment was previously verified but status is not success. Possible data inconsistency.', [
+                    'payment_id' => $payment->id,
+                    'current_status' => $payment->status,
+                ]);
+                // در این حالت وضعیت را failed نمی‌گذاریم، بلکه به ادمین اطلاع می‌دهیم
+                return redirect()->route('profile')
+                    ->with('error', 'وضعیت پرداخت نامشخص است. لطفاً با پشتیبانی تماس بگیرید.');
+            }
+            
             $payment->update(['status' => 'failed']);
             return redirect()->route('profile')
                 ->with('error', 'پرداخت ناموفق بود: ' . $e->getMessage());
@@ -175,8 +196,16 @@ class PaymentController extends Controller
             Log::error('Payment verification failed - Exception', [
                 'payment_id' => $payment->id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'current_status' => $payment->status,
             ]);
+            
+            // اگر پرداخت قبلاً موفق بوده، وضعیت را تغییر نده
+            if ($payment->status === 'success') {
+                Log::info('Payment was already successful, redirecting user', ['payment_id' => $payment->id]);
+                return redirect()->route('profile')
+                    ->with('subscription_success', 'پرداخت شما قبلاً با موفقیت انجام شده است.');
+            }
+            
             $payment->update(['status' => 'failed']);
             return redirect()->route('profile')
                 ->with('error', 'خطا در تایید پرداخت: ' . $e->getMessage());
