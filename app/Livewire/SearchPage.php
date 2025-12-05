@@ -4,12 +4,15 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\Url;
+use Livewire\WithPagination;
 use App\Models\Question;
 use App\Models\ExamDomain;
 use Illuminate\Database\Eloquent\Builder;
 
 class SearchPage extends Component
 {
+    use WithPagination;
+
     #[Url(as: 'q')]
     public $query = '';
 
@@ -18,7 +21,8 @@ class SearchPage extends Component
 
     public function search()
     {
-        // Just to trigger re-render with new URL params
+        // Reset pagination when searching
+        $this->resetPage();
     }
 
     public function render()
@@ -66,7 +70,8 @@ class SearchPage extends Component
                 }
             });
 
-            $results = $q->latest()->limit(100)->get();
+            // Order by latest
+            $results = $q->latest()->paginate(10);
         }
 
         return view('livewire.search-page', [

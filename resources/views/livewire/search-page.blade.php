@@ -11,7 +11,7 @@
                     <div class="relative">
                         <input 
                             type="text" 
-                            wire:model.live.debounce.500ms="query" 
+                            wire:model="query" 
                             placeholder="متن سوال یا کلمه کلیدی را بنویسید... (مثلا: آسانسور)" 
                             class="w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 py-3 pr-11 text-base"
                         >
@@ -21,12 +21,19 @@
                             </svg>
                         </div>
                     </div>
+                    <!-- Search Help Text -->
+                    <p class="mt-2 text-xs text-gray-500">
+                        <span class="font-bold text-gray-700">نکته جستجو:</span> برای یافتن دقیق کلمات چند بخشی، می‌توانید از حالات مختلف استفاده کنید. 
+                        مثلاً: <span class="bg-gray-100 px-1 rounded">پی سازی</span> (فاصله معمولی)، 
+                        <span class="bg-gray-100 px-1 rounded">پی‌سازی</span> (نیم‌فاصله) یا 
+                        <span class="bg-gray-100 px-1 rounded">پیسازی</span> (بدون فاصله).
+                    </p>
                 </div>
 
                 <div class="w-full md:w-64">
                     <label for="domain" class="sr-only">دامنه آزمون</label>
                     <select 
-                        wire:model.live="domain" 
+                        wire:model="domain" 
                         class="w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 py-3 text-base"
                     >
                         <option value="">همه دامنه‌ها</option>
@@ -34,6 +41,13 @@
                             <option value="{{ $d->id }}">{{ $d->title }}</option>
                         @endforeach
                     </select>
+                </div>
+
+                <!-- Search Button -->
+                <div class="w-full md:w-auto">
+                    <button type="submit" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2">
+                        <span>جستجو</span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -45,7 +59,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-16 h-16 mx-auto mb-4 text-gray-300">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
-                    <p class="text-lg">برای شروع جستجو حداقل ۲ حرف وارد کنید.</p>
+                    <p class="text-lg">برای شروع جستجو حداقل ۲ حرف وارد کنید و دکمه جستجو را بزنید.</p>
                 </div>
             @elseif($results->isEmpty())
                 <div class="text-center text-gray-500 py-12 bg-white rounded-2xl border border-dashed border-gray-300">
@@ -57,7 +71,7 @@
                 </div>
             @else
                 <div class="flex items-center justify-between px-2 mb-2">
-                    <span class="text-sm text-gray-500">تعداد نتایج: {{ $results->count() }} مورد</span>
+                    <span class="text-sm text-gray-500">تعداد نتایج: {{ $results->total() }} مورد</span>
                 </div>
 
                 @foreach($results as $question)
@@ -107,6 +121,11 @@
                         </div>
                     </div>
                 @endforeach
+
+                <!-- Pagination -->
+                <div class="mt-6">
+                    {{ $results->links() }}
+                </div>
             @endif
         </div>
     </div>

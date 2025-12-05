@@ -124,7 +124,7 @@
                         <div class="sm:w-48 relative border-t sm:border-t-0 sm:border-r border-gray-100">
                             <select 
                                 name="domain" 
-                                class="w-full border-0 bg-transparent py-3 pr-2 pl-4 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 cursor-pointer"
+                                class="w-full border-0 bg-transparent py-3 pr-8 pl-4 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 cursor-pointer"
                             >
                                 <option value="">همه دامنه‌ها</option>
                                 @if(isset($domains))
