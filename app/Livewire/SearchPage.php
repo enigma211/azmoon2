@@ -52,6 +52,9 @@ class SearchPage extends Component
         return view('livewire.search-page', [
             'domains' => $domains,
             'results' => $results
+        ])->layout('layouts.app', [
+            'seoTitle' => 'جستجوی سوالات - آزمون کده',
+            'seoDescription' => 'جستجوی پیشرفته در بانک سوالات آزمون‌های نظام مهندسی و کارشناس رسمی',
         ]);
     }
 }
