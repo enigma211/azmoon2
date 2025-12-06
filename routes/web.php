@@ -32,6 +32,8 @@ use App\Livewire\BlogPostPage;
 Route::get('/', HomePage::class)->name('home');
 Route::get('/search', \App\Livewire\SearchPage::class)->name('search');
 Route::get('/blog', BlogPage::class)->name('blog.index');
+Route::get('/blog/tags/{tag}', \App\Livewire\BlogTagPage::class)->name('blog.tag');
+Route::get('/blog/{category}', \App\Livewire\BlogCategoryPage::class)->name('blog.category');
 Route::get('/blog/{category}/{slug}', BlogPostPage::class)->name('blog.show');
 Route::get('/domains', DomainsPage::class)->name('domains');
 Route::get('/resources', EducationalResourcesPage::class)->name('resources'); // تغییر به سیستم جدید

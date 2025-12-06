@@ -12,12 +12,15 @@ class BlogPage extends Component
 
     public function render()
     {
+        $categories = \App\Models\Category::all();
         $posts = Post::published()
+            ->with('category')
             ->orderBy('published_at', 'desc')
-            ->paginate(9);
+            ->paginate(10);
 
         return view('livewire.blog-page', [
-            'posts' => $posts
+            'posts' => $posts,
+            'categories' => $categories
         ])->layout('layouts.app', [
             'seoTitle' => 'اخبار و مقالات - آزمون کده',
             'seoDescription' => 'جدیدترین اخبار، مقالات و اطلاعیه‌های مربوط به آزمون‌های نظام مهندسی و کارشناس رسمی دادگستری'

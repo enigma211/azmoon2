@@ -1,46 +1,56 @@
 <div class="min-h-screen bg-gray-50 pb-12">
-    <!-- Hero Image -->
-    <div class="relative h-[400px] w-full overflow-hidden">
-        <div class="absolute inset-0 bg-gray-900/50 z-10"></div>
+    <!-- Hero Image (Only Image, No Text) -->
+    <div class="relative w-full h-[300px] md:h-[400px] bg-gray-200 overflow-hidden">
         @if($post->image_path)
             <img src="{{ Storage::url($post->image_path) }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
         @else
-            <div class="w-full h-full bg-gradient-to-r from-indigo-600 to-purple-700"></div>
-        @endif
-        
-        <div class="absolute inset-0 z-20 flex items-center justify-center">
-            <div class="max-w-4xl mx-auto px-4 text-center text-white">
-                <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-6 leading-tight">
-                    {{ $post->title }}
-                </h1>
-                <div class="flex items-center justify-center gap-6 text-sm md:text-base text-gray-200">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        {{ $post->published_at->format('Y/m/d') }}
-                    </span>
-                    <span class="flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
-                        {{ number_format($post->view_count) }} بازدید
-                    </span>
-                </div>
+            <div class="w-full h-full bg-gradient-to-r from-indigo-600 to-purple-700 flex items-center justify-center">
+                <svg class="w-24 h-24 text-white/20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                </svg>
             </div>
-        </div>
+        @endif
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Main Content -->
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-10">
+                    
+                    <!-- Title and Metadata Section -->
+                    <div class="mb-8 border-b pb-6">
+                        @if($post->category)
+                            <a href="{{ route('blog.category', $post->category->slug) }}" class="inline-block bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm font-bold mb-4 hover:bg-indigo-200 transition-colors">
+                                {{ $post->category->title }}
+                            </a>
+                        @endif
+
+                        <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
+                            {{ $post->title }}
+                        </h1>
+
+                        <div class="flex items-center flex-wrap gap-4 text-sm text-gray-500">
+                            <span class="flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                {{ jdate($post->published_at)->format('%d %B %Y') }}
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                {{ number_format($post->view_count) }} بازدید
+                            </span>
+                        </div>
+                    </div>
+
                     <!-- Summary -->
                     @if($post->summary)
-                        <div class="bg-indigo-50 border-r-4 border-indigo-500 p-4 mb-8 rounded-l-lg">
-                            <p class="text-indigo-900 font-medium leading-relaxed">
+                        <div class="bg-gray-50 border-r-4 border-indigo-500 p-4 mb-8 rounded-l-lg">
+                            <p class="text-gray-800 font-medium leading-relaxed">
                                 {{ $post->summary }}
                             </p>
                         </div>
@@ -51,12 +61,15 @@
                         {!! $post->content !!}
                     </article>
                     
-                    <!-- Keywords -->
+                    <!-- Keywords (Tags) -->
                     @if($post->meta_keywords)
                         <div class="mt-10 pt-6 border-t border-gray-100">
+                            <h4 class="text-sm font-bold text-gray-700 mb-3">برچسب‌ها:</h4>
                             <div class="flex flex-wrap gap-2">
                                 @foreach(explode(',', $post->meta_keywords) as $keyword)
-                                    <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm"># {{ trim($keyword) }}</span>
+                                    <a href="{{ route('blog.tag', trim($keyword)) }}" class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm hover:bg-indigo-100 hover:text-indigo-700 transition-colors">
+                                        # {{ trim($keyword) }}
+                                    </a>
                                 @endforeach
                             </div>
                         </div>
