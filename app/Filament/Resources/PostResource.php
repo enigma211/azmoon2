@@ -18,9 +18,10 @@ class PostResource extends Resource
     protected static ?string $model = Post::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
-    protected static ?string $navigationLabel = 'اخبار و مقالات';
+    protected static ?string $navigationLabel = 'لیست اخبار';
     protected static ?string $modelLabel = 'خبر';
     protected static ?string $pluralModelLabel = 'اخبار';
+    protected static ?string $navigationGroup = 'اخبار و مقالات';
 
     public static function form(Form $form): Form
     {
@@ -28,16 +29,25 @@ class PostResource extends Resource
             ->schema([
                 Forms\Components\Section::make()
                     ->schema([
+                        Forms\Components\Select::make('category_id')
+                            ->label('دسته‌بندی')
+                            ->relationship('category', 'title')
+                            ->required()
+                            ->preload()
+                            ->searchable()
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('title')->label('عنوان')->required(),
+                                Forms\Components\TextInput::make('slug')->label('اسلاگ')->required(),
+                            ]),
+
                         Forms\Components\TextInput::make('title')
                             ->label('عنوان خبر')
-                            ->required()
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', str()->slug($state)) : null),
+                            ->required(),
 
                         Forms\Components\TextInput::make('slug')
                             ->label('آدرس یکتا (Slug)')
-                            ->disabled()
-                            ->dehydrated()
+                            ->default(fn () => 'post-' . rand(1000, 9999))
+                            ->readOnly()
                             ->required()
                             ->unique(Post::class, 'slug', ignoreRecord: true),
 
@@ -51,11 +61,19 @@ class PostResource extends Resource
                             ->columnSpanFull()
                             ->fileAttachmentsDirectory('posts'),
 
-                        Forms\Components\TextInput::make('meta_keywords')
-                            ->label('کلمات کلیدی سئو (با کاما جدا کنید)'),
+                        Forms\Components\TagsInput::make('meta_keywords')
+                            ->label('کلمات کلیدی سئو (اینتر بزنید)')
+                            ->separator(',')
+                            ->suggestions(function () {
+                                $keywords = Post::pluck('meta_keywords')->filter()->flatMap(function ($item) {
+                                    return explode(',', $item);
+                                })->unique()->values()->toArray();
+                                return $keywords;
+                            }),
 
                         Forms\Components\DateTimePicker::make('published_at')
-                            ->label('تاریخ انتشار'),
+                            ->label('تاریخ انتشار')
+                            ->default(now()),
 
                         Forms\Components\Toggle::make('is_published')
                             ->label('منتشر شده')
@@ -82,6 +100,9 @@ class PostResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->label('عنوان')
                     ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('category.title')
+                    ->label('دسته‌بندی')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('is_published')
                     ->label('وضعیت')

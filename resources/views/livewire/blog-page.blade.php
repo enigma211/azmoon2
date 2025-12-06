@@ -28,7 +28,7 @@
                 @foreach($posts as $post)
                     <article class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col h-full">
                         <!-- Image -->
-                        <a href="{{ route('blog.show', $post->slug) }}" class="block relative h-48 overflow-hidden group">
+                        <a href="{{ route('blog.show', ['category' => $post->category->slug ?? 'general', 'slug' => $post->slug]) }}" class="block relative h-48 overflow-hidden group">
                             @if($post->image_path)
                                 <img src="{{ Storage::url($post->image_path) }}" alt="{{ $post->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             @else
@@ -49,17 +49,15 @@
                                     </svg>
                                     {{ $post->published_at->format('Y/m/d') }}
                                 </span>
-                                <span class="flex items-center gap-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                    {{ number_format($post->view_count) }}
-                                </span>
+                                @if($post->category)
+                                    <span class="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full text-xs">
+                                        {{ $post->category->title }}
+                                    </span>
+                                @endif
                             </div>
 
                             <h2 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-indigo-600 transition-colors">
-                                <a href="{{ route('blog.show', $post->slug) }}">
+                                <a href="{{ route('blog.show', ['category' => $post->category->slug ?? 'general', 'slug' => $post->slug]) }}">
                                     {{ $post->title }}
                                 </a>
                             </h2>
@@ -68,7 +66,7 @@
                                 {{ $post->summary }}
                             </p>
 
-                            <a href="{{ route('blog.show', $post->slug) }}" class="inline-flex items-center text-indigo-600 font-semibold text-sm hover:text-indigo-800 transition-colors mt-auto">
+                            <a href="{{ route('blog.show', ['category' => $post->category->slug ?? 'general', 'slug' => $post->slug]) }}" class="inline-flex items-center text-indigo-600 font-semibold text-sm hover:text-indigo-800 transition-colors mt-auto">
                                 ادامه مطلب
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>

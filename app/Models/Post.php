@@ -16,12 +16,18 @@ class Post extends Model
         'is_published',
         'published_at',
         'view_count',
+        'category_id',
     ];
 
     protected $casts = [
         'is_published' => 'boolean',
         'published_at' => 'datetime',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     public function scopePublished($query)
     {

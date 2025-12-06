@@ -9,12 +9,23 @@ use Illuminate\Support\Str;
 class BlogPostPage extends Component
 {
     public $slug;
+    public $category;
     public Post $post;
 
-    public function mount($slug)
+    public function mount($category, $slug)
     {
         $this->slug = $slug;
-        $this->post = Post::published()->where('slug', $slug)->firstOrFail();
+        $this->category = $category;
+        
+        $this->post = Post::published()->with('category')->where('slug', $slug)->firstOrFail();
+
+        // SEO Check: If category slug in URL doesn't match post's category, redirect permanently
+        if ($this->post->category && $this->post->category->slug !== $category) {
+            return redirect()->route('blog.show', [
+                'category' => $this->post->category->slug, 
+                'slug' => $this->post->slug
+            ], 301);
+        }
         
         // Increment view count
         $this->post->increment('view_count');

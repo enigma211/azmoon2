@@ -71,7 +71,7 @@
                     <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2">آخرین مطالب</h3>
                     <div class="space-y-4">
                         @foreach($recentPosts as $recent)
-                            <a href="{{ route('blog.show', $recent->slug) }}" class="flex gap-3 group">
+                            <a href="{{ route('blog.show', ['category' => $recent->category->slug ?? 'general', 'slug' => $recent->slug]) }}" class="flex gap-3 group">
                                 <div class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
                                     @if($recent->image_path)
                                         <img src="{{ Storage::url($recent->image_path) }}" alt="{{ $recent->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
