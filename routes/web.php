@@ -25,9 +25,14 @@ use App\Livewire\ResourceCategoriesPage;
 use App\Livewire\ResourcePostsPage;
 use App\Livewire\ResourcePostDetailPage;
 
+use App\Livewire\BlogPage;
+use App\Livewire\BlogPostPage;
+
 // SPA-style routes powered by Livewire v3 (wire:navigate handled in views)
 Route::get('/', HomePage::class)->name('home');
-Route::get('/search', \App\Livewire\SearchPage::class)->name('search'); // Added search route
+Route::get('/search', \App\Livewire\SearchPage::class)->name('search');
+Route::get('/blog', BlogPage::class)->name('blog.index');
+Route::get('/blog/{slug}', BlogPostPage::class)->name('blog.show');
 Route::get('/domains', DomainsPage::class)->name('domains');
 Route::get('/resources', EducationalResourcesPage::class)->name('resources'); // تغییر به سیستم جدید
 Route::get('/profile', ProfilePage::class)->name('profile');
