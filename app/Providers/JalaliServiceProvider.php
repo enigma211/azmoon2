@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Morilog\Jalali\Jalalian;
+use Ariaieboy\Jalali\Jalali;
 
 class JalaliServiceProvider extends ServiceProvider
 {
@@ -20,7 +20,7 @@ class JalaliServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Jalali package is ready to use
+        // Jalali package (ariaieboy/jalali) is ready to use
         // No additional configuration needed
     }
 }

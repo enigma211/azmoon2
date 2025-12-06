@@ -1,17 +1,37 @@
 <?php
 
+use Ariaieboy\Jalali\Jalali;
 use Carbon\Carbon;
 
 if (!function_exists('jdate')) {
     /**
-     * Format a Gregorian date using the given PHP date format.
-     * This is a compatibility shim after removing Jalali dependency.
+     * Format a date to Jalali (Persian) calendar.
+     * Uses ariaieboy/jalali package.
+     * 
+     * @param mixed $date Date to convert (Carbon, DateTime, string, or timestamp)
+     * @param string|null $format Optional format string (e.g., 'Y/m/d' or '%d %B %Y')
+     * @return \Ariaieboy\Jalali\Jalali|string
      */
-    function jdate($date = null, $format = 'Y/m/d')
+    function jdate($date = null, $format = null)
     {
         try {
-            $dt = $date ? Carbon::parse($date) : Carbon::now();
-            return $dt->format($format);
+            if ($date === null) {
+                $jalali = Jalali::now();
+            } elseif ($date instanceof \DateTimeInterface) {
+                $jalali = Jalali::fromCarbon(Carbon::instance($date));
+            } elseif (is_numeric($date)) {
+                $jalali = Jalali::forge($date);
+            } else {
+                $jalali = Jalali::forge($date);
+            }
+            
+            // If format is provided, return formatted string
+            if ($format !== null) {
+                return $jalali->format($format);
+            }
+            
+            // Otherwise return the Jalali object for chaining
+            return $jalali;
         } catch (\Throwable $e) {
             return (string) $date;
         }
@@ -20,7 +40,7 @@ if (!function_exists('jdate')) {
 
 if (!function_exists('jdate_time')) {
     /**
-     * Format a Gregorian datetime (compat shim), Y/m/d H:i
+     * Format a Jalali datetime, Y/m/d H:i
      */
     function jdate_time($date = null)
     {
