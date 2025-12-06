@@ -3,7 +3,9 @@
         <!-- Header Text -->
         <div class="text-center mb-8">
             <h1 class="text-2xl font-bold text-gray-900 mb-2">اخبار و مقالات آموزشی</h1>
-            <p class="text-gray-600">جدیدترین اطلاعیه‌ها، مقالات آموزشی و اخبار مرتبط با آزمون‌های نظام مهندسی و کارشناس رسمی را اینجا بخوانید.</p>
+            <p class="text-lg text-indigo-100 mb-8 max-w-2xl mx-auto leading-relaxed">
+                جدیدترین اطلاعیه‌ها، مقالات آموزشی و اخبار مرتبط
+            </p>
         </div>
 
         <!-- Categories Navigation -->

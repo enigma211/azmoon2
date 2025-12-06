@@ -44,7 +44,8 @@ class BlogPostPage extends Component
         ])->layout('layouts.app', [
             'seoTitle' => $this->post->title . ' - آزمون کده',
             'seoDescription' => $this->post->summary ?? Str::limit(strip_tags($this->post->content), 160),
-            'seoKeywords' => $this->post->meta_keywords
+            'seoKeywords' => $this->post->meta_keywords,
+            'seoImage' => $this->post->image_path ? url(\Illuminate\Support\Facades\Storage::url($this->post->image_path)) : null,
         ]);
     }
 }

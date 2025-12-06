@@ -7,6 +7,8 @@ use App\Models\ExamBatch;
 use App\Models\ExamType;
 use App\Models\ResourceCategory;
 use App\Models\EducationalPost;
+use App\Models\Post as BlogPost;
+use App\Models\Category as BlogCategory;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
@@ -84,6 +86,37 @@ class SitemapController extends Controller
                     'lastmod' => optional($exam->updated_at)->toAtomString(),
                     'changefreq' => 'weekly',
                     'priority' => '0.9',
+                ];
+            }
+
+            // Blog Main Page
+            $urls[] = [
+                'loc' => route('blog.index'),
+                'lastmod' => now()->toAtomString(),
+                'changefreq' => 'daily',
+                'priority' => '0.8',
+            ];
+
+            // Blog Categories
+            $blogCategories = BlogCategory::all();
+            foreach ($blogCategories as $category) {
+                 $urls[] = [
+                    'loc' => route('blog.category', $category->slug),
+                    'lastmod' => now()->toAtomString(),
+                    'changefreq' => 'weekly',
+                    'priority' => '0.7',
+                ];
+            }
+
+            // Blog Posts
+            $blogPosts = BlogPost::published()->orderBy('updated_at', 'desc')->get();
+            foreach ($blogPosts as $post) {
+                $categorySlug = $post->category ? $post->category->slug : 'general';
+                 $urls[] = [
+                    'loc' => route('blog.show', ['category' => $categorySlug, 'slug' => $post->slug]),
+                    'lastmod' => $post->updated_at->toAtomString(),
+                    'changefreq' => 'weekly',
+                    'priority' => '0.8',
                 ];
             }
 

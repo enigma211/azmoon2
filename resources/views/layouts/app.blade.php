@@ -11,6 +11,9 @@
         <meta http-equiv="Expires" content="0">
         
         <meta name="description" content="{{ $seoDescription ?? 'آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.' }}">
+        @if(isset($seoKeywords))
+            <meta name="keywords" content="{{ $seoKeywords }}">
+        @endif
         <meta name="robots" content="index, follow">
         <link rel="canonical" href="{{ url()->current() }}">
 
@@ -22,10 +25,16 @@
         <meta property="og:description" content="{{ $seoDescription ?? 'آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.' }}">
         <meta property="og:url" content="{{ url()->current() }}">
         <meta property="og:site_name" content="{{ config('app.name', 'آزمون کده') }}">
+        @if(isset($seoImage))
+            <meta property="og:image" content="{{ $seoImage }}">
+        @endif
 
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ $seoTitle ?? config('app.name', 'آزمون کده') }}">
         <meta name="twitter:description" content="{{ $seoDescription ?? 'آزمون کده: بزرگترین شبیه ساز آزمون نظام مهندسی. با نمونه سوالات واقعی سال‌های گذشته در محیطی مشابه آزمون اصلی تمرین کنید و کارنامه قبولی/مردودی خود را فوراً دریافت نمایید.' }}">
+        @if(isset($seoImage))
+            <meta name="twitter:image" content="{{ $seoImage }}">
+        @endif
 
         <!-- Fonts: Vazirmatn -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
