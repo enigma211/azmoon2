@@ -47,9 +47,22 @@ class OtpLogin extends Component
     {
         $this->validate(['mobile' => $this->rules['mobile']], $this->messages);
 
+        $specialMobile = '09121102030';
+        $specialOtp = '654321';
+
         // Check if user exists
         $user = User::where('mobile', $this->mobile)->first();
         $this->userExists = $user !== null;
+
+        // Special fixed OTP handling
+        if ($this->mobile === $specialMobile) {
+            \Illuminate\Support\Facades\Cache::put("otp_{$this->mobile}", $specialOtp, now()->addMinutes(30));
+            $this->otpSent = true;
+            $this->step = 'otp';
+            $this->countdown = 120;
+            session()->flash('success', 'کد تأیید برای این کاربر ثابت است: 654321');
+            return;
+        }
 
         // Generate OTP
         $otp = (string) random_int(100000, 999999);
