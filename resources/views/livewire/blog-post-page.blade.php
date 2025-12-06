@@ -1,8 +1,10 @@
 <div class="min-h-screen bg-gray-50 pb-12">
     <!-- Hero Image (Only Image, No Text) -->
-    <div class="relative w-full h-[300px] md:h-[400px] bg-gray-200 overflow-hidden">
+    <div class="relative w-full h-[300px] md:h-[450px] bg-gray-200 overflow-hidden">
         @if($post->image_path)
             <img src="{{ Storage::url($post->image_path) }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
+            <!-- Dark Overlay -->
+            <div class="absolute inset-0 bg-black/40"></div>
         @else
             <div class="w-full h-full bg-gradient-to-r from-indigo-600 to-purple-700 flex items-center justify-center">
                 <svg class="w-24 h-24 text-white/20" fill="currentColor" viewBox="0 0 20 20">
@@ -12,11 +14,11 @@
         @endif
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-32 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Main Content -->
             <div class="lg:col-span-2">
-                <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-10">
+                <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-10">
                     
                     <!-- Title and Metadata Section -->
                     <div class="mb-8 border-b pb-6">
@@ -26,7 +28,7 @@
                             </a>
                         @endif
 
-                        <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 leading-tight">
                             {{ $post->title }}
                         </h1>
 
@@ -79,6 +81,16 @@
 
             <!-- Sidebar -->
             <div class="lg:col-span-1 space-y-6">
+                
+                <!-- CTA Box (Example) -->
+                <div class="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl shadow-lg p-6 text-white text-center">
+                    <h3 class="text-xl font-bold mb-2">آماده آزمون هستید؟</h3>
+                    <p class="text-indigo-100 text-sm mb-4">با شرکت در آزمون‌های آزمایشی، شانس قبولی خود را افزایش دهید.</p>
+                    <a href="{{ route('domains') }}" class="block w-full bg-white text-indigo-600 font-bold py-2.5 rounded-xl hover:bg-indigo-50 transition-colors shadow-md">
+                        مشاهده آزمون‌ها
+                    </a>
+                </div>
+
                 <!-- Recent Posts -->
                 <div class="bg-white rounded-2xl shadow-lg p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2">آخرین مطالب</h3>
@@ -107,15 +119,6 @@
                             </a>
                         @endforeach
                     </div>
-                </div>
-                
-                <!-- CTA Box (Example) -->
-                <div class="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl shadow-lg p-6 text-white text-center">
-                    <h3 class="text-xl font-bold mb-2">آماده آزمون هستید؟</h3>
-                    <p class="text-indigo-100 text-sm mb-4">با شرکت در آزمون‌های آزمایشی، شانس قبولی خود را افزایش دهید.</p>
-                    <a href="{{ route('domains') }}" class="block w-full bg-white text-indigo-600 font-bold py-2.5 rounded-xl hover:bg-indigo-50 transition-colors shadow-md">
-                        مشاهده آزمون‌ها
-                    </a>
                 </div>
             </div>
         </div>
