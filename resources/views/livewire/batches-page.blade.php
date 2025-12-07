@@ -3,6 +3,15 @@
         <!-- Header -->
         <header class="mb-8 text-center">
             <h1 class="text-lg font-bold text-gray-900">آزمون‌های رسمی دوره‌های گذشته</h1>
+            @if(isset($domain) && $domain->id == 1)
+                <div class="mt-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-900 text-right">
+                    کلیه سوالات از وب سایت دفتر مقررات ملی ساختمان که بصورت رایگان در اختیار مهندسین قرار گرفته است دریافت شده است
+                </div>
+            @elseif(isset($domain) && $domain->id == 3)
+                <div class="mt-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-900 text-right">
+                    کلیه سوالات از وب سایت شورای عالی کارشناسان رسمی دادگستری که بصورت رایگان در اختیار مهندسین قرار گرفته است دریافت شده است
+                </div>
+            @endif
         </header>
 
         <!-- Batches List -->
