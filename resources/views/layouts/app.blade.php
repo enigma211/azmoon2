@@ -52,6 +52,20 @@
         @if($favicon)
             <link rel="icon" type="image/png" href="{{ $favicon }}">
         @endif
+
+        <!-- MathJax for LaTeX rendering -->
+        <script>
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+                },
+                svg: {
+                    fontCache: 'global'
+                }
+            };
+        </script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </head>
     <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased selection:bg-indigo-200 selection:text-indigo-900" style="font-family: Vazirmatn, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
         <!-- PWA Splash Screen / Initial Loading -->
@@ -390,6 +404,22 @@
                     window.addEventListener('beforeunload', () => clearTimeout(timer), { once: true });
                 }, true);
             })();
+        </script>
+        <script>
+            // Initialize MathJax re-render for Livewire
+            document.addEventListener('livewire:navigated', () => {
+                 if(typeof MathJax !== 'undefined') {
+                     MathJax.typesetPromise();
+                 }
+            });
+
+            document.addEventListener('livewire:initialized', () => {
+                Livewire.hook('morph.updated', ({ el, component }) => {
+                     if(typeof MathJax !== 'undefined') {
+                         MathJax.typesetPromise();
+                     }
+                });
+            });
         </script>
     </body>
 </html>

@@ -107,7 +107,7 @@ class QuestionResource extends Resource
                                     ]),
 
                                 RichEditor::make('explanation')
-                                    ->label('پاسخ تشریحی (متن)')
+                                    ->label('پاسخ تشریحی (پشتیبانی فرمول)')
                                     ->toolbarButtons([
                                         'bold','italic','strike','underline','link','orderedList','bulletList','codeBlock'
                                     ]),
@@ -166,9 +166,12 @@ class QuestionResource extends Resource
                         ['text' => '', 'is_correct' => false, 'order' => 4],
                     ])
                     ->schema([
-                        TextInput::make('text')
-                            ->label(fn (callable $get) => 'گزینه ' . ($get('order') ?? 1))
-                            ->required(),
+                        RichEditor::make('text')
+                            ->label(fn (callable $get) => 'گزینه ' . ($get('order') ?? 1) . ' (پشتیبانی فرمول)')
+                            ->required()
+                            ->toolbarButtons([
+                                'bold','italic','strike','underline','codeBlock'
+                            ]),
                         Toggle::make('is_correct')
                             ->label('گزینه صحیح')
                             ->inline(false)
