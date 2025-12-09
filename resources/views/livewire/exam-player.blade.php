@@ -1,6 +1,16 @@
 @php
     // Defensive checks to avoid errors before data is fully wired
     $q = $question ?? null;
+    // Check if user can interact (logged in + has active subscription or is admin)
+    $canInteract = false;
+    if (Auth::check()) {
+        $user = Auth::user();
+        if ($user->hasRole('admin')) {
+            $canInteract = true;
+        } else {
+            $canInteract = $user->activeSubscription()->exists();
+        }
+    }
 @endphp
 <div class="mx-auto max-w-2xl p-4 space-y-4" 
      oncontextmenu="return false;" 
@@ -13,22 +23,30 @@
         <h1 class="text-sm font-bold text-gray-800">{{ $this->exam->title }}</h1>
     </div>
 
-    @guest
+    @if(!$canInteract)
         <div class="mb-4 rounded-lg bg-blue-50 p-4 border border-blue-200">
             <div class="flex items-start gap-3">
                 <svg class="w-6 h-6 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 <div class="text-sm text-blue-800">
-                    <p class="font-bold mb-1">شما به صورت مهمان در حال مشاهده این آزمون هستید.</p>
-                    <p>پاسخ‌های شما ذخیره نمی‌شود و کارنامه نهایی صادر نخواهد شد.</p>
-                    <a href="{{ route('login') }}" class="inline-block mt-2 font-bold underline hover:text-blue-900">
-                        برای ثبت نتیجه وارد شوید
-                    </a>
+                    @guest
+                        <p class="font-bold mb-1">شما به صورت مهمان در حال مشاهده این آزمون هستید.</p>
+                        <p>برای پاسخ‌دهی به سوالات و مشاهده کارنامه، ابتدا وارد شوید و اشتراک تهیه کنید.</p>
+                        <a href="{{ route('login') }}" class="inline-block mt-2 font-bold underline hover:text-blue-900">
+                            ورود / ثبت نام
+                        </a>
+                    @else
+                        <p class="font-bold mb-1">برای پاسخ‌دهی به سوالات نیاز به اشتراک دارید.</p>
+                        <p>با خرید اشتراک می‌توانید به تمام سوالات پاسخ دهید و کارنامه دریافت کنید.</p>
+                        <a href="{{ route('profile') }}" class="inline-block mt-2 font-bold underline hover:text-blue-900">
+                            خرید اشتراک
+                        </a>
+                    @endguest
                 </div>
             </div>
         </div>
-    @endguest
+    @endif
     
     <!-- Assumptions Button -->
     @if($this->exam->assumptions_text || $this->exam->assumptions_image)
@@ -96,7 +114,7 @@
             </div>
         @elseif($q->choices && $q->choices->count())
             <div class="mt-3 space-y-2">
-                @auth
+                @if($canInteract)
                     @foreach($q->choices as $choice)
                         <label wire:key="choice-{{ $q->id }}-{{ $choice->id }}" class="flex items-start gap-3 rounded-lg border-2 p-4 cursor-pointer hover:bg-gray-50 hover:border-indigo-300 transition {{ ($answers[$q->id][$choice->id] ?? false) ? 'bg-indigo-50 border-indigo-400' : 'border-gray-200' }}">
                             @php $inputId = 'q'.$q->id.'_c'.$choice->id; @endphp
@@ -118,14 +136,20 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
                         <h3 class="mt-2 text-sm font-medium text-gray-900">گزینه‌ها مخفی هستند</h3>
-                        <p class="mt-1 text-sm text-gray-500">برای مشاهده گزینه‌ها و پاسخ به سوال، لطفاً وارد حساب کاربری خود شوید.</p>
+                        <p class="mt-1 text-sm text-gray-500">برای مشاهده گزینه‌ها و پاسخ به سوال، نیاز به اشتراک دارید.</p>
                         <div class="mt-6">
-                            <a href="{{ route('profile') }}" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                ورود / ثبت نام
-                            </a>
+                            @guest
+                                <a href="{{ route('login') }}" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    ورود / ثبت نام
+                                </a>
+                            @else
+                                <a href="{{ route('profile') }}" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    خرید اشتراک
+                                </a>
+                            @endguest
                         </div>
                     </div>
-                @endauth
+                @endif
             </div>
         @endif
 
@@ -146,7 +170,7 @@
             
             <!-- Submit button -->
             <div class="flex justify-center pt-4 border-t border-gray-200">
-                @auth
+                @if($canInteract)
                     <form method="POST" action="{{ route('exam.finish', ['exam' => $this->exam->id]) }}" id="finishForm-{{ $this->exam->id }}" class="inline" data-loading-delay="4000">
                         @csrf
                         <input type="hidden" name="answers" value="{{ json_encode($this->answers) }}">
@@ -156,10 +180,10 @@
                             پایان آزمون و مشاهده کارنامه
                         </button>
                     </form>
-                @endauth
+                @endif
             </div>
             
-    @auth
+    @if($canInteract)
         <!-- Report Issue Button -->
         <div class="flex justify-center pt-2">
             <button wire:click="$set('showReportModal', true)" 
@@ -167,15 +191,15 @@
                 گزارش ایراد سوال
             </button>
         </div>
-    @endauth
+    @endif
+        </div>
     </div>
     @else
         <div class="rounded border p-4 text-sm text-gray-600">سوالی برای نمایش وجود ندارد.</div>
     @endif
-</div>
 
-<!-- Report Issue Modal -->
-@auth
+    <!-- Report Issue Modal -->
+    @auth
 @if($showReportModal)
 <div class="fixed inset-0 z-50 overflow-y-auto" x-data="{ show: @entangle('showReportModal') }" x-show="show" x-cloak>
     <div class="flex min-h-screen items-center justify-center p-4">
@@ -251,73 +275,92 @@
         </div>
     </div>
 </div>
-@endif
-@endauth
+    @endif
+    @endauth
 
-<!-- Periodic autosave flush (debounced) -->
-<div wire:poll.2s="flushDirty" class="hidden" aria-hidden="true"></div>
+    <!-- Periodic autosave flush (debounced) - only for subscribed users -->
+    @if($canInteract)
+        <div wire:poll.2s="flushDirty" class="hidden" aria-hidden="true"></div>
+    @endif
 
-<!-- Upgrade Modal -->
-<div x-data="{ show: false }" 
-     @show-upgrade-modal.window="show = true"
-     x-show="show" 
-     x-cloak
-     class="fixed inset-0 z-50 overflow-y-auto" 
-     style="display: none;">
-    <div class="flex min-h-screen items-center justify-center p-4">
-        <!-- Backdrop -->
-        <div x-show="show" 
-             x-transition:enter="ease-out duration-300"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="ease-in duration-200"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0"
-             @click="show = false"
-             class="fixed inset-0 bg-black bg-opacity-50"></div>
-        
-        <!-- Modal Content -->
-        <div x-show="show"
-             x-transition:enter="ease-out duration-300"
-             x-transition:enter-start="opacity-0 scale-95"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="ease-in duration-200"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95"
-             class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
+    <!-- Assumptions Modal -->
+    @if($this->exam->assumptions_text || $this->exam->assumptions_image)
+        <div 
+            x-data="{ show: false }"
+            @open-modal.window="if ($event.detail === 'assumptions-modal') show = true"
+            @close-modal.window="show = false"
+            @keydown.escape.window="show = false"
+            x-show="show"
+            x-cloak
+            class="fixed inset-0 z-50 overflow-y-auto"
+            style="display: none;">
             
-            <!-- Icon -->
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-100 mb-4">
-                <svg class="h-10 w-10 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                </svg>
+            <!-- Backdrop -->
+            <div 
+                class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+                @click="show = false">
             </div>
             
-            <!-- Title -->
-            <h3 class="text-2xl font-bold text-gray-900 mb-3">
-                محدودیت پلن رایگان
-            </h3>
-            
-            <!-- Message -->
-            <p class="text-gray-600 mb-6 leading-relaxed">
-                در پلن رایگان فقط می‌توانید به <strong class="text-indigo-600">4 سوال اول</strong> هر آزمون پاسخ دهید.
-                <br><br>
-                برای دسترسی به تمام سوالات و امکانات، اشتراک ماهیانه خریداری کنید.
-            </p>
-            
-            <!-- Actions -->
-            <div class="flex flex-col gap-3">
-                <a href="{{ route('profile') }}" 
-                   class="inline-block w-full rounded-lg bg-indigo-600 px-6 py-3 text-white font-bold hover:bg-indigo-700 transition shadow-lg">
-                    خرید اشتراک
-                </a>
-                <button @click="show = false" 
-                        class="w-full rounded-lg bg-gray-100 px-6 py-3 text-gray-700 font-medium hover:bg-gray-200 transition">
-                    بستن
-                </button>
+            <!-- Modal Content -->
+            <div class="flex min-h-screen items-center justify-center p-4">
+                <div 
+                    @click.stop
+                    x-show="show"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 transform scale-90"
+                    x-transition:enter-end="opacity-100 transform scale-100"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 transform scale-100"
+                    x-transition:leave-end="opacity-0 transform scale-90"
+                    class="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+                    
+                    <!-- Header -->
+                    <div class="sticky top-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-4 rounded-t-2xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold">مفروضات این آزمون</h3>
+                        </div>
+                        <button 
+                            @click="show = false"
+                            class="text-white hover:bg-white/20 rounded-lg p-2 transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Body -->
+                    <div class="p-6 space-y-4">
+                        @if($this->exam->assumptions_text)
+                            <div class="prose prose-sm max-w-none bg-amber-50 rounded-lg p-4 border border-amber-200">
+                                {!! $this->exam->assumptions_text !!}
+                            </div>
+                        @endif
+                        
+                        @if($this->exam->assumptions_image)
+                            <div class="flex justify-center bg-gray-50 rounded-lg p-4">
+                                <img 
+                                    src="{{ Storage::url($this->exam->assumptions_image) }}" 
+                                    alt="تصویر مفروضات" 
+                                    class="max-w-full h-auto rounded shadow-lg">
+                            </div>
+                        @endif
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="sticky bottom-0 bg-gray-50 px-6 py-4 rounded-b-2xl flex justify-end">
+                        <button 
+                            @click="show = false"
+                            class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg transition">
+                            بستن
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 </div>
 
 <script>
@@ -384,82 +427,3 @@
         return false;
     });
 </script>
-
-<!-- Assumptions Modal -->
-@if($this->exam->assumptions_text || $this->exam->assumptions_image)
-    <div 
-        x-data="{ show: false }"
-        @open-modal.window="if ($event.detail === 'assumptions-modal') show = true"
-        @close-modal.window="show = false"
-        @keydown.escape.window="show = false"
-        x-show="show"
-        x-cloak
-        class="fixed inset-0 z-50 overflow-y-auto"
-        style="display: none;">
-        
-        <!-- Backdrop -->
-        <div 
-            class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-            @click="show = false">
-        </div>
-        
-        <!-- Modal Content -->
-        <div class="flex min-h-screen items-center justify-center p-4">
-            <div 
-                @click.stop
-                x-show="show"
-                x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0 transform scale-90"
-                x-transition:enter-end="opacity-100 transform scale-100"
-                x-transition:leave="transition ease-in duration-200"
-                x-transition:leave-start="opacity-100 transform scale-100"
-                x-transition:leave-end="opacity-0 transform scale-90"
-                class="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-                
-                <!-- Header -->
-                <div class="sticky top-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-4 rounded-t-2xl flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <h3 class="text-xl font-bold">مفروضات این آزمون</h3>
-                    </div>
-                    <button 
-                        @click="show = false"
-                        class="text-white hover:bg-white/20 rounded-lg p-2 transition">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                
-                <!-- Body -->
-                <div class="p-6 space-y-4">
-                    @if($this->exam->assumptions_text)
-                        <div class="prose prose-sm max-w-none bg-amber-50 rounded-lg p-4 border border-amber-200">
-                            {!! $this->exam->assumptions_text !!}
-                        </div>
-                    @endif
-                    
-                    @if($this->exam->assumptions_image)
-                        <div class="flex justify-center bg-gray-50 rounded-lg p-4">
-                            <img 
-                                src="{{ Storage::url($this->exam->assumptions_image) }}" 
-                                alt="تصویر مفروضات" 
-                                class="max-w-full h-auto rounded shadow-lg">
-                        </div>
-                    @endif
-                </div>
-                
-                <!-- Footer -->
-                <div class="sticky bottom-0 bg-gray-50 px-6 py-4 rounded-b-2xl flex justify-end">
-                    <button 
-                        @click="show = false"
-                        class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg transition">
-                        بستن
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif

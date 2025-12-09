@@ -59,8 +59,8 @@ class ExamPlayer extends Component
         $this->answers = [];
         Session::forget($this->sessionKey());
 
-        // Initialize or create DB attempt for authenticated users
-        if (Auth::check()) {
+        // Initialize or create DB attempt only for users with active subscription
+        if (Auth::check() && $this->canUserInteract()) {
             // Cancel any existing in-progress attempts for this exam
             // Each entry to the exam page starts a fresh attempt
             ExamAttempt::where('exam_id', $this->exam->id)
@@ -138,8 +138,13 @@ class ExamPlayer extends Component
 
     public function saveAnswer(int $questionId, int $choiceId, bool $checked): void
     {
-        // Rate limit: max 10 calls per minute per user/exam (fallback to IP for guests)
-        $who = Auth::id() ? ('user:'.Auth::id()) : ('ip:'.(request()->ip() ?? 'unknown'));
+        // Only allow users with subscription to save answers
+        if (!$this->canUserInteract()) {
+            return;
+        }
+
+        // Rate limit: max 10 calls per minute per user/exam
+        $who = 'user:'.Auth::id();
         $rateKey = sprintf('saveAnswer:%d:%s', $this->exam->id, $who);
         if (RateLimiter::tooManyAttempts($rateKey, 10)) {
             return; // silently drop to protect server
@@ -263,8 +268,34 @@ class ExamPlayer extends Component
         return null;
     }
 
+    /**
+     * Check if current user can interact with exam (answer questions, submit, etc.)
+     * User must be logged in AND have an active subscription OR be an admin.
+     */
+    public function canUserInteract(): bool
+    {
+        if (!Auth::check()) {
+            return false;
+        }
+
+        $user = Auth::user();
+        
+        // Admins always have access
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Check for active subscription
+        return $user->activeSubscription()->exists();
+    }
+
     public function submit(ScoringService $scoring = null)
     {
+        // Only allow users with subscription to submit
+        if (!$this->canUserInteract()) {
+            return redirect()->route('profile')->with('warning', 'برای ثبت آزمون نیاز به اشتراک دارید.');
+        }
+
         // Fail-safe: If attemptId is lost, try to recover the active attempt
         if (!$this->attemptId && Auth::check()) {
             $this->attemptId = ExamAttempt::where('exam_id', $this->exam->id)
@@ -336,6 +367,12 @@ class ExamPlayer extends Component
 
     public function submitReport(): void
     {
+        // Only allow users with subscription to submit reports
+        if (!$this->canUserInteract()) {
+            session()->flash('error', 'برای گزارش خطا نیاز به اشتراک دارید.');
+            return;
+        }
+
         $this->validate([
             'reportText' => 'required|string|min:10|max:1000',
         ], [
