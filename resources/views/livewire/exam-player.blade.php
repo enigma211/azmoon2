@@ -89,7 +89,9 @@
                                class="h-5 w-5 mt-0.5 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                @checked(($answers[$q->id][$choice->id] ?? false) === true)
                                wire:click="saveAnswer({{ $q->id }}, {{ $choice->id }}, true)" />
-                        <span class="flex-1 text-lg leading-relaxed">{!! $choice->text !!}</span>
+                        <div class="flex-1 text-lg leading-relaxed choice-text" dir="rtl">
+                            {!! $choice->text !!}
+                        </div>
                     </label>
                 @endforeach
             </div>

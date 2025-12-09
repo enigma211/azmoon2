@@ -74,6 +74,30 @@
             .katex-html {
                 direction: ltr !important;
             }
+
+            /* Fix RichText content layout in choices */
+            .choice-text p {
+                margin: 0 !important;
+                display: inline-block;
+            }
+            .choice-text {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            /* Fix Result Page spacing */
+            .prose p {
+                margin-top: 0.5em;
+                margin-bottom: 0.5em;
+            }
+            .prose p:first-child {
+                margin-top: 0;
+            }
+            .prose p:last-child {
+                margin-bottom: 0;
+            }
         </style>
     </head>
     <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased selection:bg-indigo-200 selection:text-indigo-900" style="font-family: Vazirmatn, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">

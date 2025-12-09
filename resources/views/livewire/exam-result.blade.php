@@ -94,12 +94,15 @@
                         <div class="rounded-lg border p-4 bg-gradient-to-r from-sky-50 to-blue-50 border-sky-200 mb-2">
                             <div class="flex items-start gap-3">
                                 @if(!empty($item['is_correct']))
-                                    @svg('heroicon-o-check-circle', 'w-6 h-6 text-green-600 flex-shrink-0')
+                                    @svg('heroicon-o-check-circle', 'w-6 h-6 text-green-600 flex-shrink-0 mt-1')
                                 @else
-                                    @svg('heroicon-o-x-circle', 'w-6 h-6 text-rose-600 flex-shrink-0')
+                                    @svg('heroicon-o-x-circle', 'w-6 h-6 text-rose-600 flex-shrink-0 mt-1')
                                 @endif
                                 <div class="flex-1">
-                                    <p class="text-gray-900">انتخاب شما: گزینه {{ $item['user_no'] }} — {{ $item['user_choice_text'] }}</p>
+                                    <span class="font-bold text-gray-900">انتخاب شما: گزینه {{ $item['user_no'] }}</span>
+                                    <div class="mt-1 prose prose-sm max-w-none text-gray-800">
+                                        {!! $item['user_choice_text'] !!}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -108,9 +111,12 @@
                     @if(!empty($item['correct_choice_text']))
                         <div class="rounded-lg border-2 p-4 bg-green-50 border-green-200">
                             <div class="flex items-start gap-3">
-                                @svg('heroicon-o-check-circle', 'w-6 h-6 text-green-600 flex-shrink-0')
+                                @svg('heroicon-o-check-circle', 'w-6 h-6 text-green-600 flex-shrink-0 mt-1')
                                 <div class="flex-1">
-                                    <p class="text-gray-900">گزینه صحیح: گزینه {{ $item['correct_no'] }} — {{ $item['correct_choice_text'] }}</p>
+                                    <span class="font-bold text-gray-900">گزینه صحیح: گزینه {{ $item['correct_no'] }}</span>
+                                    <div class="mt-1 prose prose-sm max-w-none text-gray-800">
+                                        {!! $item['correct_choice_text'] !!}
+                                    </div>
                                 </div>
                             </div>
                         </div>
