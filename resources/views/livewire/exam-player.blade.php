@@ -252,6 +252,7 @@
     </div>
 </div>
 @endif
+@endauth
 
 <!-- Periodic autosave flush (debounced) -->
 <div wire:poll.2s="flushDirty" class="hidden" aria-hidden="true"></div>
