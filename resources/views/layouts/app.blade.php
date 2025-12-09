@@ -57,6 +57,24 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+        
+        <style>
+            /* Force LTR direction for math formulas to fix layout issues in RTL pages */
+            .katex {
+                direction: ltr !important;
+                unicode-bidi: isolate;
+                text-align: left;
+            }
+            /* Reset text align for display mode formulas */
+            .katex-display {
+                text-align: center;
+                direction: ltr !important;
+            }
+            /* Ensure fractions and roots display correctly */
+            .katex-html {
+                direction: ltr !important;
+            }
+        </style>
     </head>
     <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased selection:bg-indigo-200 selection:text-indigo-900" style="font-family: Vazirmatn, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
         <!-- PWA Splash Screen / Initial Loading -->
