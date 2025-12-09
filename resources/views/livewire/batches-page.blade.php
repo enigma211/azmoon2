@@ -33,22 +33,12 @@
                     $btnColor = $style['btn'];
                 @endphp
 
-                @php
-                    // Batch is accessible if: user is premium OR batch is marked as free
-                    $canAccess = $isPremium || $batch->is_free;
-                @endphp
-
                 <div class="relative rounded-2xl shadow-md bg-white overflow-hidden">
                     <!-- Card Header (Colored) -->
                     <div class="{{ $bgColor }} px-6 py-2 flex items-center justify-between text-white">
                         <!-- Title (Right) -->
                         <h3 class="text-base font-bold flex items-center gap-2">
                             {{ $batch->title }}
-                            @if(!$canAccess)
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-yellow-300">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-                                </svg>
-                            @endif
                         </h3>
 
                         <!-- Calendar Icon (Left) -->
@@ -60,25 +50,15 @@
                     <!-- Card Body -->
                     <div class="p-7 bg-white flex flex-col items-center">
                         <a href="{{ route('exams', ['batch' => $batch->id]) }}" wire:navigate class="block w-fit mx-auto">
-                            <div class="{{ $canAccess ? $btnColor : 'bg-gray-500' }} text-white font-bold text-center py-2 px-3 rounded-xl shadow transition-colors flex items-center justify-center gap-2 text-sm">
+                            <div class="{{ $btnColor }} text-white font-bold text-center py-2 px-3 rounded-xl shadow transition-colors flex items-center justify-center gap-2 text-sm">
                                 <span>مشاهده آزمون‌ها</span>
-                                @if($canAccess)
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                                    </svg>
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-                                    </svg>
-                                @endif
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                </svg>
                             </div>
                         </a>
-                        
-                        @if(!$canAccess)
-                            <p class="mt-2 text-xs text-gray-500">نیازمند اشتراک ویژه</p>
-                        @endif
 
-                        <!-- Inactive Badge (Moved Here) -->
+                        <!-- Inactive Badge -->
                         @if(!$batch->is_active)
                             <div class="mt-2 text-gray-400 text-xs font-medium bg-gray-100 px-3 py-1 rounded-full">
                                 غیرفعال
