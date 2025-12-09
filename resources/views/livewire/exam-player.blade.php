@@ -12,6 +12,23 @@
     <div class="text-center mb-2">
         <h1 class="text-sm font-bold text-gray-800">{{ $this->exam->title }}</h1>
     </div>
+
+    @guest
+        <div class="mb-4 rounded-lg bg-blue-50 p-4 border border-blue-200">
+            <div class="flex items-start gap-3">
+                <svg class="w-6 h-6 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div class="text-sm text-blue-800">
+                    <p class="font-bold mb-1">شما به صورت مهمان در حال مشاهده این آزمون هستید.</p>
+                    <p>پاسخ‌های شما ذخیره نمی‌شود و کارنامه نهایی صادر نخواهد شد.</p>
+                    <a href="{{ route('login') }}" class="inline-block mt-2 font-bold underline hover:text-blue-900">
+                        برای ثبت نتیجه وارد شوید
+                    </a>
+                </div>
+            </div>
+        </div>
+    @endguest
     
     <!-- Assumptions Button -->
     @if($this->exam->assumptions_text || $this->exam->assumptions_image)
@@ -79,21 +96,36 @@
             </div>
         @elseif($q->choices && $q->choices->count())
             <div class="mt-3 space-y-2">
-                @foreach($q->choices as $choice)
-                    <label wire:key="choice-{{ $q->id }}-{{ $choice->id }}" class="flex items-start gap-3 rounded-lg border-2 p-4 cursor-pointer hover:bg-gray-50 hover:border-indigo-300 transition {{ ($answers[$q->id][$choice->id] ?? false) ? 'bg-indigo-50 border-indigo-400' : 'border-gray-200' }}">
-                        @php $inputId = 'q'.$q->id.'_c'.$choice->id; @endphp
-                        <input type="radio"
-                               id="{{ $inputId }}"
-                               name="question_{{ $q->id }}"
-                               value="{{ $choice->id }}"
-                               class="h-5 w-5 mt-0.5 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                               @checked(($answers[$q->id][$choice->id] ?? false) === true)
-                               wire:click="saveAnswer({{ $q->id }}, {{ $choice->id }}, true)" />
-                        <div class="flex-1 text-lg leading-relaxed choice-text" dir="rtl">
-                            {!! $choice->text !!}
+                @auth
+                    @foreach($q->choices as $choice)
+                        <label wire:key="choice-{{ $q->id }}-{{ $choice->id }}" class="flex items-start gap-3 rounded-lg border-2 p-4 cursor-pointer hover:bg-gray-50 hover:border-indigo-300 transition {{ ($answers[$q->id][$choice->id] ?? false) ? 'bg-indigo-50 border-indigo-400' : 'border-gray-200' }}">
+                            @php $inputId = 'q'.$q->id.'_c'.$choice->id; @endphp
+                            <input type="radio"
+                                   id="{{ $inputId }}"
+                                   name="question_{{ $q->id }}"
+                                   value="{{ $choice->id }}"
+                                   class="h-5 w-5 mt-0.5 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                   @checked(($answers[$q->id][$choice->id] ?? false) === true)
+                                   wire:click="saveAnswer({{ $q->id }}, {{ $choice->id }}, true)" />
+                            <div class="flex-1 text-lg leading-relaxed choice-text" dir="rtl">
+                                {!! $choice->text !!}
+                            </div>
+                        </label>
+                    @endforeach
+                @else
+                    <div class="rounded-lg border-2 border-dashed border-gray-300 p-8 text-center bg-gray-50">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">گزینه‌ها مخفی هستند</h3>
+                        <p class="mt-1 text-sm text-gray-500">برای مشاهده گزینه‌ها و پاسخ به سوال، لطفاً وارد حساب کاربری خود شوید.</p>
+                        <div class="mt-6">
+                            <a href="{{ route('profile') }}" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                ورود / ثبت نام
+                            </a>
                         </div>
-                    </label>
-                @endforeach
+                    </div>
+                @endauth
             </div>
         @endif
 
@@ -124,22 +156,18 @@
                             پایان آزمون و مشاهده کارنامه
                         </button>
                     </form>
-                @else
-                    <button wire:click="submit"
-                            class="rounded-lg px-6 py-2 text-white font-medium text-sm {{ ($this->requireAllAnswered && $this->unansweredCount() > 0) ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 shadow hover:shadow-lg' }} transition-all"
-                            @disabled($this->requireAllAnswered && $this->unansweredCount() > 0)>
-                        پایان آزمون و مشاهده کارنامه
-                    </button>
                 @endauth
             </div>
             
-            <!-- Report Issue Button -->
-            <div class="flex justify-center pt-2">
-                <button wire:click="$set('showReportModal', true)" 
-                        class="text-sm text-gray-600 hover:text-red-600 underline transition">
-                    گزارش ایراد سوال
-                </button>
-            </div>
+    @auth
+        <!-- Report Issue Button -->
+        <div class="flex justify-center pt-2">
+            <button wire:click="$set('showReportModal', true)" 
+                    class="text-sm text-gray-600 hover:text-red-600 underline transition">
+                گزارش ایراد سوال
+            </button>
+        </div>
+    @endauth
     </div>
     @else
         <div class="rounded border p-4 text-sm text-gray-600">سوالی برای نمایش وجود ندارد.</div>
@@ -147,6 +175,7 @@
 </div>
 
 <!-- Report Issue Modal -->
+@auth
 @if($showReportModal)
 <div class="fixed inset-0 z-50 overflow-y-auto" x-data="{ show: @entangle('showReportModal') }" x-show="show" x-cloak>
     <div class="flex min-h-screen items-center justify-center p-4">

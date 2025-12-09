@@ -79,14 +79,29 @@ class SitemapController extends Controller
                 ];
             }
 
-            $exams = Exam::query()->orderBy('id','asc')->get(['id','updated_at']);
+            $exams = Exam::query()
+                ->withCount(['questions' => function ($q) { $q->where('is_deleted', false); }])
+                ->orderBy('id','asc')
+                ->get(['id','updated_at']);
+
             foreach ($exams as $exam) {
+                // Main Landing Page
                 $urls[] = [
                     'loc' => route('exam.landing', ['exam' => $exam->id]),
                     'lastmod' => optional($exam->updated_at)->toAtomString(),
                     'changefreq' => 'weekly',
                     'priority' => '0.9',
                 ];
+
+                // Exam Pages (Questions)
+                for ($i = 1; $i <= $exam->questions_count; $i++) {
+                    $urls[] = [
+                        'loc' => route('exam.play', ['exam' => $exam->id, 'page' => $i]),
+                        'lastmod' => optional($exam->updated_at)->toAtomString(),
+                        'changefreq' => 'weekly',
+                        'priority' => '0.8',
+                    ];
+                }
             }
 
             // Blog Main Page

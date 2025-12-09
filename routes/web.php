@@ -73,9 +73,9 @@ Route::get('/batches/{batch}/exams', ExamsPage::class)->name('exams');
 
 // Exam journey
 Route::get('/exam/{exam}', ExamLanding::class)->name('exam.landing');
+Route::get('/exam/{exam}/play', ExamPlayer::class)->name('exam.play');
 
 Route::middleware(['auth', \App\Http\Middleware\EnsureSubscribed::class])->group(function () {
-    Route::get('/exam/{exam}/play', ExamPlayer::class)->name('exam.play');
     Route::get('/exam/{exam}/study', StudyPlayer::class)->name('exam.study');
     Route::get('/exam/{exam}/result', ExamResult::class)->name('exam.result');
     Route::post('/exam/{exam}/finish', [ExamController::class, 'finish'])

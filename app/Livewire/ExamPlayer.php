@@ -19,7 +19,8 @@ class ExamPlayer extends Component
 {
     public Exam $exam;
 
-    public int $index = 0;
+    #[Url(as: 'page', history: true)]
+    public int $page = 1;
 
     #[Url(as: 'question_id')]
     public ?int $questionId = null;
@@ -47,8 +48,11 @@ class ExamPlayer extends Component
             $questions = $this->exam->questions->where('is_deleted', false)->values();
             $position = $questions->search(fn ($q) => $q->id === $this->questionId);
             if ($position !== false) {
-                $this->index = (int) $position;
+                $this->page = (int) $position + 1;
             }
+        } else {
+            // Ensure page is within bounds if set via URL
+            $this->page = max(1, min($this->page, $this->questionsCount()));
         }
 
         // Always start with a clean state on each entry (as per requirement)
@@ -75,7 +79,7 @@ class ExamPlayer extends Component
 
             // Log start
             ActivityLogger::log('exam_started', [
-                'index' => $this->index,
+                'page' => $this->page,
                 'duration_seconds' => $this->durationSeconds,
                 'remaining_seconds' => $this->remainingSeconds,
             ], $this->exam->id, $this->attemptId);
@@ -89,13 +93,12 @@ class ExamPlayer extends Component
 
     public function next(): void
     {
-        $newIndex = $this->index + 1;
-        $this->index = min($newIndex, $this->questionsCount() - 1);
+        $this->page = min($this->page + 1, $this->questionsCount());
     }
 
     public function prev(): void
     {
-        $this->index = max($this->index - 1, 0);
+        $this->page = max($this->page - 1, 1);
     }
 
     public function questionsCount(): int
@@ -125,11 +128,11 @@ class ExamPlayer extends Component
         return $count;
     }
 
-    public function goTo(int $to): void
+    public function goTo(int $toPage): void
     {
         $total = $this->questionsCount();
-        if ($to >= 0 && $to < $total) {
-            $this->index = $to;
+        if ($toPage >= 1 && $toPage <= $total) {
+            $this->page = $toPage;
         }
     }
 
@@ -342,7 +345,7 @@ class ExamPlayer extends Component
         ]);
 
         $questions = $this->exam->questions->where('is_deleted', false)->values();
-        $currentQuestion = $questions[$this->index] ?? null;
+        $currentQuestion = $questions[$this->page - 1] ?? null;
 
         if (!$currentQuestion) {
             session()->flash('error', 'سوال یافت نشد.');
@@ -366,11 +369,11 @@ class ExamPlayer extends Component
     {
         // Questions are directly on Exam, filter out deleted questions
         $questions = $this->exam->questions->where('is_deleted', false)->values();
-        $question = $questions[$this->index] ?? null;
+        $question = $questions[$this->page - 1] ?? null;
 
         return view('livewire.exam-player', [
             'question' => $question,
-            'index' => $this->index,
+            'index' => $this->page - 1,
             'total' => $questions->count(),
         ])->layout('layouts.app', [
             'seoTitle' => $this->exam->seo_title ?: ($this->exam->title . ' - آزمون کده'),
