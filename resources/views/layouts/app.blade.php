@@ -55,8 +55,8 @@
 
         <!-- KaTeX for high-performance LaTeX rendering -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
-        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
-        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
     </head>
     <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased selection:bg-indigo-200 selection:text-indigo-900" style="font-family: Vazirmatn, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
         <!-- PWA Splash Screen / Initial Loading -->
@@ -397,33 +397,35 @@
             })();
         </script>
         <script>
-            // Initialize KaTeX with auto-render
-            document.addEventListener("DOMContentLoaded", function() {
-                const renderMath = () => {
-                    if (typeof renderMathInElement === 'function') {
-                        renderMathInElement(document.body, {
-                            delimiters: [
-                                {left: '$$', right: '$$', display: true},
-                                {left: '$', right: '$', display: false},
-                                {left: '\\(', right: '\\)', display: false},
-                                {left: '\\[', right: '\\]', display: true}
-                            ],
-                            throwOnError : false
-                        });
-                    }
-                };
-
-                // Render on initial load
-                renderMath();
-
-                // Render on Livewire navigation (SPA)
-                document.addEventListener('livewire:navigated', renderMath);
-                
-                // Render on Livewire updates (DOM changes)
-                document.addEventListener('livewire:initialized', () => {
-                    Livewire.hook('morph.updated', ({ el, component }) => {
-                         renderMath();
+            // Function to render math
+            function renderMath() {
+                if (typeof renderMathInElement === 'function') {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false},
+                            {left: '\\(', right: '\\)', display: false},
+                            {left: '\\[', right: '\\]', display: true}
+                        ],
+                        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'option'],
+                        throwOnError: false,
+                        errorColor: '#cc0000'
                     });
+                }
+            }
+
+            // Run on initial load
+            document.addEventListener("DOMContentLoaded", renderMath);
+            // Fallback for some browsers or race conditions
+            window.addEventListener("load", renderMath);
+
+            // Run on Livewire navigation (SPA)
+            document.addEventListener('livewire:navigated', renderMath);
+            
+            // Run on Livewire updates (DOM changes)
+            document.addEventListener('livewire:initialized', () => {
+                Livewire.hook('morph.updated', ({ el, component }) => {
+                     renderMath();
                 });
             });
         </script>
