@@ -1,4 +1,9 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-8">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-8"
+     oncontextmenu="return false;" 
+     onselectstart="return false;" 
+     oncopy="return false;"
+     oncut="return false;"
+     style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
     <div class="container mx-auto px-4 max-w-4xl">
         <!-- Video Content -->
         @if($category->type === 'video' && $post->video_embed_code)

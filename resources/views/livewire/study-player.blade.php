@@ -1,4 +1,9 @@
-<div class="min-h-screen bg-gray-50 py-4 px-4 sm:px-6">
+<div class="min-h-screen bg-gray-50 py-4 px-4 sm:px-6"
+     oncontextmenu="return false;" 
+     onselectstart="return false;" 
+     oncopy="return false;"
+     oncut="return false;"
+     style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
     <div class="max-w-3xl mx-auto">
         
         <!-- Header Section -->
