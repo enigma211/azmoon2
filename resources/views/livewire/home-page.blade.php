@@ -101,9 +101,6 @@
                 
                 <div class="relative z-10 max-w-3xl mx-auto text-center">
                     <h2 class="text-2xl sm:text-3xl font-black mb-3">جستجوی پیشرفته در بانک سوالات</h2>
-                    <p class="text-indigo-100 mb-8 text-sm sm:text-base">
-                        به دنبال سوال خاصی هستید؟ در بین هزاران سوال آزمون‌های نظام مهندسی و کارشناس رسمی جستجو کنید.
-                    </p>
 
                     <form action="{{ route('search') }}" method="GET" class="bg-white p-2 rounded-2xl shadow-lg flex flex-col sm:flex-row gap-2">
                         <div class="flex-1 relative">
