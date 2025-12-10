@@ -6,6 +6,7 @@ use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
 use App\Models\Post;
 use Filament\Forms;
+use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -56,7 +57,7 @@ class PostResource extends Resource
                             ->rows(3)
                             ->columnSpanFull(),
 
-                        Forms\Components\RichEditor::make('content')
+                        TinyEditor::make('content')
                             ->label('متن کامل خبر')
                             ->columnSpanFull()
                             ->fileAttachmentsDirectory('posts'),

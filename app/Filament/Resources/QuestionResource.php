@@ -16,7 +16,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\RichEditor;
+use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\TextColumn;
@@ -99,18 +99,12 @@ class QuestionResource extends Resource
                     ->schema([
                         Forms\Components\Section::make()
                             ->schema([
-                                RichEditor::make('text')
+                                TinyEditor::make('text')
                                     ->label('متن سوال (پشتیبانی فرمول)')
-                                    ->required()
-                                    ->toolbarButtons([
-                                        'bold','italic','strike','underline','link','orderedList','bulletList','codeBlock'
-                                    ]),
+                                    ->required(),
 
-                                RichEditor::make('explanation')
-                                    ->label('پاسخ تشریحی (پشتیبانی فرمول)')
-                                    ->toolbarButtons([
-                                        'bold','italic','strike','underline','link','orderedList','bulletList','codeBlock'
-                                    ]),
+                                TinyEditor::make('explanation')
+                                    ->label('پاسخ تشریحی (پشتیبانی فرمول)'),
                             ])
                             ->columnSpan(8),
 
@@ -166,12 +160,9 @@ class QuestionResource extends Resource
                         ['text' => '', 'is_correct' => false, 'order' => 4],
                     ])
                     ->schema([
-                        RichEditor::make('text')
+                        TinyEditor::make('text')
                             ->label(fn (callable $get) => 'گزینه ' . ($get('order') ?? 1) . ' (پشتیبانی فرمول)')
-                            ->required()
-                            ->toolbarButtons([
-                                'bold','italic','strike','underline','codeBlock'
-                            ]),
+                            ->required(),
                         Toggle::make('is_correct')
                             ->label('گزینه صحیح')
                             ->inline(false)

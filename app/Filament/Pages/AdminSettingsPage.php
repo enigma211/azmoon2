@@ -9,7 +9,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\RichEditor;
+use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use Filament\Notifications\Notification;
 
 class AdminSettingsPage extends Page implements HasForms
@@ -57,11 +57,11 @@ class AdminSettingsPage extends Page implements HasForms
                     ->description('مدیریت متن صفحات ثابت سایت')
                     ->collapsed()
                     ->schema([
-                        RichEditor::make('terms_content')
+                        TinyEditor::make('terms_content')
                             ->label('متن قوانین و مقررات')
                             ->columnSpanFull(),
                         
-                        RichEditor::make('about_content')
+                        TinyEditor::make('about_content')
                             ->label('متن درباره ما')
                             ->columnSpanFull(),
                     ]),
