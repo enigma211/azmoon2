@@ -5,12 +5,16 @@ namespace App\Livewire;
 use App\Models\Exam;
 use App\Models\Question;
 use Livewire\Component;
+use Livewire\Attributes\Url;
 
 class StudyPlayer extends Component
 {
     public Exam $exam;
     public $questions = [];
-    public int $currentQuestionIndex = 0;
+    
+    #[Url(as: 'page', history: true)]
+    public int $page = 1;
+
     public bool $isAnswerRevealed = false;
     public $selectedOption = null; // Just for visual feedback
 
@@ -34,36 +38,43 @@ class StudyPlayer extends Component
         if ($questionId) {
             $index = $this->questions->search(fn($q) => $q->id == $questionId);
             if ($index !== false) {
-                $this->currentQuestionIndex = $index;
+                $this->page = $index + 1;
             }
         }
+
+        // Ensure page is valid
+        $this->page = max(1, min($this->page, count($this->questions)));
     }
 
     public function getCurrentQuestionProperty()
     {
-        return $this->questions[$this->currentQuestionIndex] ?? null;
+        return $this->questions[$this->page - 1] ?? null;
     }
 
     public function nextQuestion()
     {
-        if ($this->currentQuestionIndex < count($this->questions) - 1) {
-            $this->currentQuestionIndex++;
+        if ($this->page < count($this->questions)) {
+            $this->page++;
             $this->resetState();
         }
     }
 
     public function prevQuestion()
     {
-        if ($this->currentQuestionIndex > 0) {
-            $this->currentQuestionIndex--;
+        if ($this->page > 1) {
+            $this->page--;
             $this->resetState();
         }
     }
 
     public function jumpToQuestion($index)
     {
+        // Index comes as 0-based usually, or we can change signature
+        // Assuming $index is 0-based from old calls? 
+        // Actually jumpToQuestion wasn't used in the view I saw, but let's keep it safe.
+        // If index is 0-based:
         if (isset($this->questions[$index])) {
-            $this->currentQuestionIndex = $index;
+            $this->page = $index + 1;
             $this->resetState();
         }
     }

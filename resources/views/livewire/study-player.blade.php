@@ -26,7 +26,7 @@
                 
                 <div class="px-3 py-1 bg-white rounded-full shadow-sm border border-gray-100 text-xs font-bold text-gray-700 flex items-center gap-1.5">
                     <span class="text-gray-400">سوال</span>
-                    <span class="text-indigo-600 text-base">{{ $currentQuestionIndex + 1 }}</span>
+                    <span class="text-indigo-600 text-base">{{ $page }}</span>
                     <span class="text-gray-300">/</span>
                     <span>{{ count($questions) }}</span>
                 </div>
@@ -37,7 +37,7 @@
         <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-6 relative">
             <!-- Progress Bar -->
             <div class="h-1 w-full bg-gray-100">
-                <div class="h-full bg-blue-500 transition-all duration-300" style="width: {{ (($currentQuestionIndex + 1) / count($questions)) * 100 }}%"></div>
+                <div class="h-full bg-blue-500 transition-all duration-300" style="width: {{ ($page / count($questions)) * 100 }}%"></div>
             </div>
 
             <div class="p-5 sm:p-6">
@@ -121,7 +121,7 @@
                 <div class="flex items-center gap-3 w-full sm:w-auto justify-center">
                     <button 
                         wire:click="prevQuestion" 
-                        @if($currentQuestionIndex === 0) disabled @endif
+                        @if($page === 1) disabled @endif
                         class="px-4 py-2 rounded-lg text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-bold flex items-center gap-2"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
@@ -132,7 +132,7 @@
 
                     <button 
                         wire:click="nextQuestion" 
-                        @if($currentQuestionIndex === count($questions) - 1) disabled @endif
+                        @if($page === count($questions)) disabled @endif
                         class="px-4 py-2 rounded-lg text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-bold flex items-center gap-2"
                     >
                         بعدی
