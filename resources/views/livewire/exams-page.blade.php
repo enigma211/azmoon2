@@ -19,22 +19,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Alert 2 -->
-            <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl text-right">
-                <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <div>
-                        <p class="text-sm font-bold text-blue-800 mb-1">هشدار ۲:</p>
-                        <p class="text-xs text-blue-800 leading-relaxed">
-                            کاربر گرامی برای استفاده راحت‌تر از سامانه، می‌توانید از طریق مرورگر کامپیوتر به وب‌سایت ما مراجعه کنید:
-                            <a href="https://www.azmoonkade.com" class="font-bold underline decoration-blue-400 hover:text-blue-600 mr-1 dir-ltr inline-block">https://www.azmoonkade.com</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
