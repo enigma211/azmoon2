@@ -168,6 +168,8 @@
     </div>
 
     <div class="mt-4 text-center text-sm text-gray-600">
-        با ورود یا ثبت‌نام، <a href="#" class="text-indigo-600 hover:text-indigo-700">قوانین و مقررات</a> را می‌پذیرید
+        با ورود یا ثبت‌نام، <a href="{{ route('terms') }}" class="text-indigo-600 hover:text-indigo-700" target="_blank">قوانین و مقررات</a> را می‌پذیرید
+        <span class="mx-2">|</span>
+        <a href="{{ route('about') }}" class="text-indigo-600 hover:text-indigo-700" target="_blank">درباره ما</a>
     </div>
 </div>

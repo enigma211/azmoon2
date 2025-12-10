@@ -117,6 +117,16 @@ Route::middleware(['auth'])->group(function () {
     })->name('admin.sms.debug');
 });
 
+// Terms and Conditions
+Route::get('/terms', function () {
+    return view('terms');
+})->name('terms');
+
+// About Us
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
 // Pricing (public) and Checkout (requires auth)
 Route::get('/pricing', function () {
     $plans = \App\Models\SubscriptionPlan::all();
