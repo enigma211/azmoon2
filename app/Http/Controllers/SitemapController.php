@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\ExamBatch;
+use App\Models\ExamDomain;
 use App\Models\ExamType;
 use App\Models\ResourceCategory;
 use App\Models\EducationalPost;
@@ -69,6 +70,16 @@ class SitemapController extends Controller
                 ];
             }
 
+            $domains = ExamDomain::query()->orderBy('id','asc')->get(['id','updated_at']);
+            foreach ($domains as $domain) {
+                $urls[] = [
+                    'loc' => route('batches', $domain),
+                    'lastmod' => optional($domain->updated_at)->toAtomString(),
+                    'changefreq' => 'weekly',
+                    'priority' => '0.7',
+                ];
+            }
+
             $batches = ExamBatch::query()->orderBy('id','asc')->get(['id','updated_at']);
             foreach ($batches as $batch) {
                 $urls[] = [
@@ -94,7 +105,18 @@ class SitemapController extends Controller
                 ];
 
                 // Exam Pages (Questions)
-                for ($i = 1; $i <= $exam->questions_count; $i++) {
+                // Page 1 (Base URL)
+                if ($exam->questions_count > 0) {
+                    $urls[] = [
+                        'loc' => route('exam.play', ['exam' => $exam->id]),
+                        'lastmod' => optional($exam->updated_at)->toAtomString(),
+                        'changefreq' => 'weekly',
+                        'priority' => '0.8',
+                    ];
+                }
+
+                // Subsequent pages
+                for ($i = 2; $i <= $exam->questions_count; $i++) {
                     $urls[] = [
                         'loc' => route('exam.play', ['exam' => $exam->id, 'page' => $i]),
                         'lastmod' => optional($exam->updated_at)->toAtomString(),
