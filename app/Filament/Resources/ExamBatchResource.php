@@ -73,11 +73,6 @@ class ExamBatchResource extends Resource
                             ->label('فعال')
                             ->default(true),
 
-                        Toggle::make('is_free')
-                            ->label('دسترسی رایگان')
-                            ->helperText('اگر فعال باشد، کاربران رایگان هم می‌توانند به این دوره آزمون دسترسی داشته باشند.')
-                            ->default(false),
-                        
                         TextInput::make('sort_order')
                             ->label('ترتیب نمایش')
                             ->numeric()
@@ -118,13 +113,6 @@ class ExamBatchResource extends Resource
                     ->alignCenter(),
                 TextColumn::make('title')->label('عنوان')->sortable()->searchable(),
                 TextColumn::make('domain.title')->label('دامنه')->sortable()->searchable(),
-                Tables\Columns\IconColumn::make('is_free')
-                    ->label('رایگان')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-lock-open')
-                    ->falseIcon('heroicon-o-lock-closed')
-                    ->trueColor('success')
-                    ->falseColor('danger'),
                 TextColumn::make('updated_at')->formatStateUsing(fn ($state) => jdate_time($state))->label('ویرایش')->sortable(),
             ])
             ->filters([
