@@ -6,6 +6,7 @@ use App\Models\Exam;
 use App\Models\Question;
 use Livewire\Component;
 use Livewire\Attributes\Url;
+use Illuminate\Support\Facades\Auth;
 
 class StudyPlayer extends Component
 {
@@ -17,6 +18,26 @@ class StudyPlayer extends Component
 
     public bool $isAnswerRevealed = false;
     public $selectedOption = null; // Just for visual feedback
+
+    /**
+     * Check if current user can interact (see answers)
+     */
+    public function canUserInteract(): bool
+    {
+        if (!Auth::check()) {
+            return false;
+        }
+
+        $user = Auth::user();
+        
+        // Admins always have access
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Check for active subscription
+        return $user->activeSubscription()->exists();
+    }
 
     public function mount(Exam $exam)
     {

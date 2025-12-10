@@ -60,58 +60,79 @@
 
                 <!-- Options -->
                 <div class="space-y-2.5">
-                    @foreach($this->currentQuestion->choices as $choice)
-                        @php
-                            $isSelected = $selectedOption == $choice->id;
-                            $isCorrect = $choice->is_correct;
-                            
-                            // Determine classes based on state
-                            $baseClasses = "w-full text-right p-3.5 rounded-xl border transition-all duration-200 flex items-center gap-3 relative overflow-hidden";
-                            
-                            if ($isAnswerRevealed) {
-                                if ($isCorrect) {
-                                    $colorClasses = "border-green-500 bg-green-50 text-green-900";
-                                } elseif ($isSelected) {
-                                    $colorClasses = "border-red-300 bg-red-50 text-red-900"; // Wrong selection
+                    @if($this->canUserInteract())
+                        @foreach($this->currentQuestion->choices as $choice)
+                            @php
+                                $isSelected = $selectedOption == $choice->id;
+                                $isCorrect = $choice->is_correct;
+                                
+                                // Determine classes based on state
+                                $baseClasses = "w-full text-right p-3.5 rounded-xl border transition-all duration-200 flex items-center gap-3 relative overflow-hidden";
+                                
+                                if ($isAnswerRevealed) {
+                                    if ($isCorrect) {
+                                        $colorClasses = "border-green-500 bg-green-50 text-green-900";
+                                    } elseif ($isSelected) {
+                                        $colorClasses = "border-red-300 bg-red-50 text-red-900"; // Wrong selection
+                                    } else {
+                                        $colorClasses = "border-gray-100 bg-white text-gray-500 opacity-60";
+                                    }
                                 } else {
-                                    $colorClasses = "border-gray-100 bg-white text-gray-500 opacity-60";
+                                    if ($isSelected) {
+                                        $colorClasses = "border-blue-500 bg-blue-50 text-blue-900 shadow-sm ring-1 ring-blue-500";
+                                    } else {
+                                        $colorClasses = "border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer";
+                                    }
                                 }
-                            } else {
-                                if ($isSelected) {
-                                    $colorClasses = "border-blue-500 bg-blue-50 text-blue-900 shadow-sm ring-1 ring-blue-500";
-                                } else {
-                                    $colorClasses = "border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer";
-                                }
-                            }
-                        @endphp
+                            @endphp
 
-                        <div 
-                            wire:click="selectOption({{ $choice->id }})"
-                            class="{{ $baseClasses }} {{ $colorClasses }}"
-                        >
-                            <!-- Indicator Circle -->
-                            <div class="shrink-0 w-5 h-5 rounded-full border flex items-center justify-center transition-colors duration-200
-                                {{ $isAnswerRevealed && $isCorrect ? 'border-green-500 bg-green-500 text-white' : ($isSelected ? 'border-blue-500 bg-blue-500 text-white' : 'border-gray-300 text-transparent') }}">
-                                @if($isAnswerRevealed && $isCorrect)
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
-                                        <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
-                                    </svg>
-                                @elseif($isSelected)
-                                    {{-- Always show checkmark for selection, even if wrong (until revealed) --}}
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
-                                        <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
-                                    </svg>
-                                @else
-                                    {{-- Empty space for alignment --}}
-                                @endif
+                            <div 
+                                wire:click="selectOption({{ $choice->id }})"
+                                class="{{ $baseClasses }} {{ $colorClasses }}"
+                            >
+                                <!-- Indicator Circle -->
+                                <div class="shrink-0 w-5 h-5 rounded-full border flex items-center justify-center transition-colors duration-200
+                                    {{ $isAnswerRevealed && $isCorrect ? 'border-green-500 bg-green-500 text-white' : ($isSelected ? 'border-blue-500 bg-blue-500 text-white' : 'border-gray-300 text-transparent') }}">
+                                    @if($isAnswerRevealed && $isCorrect)
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
+                                            <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
+                                        </svg>
+                                    @elseif($isSelected)
+                                        {{-- Always show checkmark for selection, even if wrong (until revealed) --}}
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
+                                            <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
+                                        </svg>
+                                    @else
+                                        {{-- Empty space for alignment --}}
+                                    @endif
+                                </div>
+
+                                <!-- Option Text -->
+                                <span class="font-medium text-sm leading-relaxed">
+                                    {{ $choice->text }}
+                                </span>
                             </div>
-
-                            <!-- Option Text -->
-                            <span class="font-medium text-sm leading-relaxed">
-                                {{ $choice->text }}
-                            </span>
+                        @endforeach
+                    @else
+                        <div class="rounded-lg border-2 border-dashed border-gray-300 p-8 text-center bg-gray-50">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">گزینه‌ها مخفی هستند</h3>
+                            <p class="mt-1 text-sm text-gray-500">برای مشاهده گزینه‌ها و پاسخ به سوال، نیاز به اشتراک دارید.</p>
+                            <div class="mt-6">
+                                @guest
+                                    <a href="{{ route('login') }}" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        ورود / ثبت نام
+                                    </a>
+                                @else
+                                    <a href="{{ route('profile') }}" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        خرید اشتراک
+                                    </a>
+                                @endguest
+                            </div>
                         </div>
-                    @endforeach
+                    @endif
                 </div>
             </div>
             
@@ -143,24 +164,26 @@
                 </div>
 
                 <!-- Reveal Button -->
-                <button 
-                    wire:click="toggleAnswer" 
-                    class="w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold text-white shadow-md transition-transform active:scale-95 flex items-center justify-center gap-2
-                    {{ $isAnswerRevealed ? 'bg-gray-600 hover:bg-gray-700' : 'bg-indigo-600 hover:bg-indigo-700' }}"
-                >
-                    @if($isAnswerRevealed)
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
-                        </svg>
-                        مخفی کردن پاسخ
-                    @else
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                        </svg>
-                        نمایش پاسخ صحیح
-                    @endif
-                </button>
+                @if($this->canUserInteract())
+                    <button 
+                        wire:click="toggleAnswer" 
+                        class="w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold text-white shadow-md transition-transform active:scale-95 flex items-center justify-center gap-2
+                        {{ $isAnswerRevealed ? 'bg-gray-600 hover:bg-gray-700' : 'bg-indigo-600 hover:bg-indigo-700' }}"
+                    >
+                        @if($isAnswerRevealed)
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+                            </svg>
+                            مخفی کردن پاسخ
+                        @else
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+                            نمایش پاسخ صحیح
+                        @endif
+                    </button>
+                @endif
             </div>
         </div>
 
