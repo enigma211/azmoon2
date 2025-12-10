@@ -14,6 +14,8 @@ class SystemSetting extends Model
         'sms_provider',
         'sms_api_key',
         'sms_from',
+        'terms_content',
+        'about_content',
     ];
 
     protected $casts = [
