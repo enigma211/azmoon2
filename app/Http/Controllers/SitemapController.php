@@ -127,21 +127,10 @@ class SitemapController extends Controller
                     'priority' => '0.9',
                 ];
 
-                // Exam Pages (Questions)
-                // Page 1 (Base URL)
+                // Exam Play Page
                 if ($exam->questions_count > 0) {
                     $urls[] = [
                         'loc' => route('exam.play', ['exam' => $exam->id]),
-                        'lastmod' => optional($exam->updated_at)->toAtomString(),
-                        'changefreq' => 'weekly',
-                        'priority' => '0.8',
-                    ];
-                }
-
-                // Subsequent pages
-                for ($i = 2; $i <= $exam->questions_count; $i++) {
-                    $urls[] = [
-                        'loc' => route('exam.play', ['exam' => $exam->id, 'page' => $i]),
                         'lastmod' => optional($exam->updated_at)->toAtomString(),
                         'changefreq' => 'weekly',
                         'priority' => '0.8',
