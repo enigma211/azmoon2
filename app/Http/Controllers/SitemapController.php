@@ -20,6 +20,29 @@ class SitemapController extends Controller
         $xml = Cache::remember('sitemap.xml', 600, function () {
             $urls = [];
 
+            // Static Pages
+            $urls[] = [
+                'loc' => route('home'),
+                'lastmod' => now()->toAtomString(),
+                'changefreq' => 'daily',
+                'priority' => '1.0',
+            ];
+
+            $urls[] = [
+                'loc' => route('domains'),
+                'lastmod' => now()->toAtomString(),
+                'changefreq' => 'weekly',
+                'priority' => '0.8',
+            ];
+
+            $urls[] = [
+                'loc' => route('resources'), // Educational Resources
+                'lastmod' => now()->toAtomString(),
+                'changefreq' => 'weekly',
+                'priority' => '0.8',
+            ];
+
+            // Educational Resources (Detailed)
             $urls[] = [
                 'loc' => route('educational-resources'),
                 'lastmod' => now()->toAtomString(),
