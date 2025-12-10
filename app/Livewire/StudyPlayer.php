@@ -103,7 +103,8 @@ class StudyPlayer extends Component
         return view('livewire.study-player')
             ->layout('layouts.app', [
                 'seoTitle' => 'مطالعه: ' . $this->exam->title,
-                'seoDescription' => 'حالت مطالعه آموزشی برای آزمون ' . $this->exam->title
+                'seoDescription' => 'حالت مطالعه آموزشی برای آزمون ' . $this->exam->title,
+                'seoRobots' => 'noindex, nofollow',
             ]);
     }
 }

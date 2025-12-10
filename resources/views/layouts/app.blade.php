@@ -14,7 +14,7 @@
         @if(isset($seoKeywords))
             <meta name="keywords" content="{{ $seoKeywords }}">
         @endif
-        <meta name="robots" content="index, follow">
+        <meta name="robots" content="{{ $seoRobots ?? 'index, follow' }}">
         <link rel="canonical" href="{{ $seoCanonical ?? url()->current() }}">
 
         <title>{{ $seoTitle ?? config('app.name', 'آزمون کده') }}</title>
