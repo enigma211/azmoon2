@@ -57,7 +57,7 @@
                 <div class="rounded-xl shadow p-6 bg-gradient-to-r from-white to-slate-50 {{ !empty($item['is_correct']) ? 'border-2 border-green-200' : 'border-2 border-rose-200' }}">
                     <!-- Question Number and Status -->
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-gray-900">سوال {{ $loop->iteration }}</h3>
+                        <h3 class="text-lg font-bold text-gray-900">سوال {{ $item['question_number'] }}</h3>
                         @if(!empty($item['is_deleted']))
                             <span class="inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-sm font-semibold px-3 py-1">
                                 @svg('heroicon-o-exclamation-triangle', 'w-4 h-4')
