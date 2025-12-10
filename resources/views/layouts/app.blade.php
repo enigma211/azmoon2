@@ -15,7 +15,7 @@
             <meta name="keywords" content="{{ $seoKeywords }}">
         @endif
         <meta name="robots" content="index, follow">
-        <link rel="canonical" href="{{ url()->current() }}">
+        <link rel="canonical" href="{{ $seoCanonical ?? url()->current() }}">
 
         <title>{{ $seoTitle ?? config('app.name', 'آزمون کده') }}</title>
 

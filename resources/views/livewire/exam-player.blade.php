@@ -22,31 +22,6 @@
     <div class="text-center mb-2">
         <h1 class="text-sm font-bold text-gray-800">{{ $this->exam->title }}</h1>
     </div>
-
-    @if(!$canInteract)
-        <div class="mb-4 rounded-lg bg-blue-50 p-4 border border-blue-200">
-            <div class="flex items-start gap-3">
-                <svg class="w-6 h-6 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <div class="text-sm text-blue-800">
-                    @guest
-                        <p class="font-bold mb-1">شما به صورت مهمان در حال مشاهده این آزمون هستید.</p>
-                        <p>برای پاسخ‌دهی به سوالات و مشاهده کارنامه، ابتدا وارد شوید و اشتراک تهیه کنید.</p>
-                        <a href="{{ route('login') }}" class="inline-block mt-2 font-bold underline hover:text-blue-900">
-                            ورود / ثبت نام
-                        </a>
-                    @else
-                        <p class="font-bold mb-1">برای پاسخ‌دهی به سوالات نیاز به اشتراک دارید.</p>
-                        <p>با خرید اشتراک می‌توانید به تمام سوالات پاسخ دهید و کارنامه دریافت کنید.</p>
-                        <a href="{{ route('profile') }}" class="inline-block mt-2 font-bold underline hover:text-blue-900">
-                            خرید اشتراک
-                        </a>
-                    @endguest
-                </div>
-            </div>
-        </div>
-    @endif
     
     <!-- Assumptions Button -->
     @if($this->exam->assumptions_text || $this->exam->assumptions_image)
@@ -125,7 +100,7 @@
                                    class="h-5 w-5 mt-0.5 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                    @checked(($answers[$q->id][$choice->id] ?? false) === true)
                                    wire:click="saveAnswer({{ $q->id }}, {{ $choice->id }}, true)" />
-                            <div class="flex-1 text-lg leading-relaxed choice-text" dir="rtl">
+                            <div class="flex-1 text-base leading-relaxed choice-text" dir="rtl">
                                 {!! $choice->text !!}
                             </div>
                         </label>

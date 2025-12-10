@@ -415,6 +415,7 @@ class ExamPlayer extends Component
         ])->layout('layouts.app', [
             'seoTitle' => $this->exam->seo_title ?: ($this->exam->title . ' - آزمون کده'),
             'seoDescription' => $this->exam->seo_description ?? '',
+            'seoCanonical' => route('exam.play', ['exam' => $this->exam->id, 'page' => $this->page]),
         ]);
     }
 }
