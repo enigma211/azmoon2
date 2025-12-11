@@ -8,6 +8,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Section;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use Filament\Notifications\Notification;
@@ -40,17 +41,26 @@ class AdminSettingsPage extends Page implements HasForms
     {
         return $form
             ->schema([
-                Section::make('تنظیمات عمومی')
-                    ->description('تنظیمات کلی سامانه')
+                Section::make('تنظیمات برندینگ و سئو')
+                    ->description('تنظیمات هویت بصری و سئو سایت')
                     ->schema([
-                        TextInput::make('free_trial_hours')
-                            ->label('مدت زمان اشتراک هدیه (ساعت)')
-                            ->helperText('کاربران جدید پس از ثبت‌نام به این مدت دسترسی رایگان خواهند داشت.')
-                            ->numeric()
+                        TextInput::make('site_name')
+                            ->label('نام سایت')
                             ->required()
-                            ->minValue(1)
-                            ->maxValue(720)
-                            ->default(48),
+                            ->maxLength(255),
+                        TextInput::make('site_identity')
+                            ->label('هویت سایت (شعار)')
+                            ->maxLength(255),
+                        TextInput::make('seo_title')
+                            ->label('عنوان سئو (Title)')
+                            ->maxLength(255),
+                        Textarea::make('seo_description')
+                            ->label('توضیحات سئو (Description)')
+                            ->rows(3),
+                        Textarea::make('seo_keywords')
+                            ->label('کلمات کلیدی (Keywords)')
+                            ->rows(3)
+                            ->helperText('کلمات را با ویرگول جدا کنید'),
                     ]),
 
                 Section::make('محتوای صفحات')

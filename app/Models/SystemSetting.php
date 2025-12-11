@@ -16,6 +16,11 @@ class SystemSetting extends Model
         'sms_from',
         'terms_content',
         'about_content',
+        'site_name',
+        'site_identity',
+        'seo_title',
+        'seo_description',
+        'seo_keywords',
     ];
 
     protected $casts = [
