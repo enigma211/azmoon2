@@ -96,15 +96,37 @@ class BrandingSettings extends Page implements HasForms
         $data = $this->form->getState();
 
         $settings = SiteSetting::firstOrCreate([]);
-        $settings->update([
-            'logo' => $data['logo'] ?? $settings->logo,
-            'favicon' => $data['favicon'] ?? $settings->favicon,
-        ]);
+        
+        // Update settings without falling back to old values if strictly null (allows clearing)
+        $settings->logo = $data['logo'];
+        $settings->favicon = $data['favicon'];
+        $settings->save();
+
+        // Sync favicon to public root for SEO and browser compatibility
+        if ($settings->favicon) {
+            $sourcePath = storage_path('app/public/' . $settings->favicon);
+            
+            if (file_exists($sourcePath)) {
+                // Copy to public/favicon.png
+                @copy($sourcePath, public_path('favicon.png'));
+                
+                // Copy to public/favicon.ico (some browsers/crawlers still look for this)
+                @copy($sourcePath, public_path('favicon.ico'));
+            }
+        } else {
+            // If favicon was removed from settings, remove the public files too
+            if (file_exists(public_path('favicon.png'))) {
+                @unlink(public_path('favicon.png'));
+            }
+            if (file_exists(public_path('favicon.ico'))) {
+                @unlink(public_path('favicon.ico'));
+            }
+        }
 
         Notification::make()
             ->success()
             ->title('تنظیمات برندینگ ذخیره شد')
-            ->body('لوگو و favicon با موفقیت به‌روزرسانی شدند.')
+            ->body('لوگو و favicon با موفقیت به‌روزرسانی و اعمال شدند.')
             ->send();
     }
 }

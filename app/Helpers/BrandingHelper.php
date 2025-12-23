@@ -20,8 +20,16 @@ class BrandingHelper
     {
         $settings = SiteSetting::first();
         if ($settings && $settings->favicon) {
-            return Storage::disk('public')->url($settings->favicon);
+            // Return the synchronized root file which is SEO friendly
+            // Append timestamp to bust cache if possible, or just the file
+            return asset('favicon.png') . '?v=' . ($settings->updated_at?->timestamp ?? time());
         }
+
+        // If no favicon set, check if we have a default one manually placed
+        if (file_exists(public_path('favicon.png'))) {
+            return asset('favicon.png');
+        }
+
         return null;
     }
 }
