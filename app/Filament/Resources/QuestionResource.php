@@ -16,7 +16,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
-use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
+
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\TextColumn;
@@ -99,11 +99,11 @@ class QuestionResource extends Resource
                     ->schema([
                         Forms\Components\Section::make()
                             ->schema([
-                                TinyEditor::make('text')
+                                Forms\Components\RichEditor::make('text')
                                     ->label('متن سوال (پشتیبانی فرمول)')
                                     ->required(),
 
-                                TinyEditor::make('explanation')
+                                Forms\Components\RichEditor::make('explanation')
                                     ->label('پاسخ تشریحی (پشتیبانی فرمول)'),
                             ])
                             ->columnSpan(8),
@@ -160,7 +160,7 @@ class QuestionResource extends Resource
                         ['text' => '', 'is_correct' => false, 'order' => 4],
                     ])
                     ->schema([
-                        TinyEditor::make('text')
+                        Forms\Components\RichEditor::make('text')
                             ->label(fn (callable $get) => 'گزینه ' . ($get('order') ?? 1) . ' (پشتیبانی فرمول)')
                             ->required(),
                         Toggle::make('is_correct')

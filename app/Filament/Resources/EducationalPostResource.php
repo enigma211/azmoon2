@@ -6,7 +6,7 @@ use App\Filament\Resources\EducationalPostResource\Pages;
 use App\Models\EducationalPost;
 use App\Models\ResourceCategory;
 use Filament\Forms;
-use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
+
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -115,7 +115,7 @@ class EducationalPostResource extends Resource
 
                 Forms\Components\Section::make('محتوای متنی')
                     ->schema([
-                        TinyEditor::make('content')
+                        Forms\Components\RichEditor::make('content')
                             ->label('محتوا')
                             ->columnSpanFull(),
                     ])

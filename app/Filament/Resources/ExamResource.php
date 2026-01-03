@@ -7,7 +7,7 @@ use App\Filament\Resources\ExamResource\RelationManagers;
 use App\Models\Exam;
 use App\Filament\Resources\QuestionResource;
 use Filament\Forms;
-use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
+
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -139,7 +139,7 @@ class ExamResource extends Resource
 
                 Forms\Components\Section::make('مفروضات آزمون')
                     ->schema([
-                        TinyEditor::make('assumptions_text')
+                        Forms\Components\RichEditor::make('assumptions_text')
                             ->label('متن مفروضات')
                             ->helperText('مفروضاتی که در تمام سوالات این آزمون باید در نظر گرفته شود (مثل: g=10 m/s², وزن=2kg)')
                             ->columnSpanFull(),

@@ -17,6 +17,7 @@ class ExamDomain extends Model
         'is_active',
         'seo_title',
         'seo_description',
+        'content',
     ];
 
     public function batches()

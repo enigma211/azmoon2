@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ExamDomainResource extends Resource
 {
-    protected static ?string $model = \App\Models\ExamDomain::class;
+    protected static ?string $model = ExamDomain::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
 
@@ -66,6 +66,15 @@ class ExamDomainResource extends Resource
                             ->default(true),
                     ])
                     ->columns(2),
+
+                Forms\Components\Section::make('محتوای متنی')
+                    ->description('این توضیحات برای سئو و نمایش در صفحه دسته بندی استفاده می‌شود.')
+                    ->schema([
+                        Forms\Components\RichEditor::make('content')
+                            ->label('توضیحات کامل (محتوا)')
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible(),
 
                 Forms\Components\Section::make('تنظیمات سئو')
                     ->description('این اطلاعات برای بهبود رتبه صفحه در موتورهای جستجو استفاده می‌شود.')
