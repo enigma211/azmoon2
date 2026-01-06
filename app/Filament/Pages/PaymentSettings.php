@@ -28,7 +28,7 @@ class PaymentSettings extends Page implements HasForms
     public function mount(): void
     {
         $this->form->fill([
-            'merchant_id' => env('ZIBAL_MERCHANT_ID', 'zibal'),
+            'merchant_id' => config('payment.drivers.zibal.merchantId', 'zibal'),
         ]);
     }
 

@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         try {
-            if (\Illuminate\Support\Facades\Schema::hasTable('system_settings')) {
+            if (!$this->app->runningInConsole() && \Illuminate\Support\Facades\Schema::hasTable('system_settings')) {
                 $settings = \App\Models\SystemSetting::first();
                 if ($settings) {
                     if ($settings->site_name) {

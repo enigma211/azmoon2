@@ -8,14 +8,14 @@ class SmsService
 {
     public function isOtpEnabled(): bool
     {
-        $val = config('melipayamak.otp_enabled', env('OTP_ENABLED', true));
+        $val = config('melipayamak.otp_enabled', true);
         if (is_bool($val)) return $val;
         return in_array(strtolower((string) $val), ['1', 'true', 'yes'], true);
     }
 
     public function sendOtp(string $mobile, string $otp): bool
     {
-        $bodyId = config('melipayamak.otp_body_id', env('MELIPAYAMAK_OTP_BODY_ID'));
+        $bodyId = config('melipayamak.otp_body_id');
         
         // اگر bodyId تنظیم شده باشد، از خط خدماتی (الگو) استفاده می‌کنیم
         if (!empty($bodyId)) {
@@ -84,7 +84,7 @@ class SmsService
      */
     protected function sendOtpDirect(string $mobile, string $otp): bool
     {
-        $from = config('melipayamak.from', env('MELIPAYAMAK_FROM'));
+        $from = config('melipayamak.from');
         $template = config('melipayamak.otp_template', 'کد ورود شما: {code}');
         $text = str_replace('{code}', $otp, $template);
 
@@ -116,7 +116,7 @@ class SmsService
 
     public function sendText(string $mobile, string $text): bool
     {
-        $from = config('melipayamak.from', env('MELIPAYAMAK_FROM'));
+        $from = config('melipayamak.from');
         
         \Log::info('SMS Test: Attempting to send', [
             'mobile' => $mobile,
