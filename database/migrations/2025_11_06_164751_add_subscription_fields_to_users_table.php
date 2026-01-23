@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('users', 'subscription_plan_id')) {
+            return;
+        }
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('subscription_plan_id')->nullable()->constrained('subscription_plans')->nullOnDelete();
+            $table->foreignId('subscription_plan_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamp('subscription_start')->nullable();
             $table->timestamp('subscription_end')->nullable();
         });

@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('exam_batches', 'sort_order')) {
+            return;
+        }
         Schema::table('exam_batches', function (Blueprint $table) {
             $table->integer('sort_order')->default(0)->after('is_active');
         });

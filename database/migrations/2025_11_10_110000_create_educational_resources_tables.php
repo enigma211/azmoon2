@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('exam_types')) {
+            return;
+        }
         // جدول نوع آزمون (نظام مهندسی، کنکور ارشد، ...)
         Schema::create('exam_types', function (Blueprint $table) {
             $table->id();
@@ -23,6 +26,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        if (Schema::hasTable('resource_categories')) {
+            return;
+        }
         // جدول دسته‌بندی منابع (ویدیو آموزشی، جزوات آموزشی)
         Schema::create('resource_categories', function (Blueprint $table) {
             $table->id();
@@ -39,6 +45,9 @@ return new class extends Migration
             $table->unique(['exam_type_id', 'type']);
         });
 
+        if (Schema::hasTable('educational_posts')) {
+            return;
+        }
         // جدول پست‌های آموزشی
         Schema::create('educational_posts', function (Blueprint $table) {
             $table->id();

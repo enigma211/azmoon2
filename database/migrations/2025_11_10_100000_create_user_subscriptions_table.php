@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('user_subscriptions')) {
+            return;
+        }
         // Drop table if exists to recreate with correct structure
         Schema::dropIfExists('user_subscriptions');
         

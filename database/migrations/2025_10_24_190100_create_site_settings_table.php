@@ -8,6 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('site_settings')) {
+            return;
+        }
         Schema::create('site_settings', function (Blueprint $table) {
             $table->id();
             $table->string('logo')->nullable();

@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('exam_attempts', function (Blueprint $table) {
-            // Check if the index exists before dropping to avoid errors if it was named differently or doesn't exist
-            // But the error log explicitly named 'exam_attempts_exam_id_user_id_unique'
-            $table->dropUnique('exam_attempts_exam_id_user_id_unique');
-        });
+        try {
+            Schema::table('exam_attempts', function (Blueprint $table) {
+                $table->dropUnique('exam_attempts_exam_id_user_id_unique');
+            });
+        } catch (\Exception $e) {
+            // Index probably doesn't exist
+        }
     }
 
     /**

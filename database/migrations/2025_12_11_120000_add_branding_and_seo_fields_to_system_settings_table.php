@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('system_settings', 'site_name')) {
+            return;
+        }
         Schema::table('system_settings', function (Blueprint $table) {
             $table->string('site_name')->nullable()->after('value');
             $table->string('site_identity')->nullable()->after('site_name'); // e.g. slogan

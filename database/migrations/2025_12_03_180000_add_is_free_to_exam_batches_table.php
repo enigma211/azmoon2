@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('exam_batches', 'is_free')) {
+            return;
+        }
         Schema::table('exam_batches', function (Blueprint $table) {
             $table->boolean('is_free')->default(false)->after('is_active');
         });

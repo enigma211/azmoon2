@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('system_settings', 'free_trial_hours')) {
+            return;
+        }
         Schema::table('system_settings', function (Blueprint $table) {
             $table->integer('free_trial_hours')->default(48)->after('value');
         });

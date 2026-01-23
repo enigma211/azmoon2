@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('questions', 'explanation_image_path')) {
+            return;
+        }
         Schema::table('questions', function (Blueprint $table) {
             $table->string('explanation_image_path')->nullable()->after('explanation');
         });

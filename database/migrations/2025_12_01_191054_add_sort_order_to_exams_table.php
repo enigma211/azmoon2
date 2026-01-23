@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('exams', 'sort_order')) {
+            return;
+        }
         Schema::table('exams', function (Blueprint $table) {
             $table->integer('sort_order')->default(0)->after('title');
         });

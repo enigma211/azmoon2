@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('users', 'font_size')) {
+            return;
+        }
         Schema::table('users', function (Blueprint $table) {
             $table->string('font_size', 10)->default('medium')->after('subscription_end'); // small, medium, large, xlarge
             $table->string('theme', 10)->default('light')->after('font_size'); // light, dark

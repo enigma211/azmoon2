@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('exam_domains', 'content')) {
+            return;
+        }
         Schema::table('exam_domains', function (Blueprint $table) {
             $table->longText('content')->nullable();
         });

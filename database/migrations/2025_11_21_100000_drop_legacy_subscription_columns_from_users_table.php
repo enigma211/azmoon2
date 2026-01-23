@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasColumn('users', 'subscription_plan_id')) {
+            return;
+        }
         Schema::table('users', function (Blueprint $table) {
             $table->dropForeign(['subscription_plan_id']);
             $table->dropColumn(['subscription_plan_id', 'subscription_start', 'subscription_end']);

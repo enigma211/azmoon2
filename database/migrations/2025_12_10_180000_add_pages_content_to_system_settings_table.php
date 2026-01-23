@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('system_settings', 'terms_content')) {
+            return;
+        }
         Schema::table('system_settings', function (Blueprint $table) {
             $table->longText('terms_content')->nullable()->after('free_trial_hours');
             $table->longText('about_content')->nullable()->after('terms_content');

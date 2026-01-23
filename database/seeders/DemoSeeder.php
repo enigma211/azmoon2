@@ -39,8 +39,6 @@ class DemoSeeder extends Seeder
             [
                 'title' => 'خرداد ۱۴۰۴',
                 'is_active' => true,
-                'starts_at' => Carbon::now()->subDays(10),
-                'ends_at' => Carbon::now()->addDays(20),
             ]
         );
 
@@ -59,21 +57,11 @@ class DemoSeeder extends Seeder
             ]
         );
 
-        // 4) Section
-        $section = ExamSection::firstOrCreate(
-            [
-                'exam_id' => $exam->id,
-                'title' => 'بخش عمومی',
-            ],
-            [
-                'order' => 1,
-            ]
-        );
-
+        // 4) Questions
         // Helper to create questions succinctly
-        $makeQuestion = function(array $attrs) use ($section) {
+        $makeQuestion = function(array $attrs) use ($exam) {
             $q = Question::create(array_merge([
-                'exam_section_id' => $section->id,
+                'exam_id' => $exam->id,
                 'difficulty' => 'easy',
                 'score' => 1,
             ], $attrs));
@@ -151,7 +139,7 @@ class DemoSeeder extends Seeder
             [
                 'description' => 'دسترسی کامل (all)',
                 'price_toman' => 200000,
-                'duration_months' => 3,
+                'duration_days' => 90,
                 'access_scope' => 'all',
             ]
         );
