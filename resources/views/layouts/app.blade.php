@@ -36,10 +36,8 @@
             <meta name="twitter:image" content="{{ $seoImage }}">
         @endif
 
-        <!-- Fonts: Vazirmatn -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <!-- Fonts: Vazirmatn (Local) -->
+        <link rel="stylesheet" href="{{ asset('css/vazir.css') }}">
 
         <!-- Vite & Livewire -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -53,10 +51,10 @@
             <link rel="icon" type="image/png" href="{{ $favicon }}">
         @endif
 
-        <!-- KaTeX for high-performance LaTeX rendering -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+        <!-- KaTeX for high-performance LaTeX rendering (Local) -->
+        <link rel="stylesheet" href="{{ asset('vendor/katex/katex.min.css') }}">
+        <script src="{{ asset('vendor/katex/katex.min.js') }}"></script>
+        <script src="{{ asset('vendor/katex/contrib/auto-render.min.js') }}"></script>
         
         <style>
             /* Force LTR direction for math formulas to fix layout issues in RTL pages */

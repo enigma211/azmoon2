@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('آزمون کده')
+            ->font('Vazirmatn', url: asset('css/vazir.css'))
             ->colors([
                 'primary' => Color::Amber,
             ])
