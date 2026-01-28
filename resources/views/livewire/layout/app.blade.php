@@ -62,9 +62,11 @@
                 <div class="flex flex-col items-center justify-center space-y-4">
                     <!-- لوگوی اینماد (فعلاً غیرفعال) -->
                     <div class="enamad-logo" style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center;">
-                        <!-- <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=668272&Code=OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse'>
+                        {{-- 
+                        <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=668272&Code=OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse'>
                             <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=668272&Code=OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse' alt='اینماد' style='cursor:pointer' code='OJG9rk1Il7Gg1QVCca78Alvk4RRDPkse'>
-                        </a> -->
+                        </a> 
+                        --}}
                         <div class="w-20 h-20 bg-gray-800/50 rounded-lg flex items-center justify-center border border-gray-700">
                              <span class="text-[10px] text-gray-500">محل نماد</span>
                         </div>
