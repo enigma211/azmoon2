@@ -449,7 +449,11 @@
                         ],
                         ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'option'],
                         throwOnError: false,
-                        errorColor: '#cc0000'
+                        errorColor: '#cc0000',
+                        // Fix common malformed LaTeX where backslashes are missing (e.g., frac{...} instead of \frac{...})
+                        preProcess: function(math) {
+                            return math.replace(/([^\\]|^)\b(frac|sqrt|sum|int|prod|lim|infty|times|cdot|pm|text|mathrm|mathbf|mathscr|mathcal|mathbb|hat|bar|tilde|vec)\b/g, '$1\\$2');
+                        }
                     });
                 }
             }
