@@ -437,9 +437,40 @@
             })();
         </script>
         <script>
+            function sanitizeMathText(root) {
+                if (!root || !root.ownerDocument) {
+                    return;
+                }
+
+                const skipTags = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'PRE', 'CODE', 'NOSCRIPT']);
+                const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+                let node;
+
+                while ((node = walker.nextNode())) {
+                    if (!node.nodeValue) {
+                        continue;
+                    }
+
+                    const parentTag = node.parentElement?.tagName;
+                    if (parentTag && skipTags.has(parentTag)) {
+                        continue;
+                    }
+
+                    const cleaned = node.nodeValue
+                        .replace(/\\\$/g, '$')
+                        .replace(/<\/?p>/gi, '')
+                        .replace(/&lt;\/?p&gt;/gi, '');
+
+                    if (cleaned !== node.nodeValue) {
+                        node.nodeValue = cleaned;
+                    }
+                }
+            }
+
             // Function to render math
             function renderMath() {
                 if (typeof renderMathInElement === 'function') {
+                    sanitizeMathText(document.body);
                     renderMathInElement(document.body, {
                         delimiters: [
                             {left: '$$', right: '$$', display: true},
