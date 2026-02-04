@@ -51,10 +51,10 @@
             <link rel="icon" type="image/png" href="{{ $favicon }}">
         @endif
 
-        <!-- KaTeX for high-performance LaTeX rendering (Local) -->
-        <link rel="stylesheet" href="{{ asset('vendor/katex/katex.min.css') }}">
-        <script src="{{ asset('vendor/katex/katex.min.js') }}"></script>
-        <script src="{{ asset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+        <!-- KaTeX for high-performance LaTeX rendering (CDN) -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
         
         <style>
             /* Force LTR direction for math formulas to fix layout issues in RTL pages */
@@ -437,33 +437,9 @@
             })();
         </script>
         <script>
-            function normalizeMathContent(root) {
-                if (!root || !root.ownerDocument) {
-                    return;
-                }
-
-                const skipTags = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'PRE', 'CODE', 'NOSCRIPT']);
-                const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-                let node;
-
-                while ((node = walker.nextNode())) {
-                    if (!node.nodeValue || node.nodeValue.indexOf('\\$') === -1) {
-                        continue;
-                    }
-
-                    const parentTag = node.parentElement?.tagName;
-                    if (parentTag && skipTags.has(parentTag)) {
-                        continue;
-                    }
-
-                    node.nodeValue = node.nodeValue.replace(/\\\$/g, '$');
-                }
-            }
-
             // Function to render math
             function renderMath() {
                 if (typeof renderMathInElement === 'function') {
-                    normalizeMathContent(document.body);
                     renderMathInElement(document.body, {
                         delimiters: [
                             {left: '$$', right: '$$', display: true},
