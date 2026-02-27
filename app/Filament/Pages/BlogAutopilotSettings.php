@@ -77,6 +77,7 @@ class BlogAutopilotSettings extends Page implements HasForms
             'autopilot_min_posts_per_day',
             'autopilot_max_posts_per_day',
             'autopilot_schedule_interval',
+            'autopilot_max_article_age_days',
         ])->pluck('value', 'key')->toArray();
 
         // Default values
@@ -84,6 +85,7 @@ class BlogAutopilotSettings extends Page implements HasForms
         $settings['autopilot_min_posts_per_day'] = $settings['autopilot_min_posts_per_day'] ?? 1;
         $settings['autopilot_max_posts_per_day'] = $settings['autopilot_max_posts_per_day'] ?? 3;
         $settings['autopilot_schedule_interval'] = $settings['autopilot_schedule_interval'] ?? '12';
+        $settings['autopilot_max_article_age_days'] = $settings['autopilot_max_article_age_days'] ?? '3';
         
         $defaultPrompt = <<<EOT
 شما یک مهندس با تجربه، متخصص سئو و تولید محتوای آموزشی برای داوطلبان آزمون‌های نظام مهندسی هستید.
@@ -187,6 +189,12 @@ EOT;
                             ])
                             ->required()
                             ->helperText('ربات هر چند ساعت یک‌بار برای پیدا کردن خبر جدید اجرا شود؟'),
+                        TextInput::make('autopilot_max_article_age_days')
+                            ->label('حداکثر عمر خبر (روز)')
+                            ->numeric()
+                            ->minValue(1)
+                            ->required()
+                            ->helperText('اخباری که در RSS قدیمی‌تر از این تعداد روز باشند، نادیده گرفته می‌شوند.'),
                         Textarea::make('autopilot_rss_feeds')
                             ->label('آدرس‌های فید RSS')
                             ->rows(5)

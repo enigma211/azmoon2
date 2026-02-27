@@ -28,6 +28,7 @@ class FetchBlogNews extends Command
         $rssFeedsText = Setting::where('key', 'autopilot_rss_feeds')->value('value');
         $minPosts = (int)(Setting::where('key', 'autopilot_min_posts_per_day')->value('value') ?? 1);
         $maxPosts = (int)(Setting::where('key', 'autopilot_max_posts_per_day')->value('value') ?? 3);
+        $maxArticleAgeDays = (int)(Setting::where('key', 'autopilot_max_article_age_days')->value('value') ?? 3);
 
         if (!$apiKey || !$prompt || !$categoryId || !$rssFeedsText) {
             $this->error('Missing required settings. Please configure Autopilot Settings in the admin panel.');
@@ -110,6 +111,20 @@ class FetchBlogNews extends Command
                     $content = isset($item->children('content', true)->encoded) 
                         ? (string) $item->children('content', true)->encoded 
                         : $description;
+                    
+                    // Check article age
+                    $pubDateStr = (string) $item->pubDate;
+                    if ($pubDateStr) {
+                        try {
+                            $pubDate = \Carbon\Carbon::parse($pubDateStr);
+                            if ($pubDate->diffInDays(now()) > $maxArticleAgeDays) {
+                                $this->info("Article '{$title}' is older than {$maxArticleAgeDays} days. Skipping...");
+                                continue;
+                            }
+                        } catch (\Exception $e) {
+                            // If we can't parse the date, continue anyway
+                        }
+                    }
 
                     // Try to extract image
                     $imageUrl = null;
@@ -136,6 +151,19 @@ class FetchBlogNews extends Command
                     }
                     if (!$imageUrl && preg_match('/<img[^>]+src=[\'"]([^\'"]+)[\'"][^>]*>/i', $description, $matches)) {
                         $imageUrl = $matches[1];
+                    }
+
+                    // 4. Try to fetch og:image from the source URL directly if no image found yet
+                    if (!$imageUrl) {
+                        try {
+                            $pageContent = Http::timeout(5)->get($sourceUrl)->body();
+                            if (preg_match('/<meta[^>]*property=[\'"]og:image[\'"][^>]*content=[\'"]([^\'"]+)[\'"][^>]*>/i', $pageContent, $matches) || 
+                                preg_match('/<meta[^>]*content=[\'"]([^\'"]+)[\'"][^>]*property=[\'"]og:image[\'"][^>]*>/i', $pageContent, $matches)) {
+                                $imageUrl = $matches[1];
+                            }
+                        } catch (\Exception $e) {
+                            // Ignore errors during og:image extraction
+                        }
                     }
 
                     // Clean tags for the prompt
@@ -180,9 +208,15 @@ class FetchBlogNews extends Command
                         }
                     }
 
+                    // Generate a shorter, cleaner slug
+                    // Take the first 5 words of the title, convert to slug, and append a short random string
+                    $words = explode(' ', $aiResult['title']);
+                    $shortTitle = implode(' ', array_slice($words, 0, 5));
+                    $slug = Str::slug($shortTitle) . '-' . substr(uniqid(), -5);
+
                     Post::create([
                         'title' => $aiResult['title'],
-                        'slug' => Str::slug($aiResult['title']) . '-' . uniqid(),
+                        'slug' => $slug,
                         'summary' => $aiResult['meta_description'] ?? Str::limit(strip_tags($aiResult['content']), 150),
                         'content' => $aiResult['content'],
                         'image_path' => $imagePath,
