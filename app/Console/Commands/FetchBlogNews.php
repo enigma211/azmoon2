@@ -29,6 +29,7 @@ class FetchBlogNews extends Command
         $minPosts = (int)(Setting::where('key', 'autopilot_min_posts_per_day')->value('value') ?? 1);
         $maxPosts = (int)(Setting::where('key', 'autopilot_max_posts_per_day')->value('value') ?? 3);
         $maxArticleAgeDays = (int)(Setting::where('key', 'autopilot_max_article_age_days')->value('value') ?? 3);
+        $maxSearchDepth = (int)(Setting::where('key', 'autopilot_max_rss_items_to_check')->value('value') ?? 5);
 
         if (!$apiKey || !$prompt || !$categoryId || !$rssFeedsText) {
             $this->error('Missing required settings. Please configure Autopilot Settings in the admin panel.');
@@ -78,7 +79,6 @@ class FetchBlogNews extends Command
                 $items = $xml->channel->item;
                 $processedCount = 0;
                 $searchDepth = 0; // Prevent looking endlessly into old posts
-                $maxSearchDepth = 20; // Only check up to the first 20 items in any RSS feed
 
                 foreach ($items as $item) {
                     if ($searchDepth >= $maxSearchDepth) {
